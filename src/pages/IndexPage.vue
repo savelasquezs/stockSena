@@ -1,4 +1,53 @@
 <template>
+  <div class="flex justify-evenly q-mt-lg">
+    <q-card class="my-card q-px-lg">
+      <q-icon
+        name="article"
+        size="100px"
+        color="primary"
+        style="
+           {
+            margin: 0 auto;
+          }
+        "
+      />
+      <q-card-section>
+        <div class="text-subtitle2 text-center">Historial</div>
+      </q-card-section>
+    </q-card>
+    <q-card class="my-card q-px-lg">
+      <q-icon
+        name="article"
+        size="100px"
+        color="primary"
+        style="
+           {
+            margin: 0 auto;
+          }
+        "
+      />
+      <q-card-section>
+        <div class="text-subtitle2 text-center">Historial</div>
+      </q-card-section>
+    </q-card>
+    <q-card class="my-card q-px-lg">
+      <q-icon
+        name="article"
+        size="100px"
+        color="primary"
+        style="
+           {
+            margin: 0 auto;
+          }
+        "
+      />
+      <q-card-section>
+        <div class="text-subtitle2 text-center">Historial</div>
+      </q-card-section>
+    </q-card>
+
+    <date-picker @guardarFecha="(fecha) => console.log(fecha)" />
+  </div>
   <q-page class="flex flex-center">
     <div class="q-pa-md" style="max-width: 400px">
       <q-form @submit="onSubmit" class="q-gutter-md">
@@ -38,11 +87,12 @@
         />
       </q-form>
     </div>
-    <q-list bordered separator>
+
+    <!-- <q-list bordered separator>
       <q-item clickable v-ripple v-for="registro in data" :key="registro.docId">
         <q-item-section>{{ registro.name }}</q-item-section>
       </q-item>
-    </q-list>
+    </q-list> -->
   </q-page>
 </template>
 
@@ -51,11 +101,13 @@ import { collection, addDoc, onSnapshot } from "firebase/firestore";
 import AutocompleteInput from "components/utils/autocompleteInput.vue";
 import { db } from "src/firebaseInit";
 import { ref } from "vue";
+import DatePicker from "components/utils/DatePicker.vue";
 
 const options = ref(["Hola", "care", "nalgas"]);
 const name = ref("");
 const age = ref("");
 const pais = ref("");
+const dueDate = ref(new Date().toLocaleDateString());
 
 const tabla = collection(db, "customers");
 const onSubmit = async () => {

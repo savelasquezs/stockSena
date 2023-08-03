@@ -12,9 +12,10 @@ onAuthStateChanged(auth, (user) => {
     // https://firebase.google.com/docs/reference/js/auth.user
     const uid = user.uid;
     console.log(user, uid);
+    console.log("El usuario inicio la sesión (app)");
     // ...
   } else {
-    // User is signed out
+    console.log("El usuario cerro sesion (app)");
     // ...
   }
 });
