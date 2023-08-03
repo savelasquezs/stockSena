@@ -35,6 +35,13 @@
           <q-btn label="Entrar" type="submit" color="primary" />
         </div>
       </q-form>
+      <div>
+        <q-btn
+          @click="recoverPasword()"
+          color="primary"
+          label="Recuperar contraseña"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -43,6 +50,7 @@
 import { ref } from "vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "src/firebaseInit";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const email = ref("");
 const password = ref("");
@@ -70,6 +78,20 @@ function onSubmit() {
 function isEmailValid() {
   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
   return name.endsWith("@misena.edu.co");
+}
+
+//Función para recuperar la contraseña
+function recoverPasword() {
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      // Password reset email sent!
+      // ..
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+    });
 }
 </script>
 
