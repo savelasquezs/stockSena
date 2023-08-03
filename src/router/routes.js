@@ -21,16 +21,23 @@ const routes = [
         component: () => import("pages/PrestamosRegistro.vue"),
       },
       {
-        path: '/detalles',
+        path: "/detalles",
         name: 'detalles',
-        omponent: () => import("pages/DetallesRegistros.vue"),
+        component: () => import("pages/DetallesRegistros.vue"),
         props: true, // Permite pasar los parámetros como props
       },
+
     ],
   },
   {
     path: "/login",
     component: () => import("pages/LoginPage.vue"),
+
+  },
+  {
+    path: "/Recover",
+    component: () => import("pages/RecoverPage.vue"),
+
   },
 
   // Always leave this as last one,
