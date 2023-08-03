@@ -17,11 +17,12 @@ const routes = [
         component: () => import("pages/PrestamosRegistro.vue"),
       },
       {
-        path: '/detalles',
+        path: "/detalles",
         name: 'detalles',
-        omponent: () => import("pages/DetallesRegistros.vue"),
+        component: () => import("pages/DetallesRegistros.vue"),
         props: true, // Permite pasar los parámetros como props
       },
+
     ],
   },
   {

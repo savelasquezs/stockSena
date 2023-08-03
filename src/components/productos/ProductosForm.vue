@@ -57,10 +57,12 @@
                   outlined
                   v-model.number="formulario.codigoBarra"
                   label="Código de Barra"
-                  @blur="adjustBarcodeValue"
                   required
                 />
               </q-item-section>
+            </q-item>
+            <q-item>
+              <q-date v-model="formulario.fechaVencimiento" />
             </q-item>
             <q-item>
               <q-item-section>
@@ -96,30 +98,35 @@
   </q-page>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      formulario: {
-        nombre: "",
-        consumible: "",
-        stockTotal: null,
-        descripcion: "",
-        codigoBarra: null,
-        categoria: "",
-      },
-    };
-  },
-  methods: {
-    submitForm() {
-      // Redirigir a la página de detalles y pasar los datos mediante una ruta con parámetros
-      this.$router.push({
-        name: "detalles",
-        params: { detalles: this.formulario },
-      });
-    },
-  },
-};
+<script setup>
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "src/firebaseInit";
+import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const formulario = ref({});
+
+function submitForm() {
+  const tabla = collection(db, "products");
+  console.log(formulario);
+  const data = {
+    name: formulario.value.nombre,
+    consumable: formulario.value.consumible,
+    totalStock: formulario.value.stockTotal,
+    description: formulario.value.descripcion,
+    barCode: formulario.value.codigoBarra,
+    category: formulario.value.categoria,
+    created: new Date().getTime(),
+    borrowedQuantity: 0,
+    dueDate: new Date() + 900,
+  };
+  addDoc(tabla);
+
+  // Redirigir a la página de detalles y pasar los datos mediante una ruta con parámetros
+  router.push({
+    name: "detalles",
+  });
+}
 </script>
 
 <style>
