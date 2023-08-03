@@ -1,7 +1,14 @@
 <template>
   <div class="flex flex-center content-center paginaCompleta">
     <div class="q-pa-md" style="max-width: 400px">
-      <q-form @submit="onSubmit" class="q-gutter-md">
+      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+        <q-img
+          src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
+          loading="lazy"
+          spinner-color="white"
+          width="300px"
+          class=""
+        />
         <q-input
           filled
           type="email"
@@ -37,10 +44,6 @@ import { ref } from "vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "src/firebaseInit";
 
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-
 const email = ref("");
 const password = ref("");
 
@@ -57,8 +60,6 @@ function onSubmit() {
       // El inicio de sesión fue exitoso, aquí puedes realizar acciones
       // como redireccionar al usuario a otra página o mostrar un mensaje de bienvenida.
       console.log("Inicio de sesión exitoso", userCredential.user);
-
-      router.push("/");
     })
     .catch((error) => {
       // Si ocurre un error, puedes mostrar un mensaje de error al usuario.
@@ -68,7 +69,7 @@ function onSubmit() {
 
 function isEmailValid() {
   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
-  return email.value.endsWith("@misena.edu.co");
+  return name.endsWith("@misena.edu.co");
 }
 </script>
 
