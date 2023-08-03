@@ -5,13 +5,15 @@
         <q-btn
           flat
           dense
-          round
           icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
 
         <q-toolbar-title> Quasar App </q-toolbar-title>
+        <div style="margin-right: 16px">
+          <text-h6>{{ userEmail }}</text-h6>
+        </div>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
         <q-btn @click="cerrarSesion" label="Cerrar Sesión" />
@@ -29,7 +31,6 @@
         />
       </q-list>
     </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -37,13 +38,15 @@
 </template>
 
 <script setup>
-import { defineComponent, ref } from "vue";
+import { defineComponent, inject, ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 //importación cierre de sesión
 import { signOut } from "firebase/auth";
 import { auth } from "src/firebaseInit";
 //redireccion
 import { useRouter } from "vue-router";
+
+const userEmail = inject("userEmail");
 
 const linksList = ref([
   {

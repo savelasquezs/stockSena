@@ -9,6 +9,10 @@ const routes = [
         component: () => import("pages/ClientesRegistro.vue"),
       },
       {
+        path: "/opciones",
+        component: () => import("pages/ClientesOpciones.vue"),
+      },
+      {
         path: "/productos",
         component: () => import("pages/ProductosRegistro.vue"),
       },
@@ -28,6 +32,12 @@ const routes = [
   {
     path: "/login",
     component: () => import("pages/LoginPage.vue"),
+
+  },
+  {
+    path: "/Recover",
+    component: () => import("pages/RecoverPage.vue"),
+
   },
 
   // Always leave this as last one,
