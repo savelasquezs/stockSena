@@ -52,6 +52,9 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "src/firebaseInit";
 import { sendPasswordResetEmail } from "firebase/auth";
 
+//redireccion de rutas
+import { useRouter } from "vue-router";
+const router = useRouter();
 const email = ref("");
 const password = ref("");
 
@@ -67,6 +70,7 @@ function onSubmit() {
     .then((userCredential) => {
       // El inicio de sesión fue exitoso, aquí puedes realizar acciones
       // como redireccionar al usuario a otra página o mostrar un mensaje de bienvenida.
+      router.push("/");
       console.log("Inicio de sesión exitoso", userCredential.user);
     })
     .catch((error) => {
