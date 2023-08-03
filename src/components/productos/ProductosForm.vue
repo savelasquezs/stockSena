@@ -62,7 +62,8 @@
               </q-item-section>
             </q-item>
             <q-item>
-              <q-date v-model="formulario.fechaVencimiento" />
+              <date-picker @guardar-fecha="(fecha) => (dueDate = fecha)" />
+              <q-input v-model="dueDate" />
             </q-item>
             <q-item>
               <q-item-section>
@@ -103,10 +104,12 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
+import DatePicker from "components/utils/DatePicker.vue";
 const router = useRouter();
 const formulario = ref({});
+const dueDate = ref("");
 
-function submitForm() {
+async function submitForm() {
   const tabla = collection(db, "products");
   console.log(formulario);
   const data = {
@@ -118,9 +121,11 @@ function submitForm() {
     category: formulario.value.categoria,
     created: new Date().getTime(),
     borrowedQuantity: 0,
-    dueDate: new Date() + 900,
+    dueDate: dueDate.value,
+    almacen: "tics",
   };
-  addDoc(tabla);
+  const refDoc = await addDoc(tabla, data);
+  console.log("documento guardado exitosamente con id _:", refDoc.id);
 
   // Redirigir a la página de detalles y pasar los datos mediante una ruta con parámetros
   router.push({
