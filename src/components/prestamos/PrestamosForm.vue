@@ -35,13 +35,11 @@
           <q-item-label caption>Cédula</q-item-label>
         </q-item-section>
       </q-item>
-      <AutocompleteInput :stringOptions="opciones" />
-      <q-input
-        v-model.number="model"
-        type="number"
-        filled
-        style="max-width: 200px"
-      />
+      <div class="flex">
+        <AutocompleteInput :stringOptions="opciones" class="q-mx-sm" />
+        <q-input v-model.number="cantidad" type="number" outlined />
+      </div>
+      <q-input v-model="text" type="textarea" class="q-ma-sm" outlined />
     </div>
   </q-page>
 </template>
@@ -54,6 +52,7 @@ export default {
       selectedDocumentType: null,
       documentNumber: "",
       opciones: ["Computador", "HDMI", "Cargador"],
+      cantidad: 1,
     };
   },
   computed: {
@@ -82,9 +81,3 @@ export default {
   components: { AutocompleteInput },
 };
 </script>
-
-<!--
-  - Crear la tabla que depués de darle al botón buscar aparesca los datos del usuario.
-  - Averiguar en Quasar como hacer una validación.
-  - Other...
--->
