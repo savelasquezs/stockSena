@@ -77,7 +77,7 @@ function onSubmit() {
 
 function isEmailValid() {
   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
-  return name.endsWith("@misena.edu.co");
+  return email.value.endsWith("@misena.edu.co");
 }
 
 //Función para recuperar la contraseña
