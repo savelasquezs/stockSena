@@ -27,6 +27,12 @@ const routes = [
   {
     path: "/login",
     component: () => import("pages/LoginPage.vue"),
+
+  },
+  {
+    path: "/Recover",
+    component: () => import("pages/RecoverPage.vue"),
+
   },
 
   // Always leave this as last one,
