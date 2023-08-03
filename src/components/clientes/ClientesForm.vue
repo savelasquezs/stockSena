@@ -20,6 +20,7 @@
           transition-hide="flip-up"
           style="width: 250px"
         />
+        <AutocompleteInput :stringOptions="opciones" />
 
         <q-input
           outlined
@@ -77,15 +78,12 @@
 </template>
 
 <script>
+import AutocompleteInput from "components/utils/autocompleteInput.vue";
+import autocompleteinput from "components/utils/autocompleteInput.vue";
 export default {
   data() {
     return {
-      Tipo_documento: null,
-      options_Tipo_documento: [
-        "Cedula de ciudadania",
-        "Tarjeta de indentidad",
-        "Pasaporte",
-      ],
+      opciones: ["Cedula de ciudadania", "Tarjeta de indentidad", "Pasaporte"],
       Numero_documento: "",
       Nombre: "",
       Apellido: "",
@@ -114,6 +112,7 @@ export default {
       console.log("Area:", this.Area);
     },
   },
+  components: { AutocompleteInput },
 };
 </script>
 
