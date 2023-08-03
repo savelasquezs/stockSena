@@ -86,7 +86,6 @@ const linksList = ref([
     title: "Cerrar sesión",
     caption: "Community Quasar projects",
     icon: "favorite",
-    link: "https://awesome.quasar.dev",
   },
 ]);
 
