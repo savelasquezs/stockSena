@@ -57,10 +57,13 @@
                   outlined
                   v-model.number="formulario.codigoBarra"
                   label="Código de Barra"
-                  @blur="adjustBarcodeValue"
                   required
                 />
               </q-item-section>
+            </q-item>
+            <q-item>
+              <date-picker @guardar-fecha="(fecha) => (dueDate = fecha)" />
+              <q-input v-model="dueDate" />
             </q-item>
             <q-item>
               <q-item-section>
@@ -96,30 +99,39 @@
   </q-page>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      formulario: {
-        nombre: "",
-        consumible: "",
-        stockTotal: null,
-        descripcion: "",
-        codigoBarra: null,
-        categoria: "",
-      },
-    };
-  },
-  methods: {
-    submitForm() {
-      // Redirigir a la página de detalles y pasar los datos mediante una ruta con parámetros
-      this.$router.push({
-        name: "detalles",
-        params: { detalles: this.formulario },
-      });
-    },
-  },
-};
+<script setup>
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "src/firebaseInit";
+import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
+import DatePicker from "components/utils/DatePicker.vue";
+const router = useRouter();
+const formulario = ref({});
+const dueDate = ref("");
+
+async function submitForm() {
+  const tabla = collection(db, "products");
+  console.log(formulario);
+  const data = {
+    name: formulario.value.nombre,
+    consumable: formulario.value.consumible,
+    totalStock: formulario.value.stockTotal,
+    description: formulario.value.descripcion,
+    barCode: formulario.value.codigoBarra,
+    category: formulario.value.categoria,
+    created: new Date().getTime(),
+    borrowedQuantity: 0,
+    dueDate: dueDate.value,
+    almacen: "tics",
+  };
+  const refDoc = await addDoc(tabla, data);
+  console.log("documento guardado exitosamente con id _:", refDoc.id);
+
+  // Redirigir a la página de detalles y pasar los datos mediante una ruta con parámetros
+  router.push({
+    name: "detalles",
+  });
+}
 </script>
 
 <style>
