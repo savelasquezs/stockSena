@@ -1,5 +1,5 @@
 <template>
-  <div>Detalles</div>
+  <div></div>
   <DetallesProductos />
 </template>
 
@@ -8,3 +8,4 @@ import DetallesProductos from "components/productos/DetallesProductos.vue";
 </script>
 
 <style lang="scss" scoped></style>
+
