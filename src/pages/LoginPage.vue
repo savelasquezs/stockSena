@@ -59,10 +59,10 @@ const email = ref("");
 const password = ref("");
 
 function onSubmit() {
-  // if (!isEmailValid()) {
-  //   alert("Por favor, ingresa un correo válido de @misena.edu.co");
-  //   return;
-  // }
+  if (!isEmailValid()) {
+    alert("Por favor, ingresa un correo válido de @misena.edu.co");
+    return;
+  }
 
   // Realizar el inicio de sesión con Firebase
 
