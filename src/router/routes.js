@@ -25,10 +25,18 @@ const routes = [
         component: () => import("pages/PrestamosRegistro.vue"),
       },
       {
+        path: "/tablaPrestamos",
+        component: () => import("pages/tblPrestamos.vue"),
+      },
+      {
         path: "/detalles",
         name: "detalles",
         component: () => import("pages/DetallesRegistros.vue"),
         props: true, // Permite pasar los parámetros como props
+      },
+      {
+        path: "/Dashboard",
+        component: () => import("pages/PageDashboard.vue"),
       },
     ],
   },
