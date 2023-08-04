@@ -1,6 +1,10 @@
 const routes = [
   {
     path: "/",
+    meta: {
+      requiresAuth: true,
+    },
+
     component: () => import("layouts/MainLayout.vue"),
     children: [
       { path: "", component: () => import("pages/IndexPage.vue") },
@@ -17,8 +21,8 @@ const routes = [
         component: () => import("pages/PrestamosRegistro.vue"),
       },
       {
-        path: '/detalles',
-        name: 'detalles',
+        path: "/detalles",
+        name: "detalles",
         omponent: () => import("pages/DetallesRegistros.vue"),
         props: true, // Permite pasar los parámetros como props
       },
