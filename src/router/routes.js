@@ -1,6 +1,10 @@
 const routes = [
   {
     path: "/",
+    meta: {
+      requiresAuth: true,
+    },
+
     component: () => import("layouts/MainLayout.vue"),
     children: [
       { path: "", component: () => import("pages/IndexPage.vue") },
@@ -26,22 +30,19 @@ const routes = [
       },
       {
         path: "/detalles",
-        name: 'detalles',
+        name: "detalles",
         component: () => import("pages/DetallesRegistros.vue"),
         props: true, // Permite pasar los parámetros como props
       },
-
     ],
   },
   {
     path: "/login",
     component: () => import("pages/LoginPage.vue"),
-
   },
   {
     path: "/Recover",
     component: () => import("pages/RecoverPage.vue"),
-
   },
 
   // Always leave this as last one,
