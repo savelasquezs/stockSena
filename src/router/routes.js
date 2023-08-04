@@ -22,6 +22,10 @@ const routes = [
         omponent: () => import("pages/DetallesRegistros.vue"),
         props: true, // Permite pasar los parámetros como props
       },
+      {
+        path: "/Dashboard",
+        component: () => import("pages/PageDashboard.vue"),
+      },
     ],
   },
   {
