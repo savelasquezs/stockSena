@@ -7,7 +7,6 @@
         v-model="selectedDocumentType"
         :options="documentTypes"
         label="Tipo de documento"
-        :rules="[val]"
       />
       <q-input
         outlined
@@ -39,45 +38,49 @@
         <AutocompleteInput :stringOptions="opciones" class="q-mx-sm" />
         <q-input v-model.number="cantidad" type="number" outlined />
       </div>
-      <q-input v-model="text" type="textarea" class="q-ma-sm" outlined />
+      <q-input
+        label="Descripción"
+        v-model="text"
+        type="textarea"
+        class="q-ma-sm"
+        outlined
+      />
+      <q-btn
+        @click="prestarProducto"
+        color="positive"
+        label="Prestar"
+        class="q-mt-md"
+      />
     </div>
   </q-page>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, computed } from "vue";
 import AutocompleteInput from "../utils/autocompleteInput.vue";
-export default {
-  data() {
-    return {
-      selectedDocumentType: null,
-      documentNumber: "",
-      opciones: ["Computador", "HDMI", "Cargador"],
-      cantidad: 1,
-    };
-  },
-  computed: {
-    documentTypes() {
-      return ["C.C", "T.I ", "C.E", "P.P"];
-    },
-    numberRule() {
-      return (val) => {
-        // Validar que el campo contenga solo caracteres numéricos
-        if (/^\d+$/.test(val)) {
-          return true;
-        }
-        return "Este campo solo acepta caracteres numéricos.";
-      };
-    },
-  },
-  methods: {
-    buscarDocumento() {
-      // Aquí puedes realizar la acción de búsqueda utilizando los datos seleccionados en el formulario.
-      // Por ejemplo, puedes mostrar una alerta con los datos ingresados para demostración:
-      alert(
-        `Tipo de documento: ${this.selectedDocumentType}\nNúmero de documento: ${this.documentNumber}`
-      );
-    },
-  },
-  components: { AutocompleteInput },
+
+const selectedDocumentType = ref(null);
+const documentNumber = ref("");
+const opciones = reactive(["Computador", "HDMI", "Cargador"]);
+const cantidad = ref(1);
+
+const documentTypes = computed(() => {
+  return ["C.C", "T.I", "C.E", "P.P"];
+});
+
+const numberRule = (val) => {
+  // Validar que el campo contenga solo caracteres numéricos
+  if (val.length > 6 && /^\d+$/.test(val)) {
+    return true;
+  }
+  return "Este campo solo acepta caracteres numéricos mayores de 7 digitos";
+};
+
+const buscarDocumento = () => {
+  // Aquí puedes realizar la acción de búsqueda utilizando los datos seleccionados en el formulario.
+  // Por ejemplo, puedes mostrar una alerta con los datos ingresados para demostración:
+  alert(
+    `Tipo de documento: ${selectedDocumentType.value}\nNúmero de documento: ${documentNumber.value}`
+  );
 };
 </script>

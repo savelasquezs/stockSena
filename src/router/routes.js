@@ -13,6 +13,10 @@ const routes = [
         component: () => import("pages/ClientesRegistro.vue"),
       },
       {
+        path: "/opciones",
+        component: () => import("pages/ClientesOpciones.vue"),
+      },
+      {
         path: "/productos",
         component: () => import("pages/ProductosRegistro.vue"),
       },
@@ -23,7 +27,7 @@ const routes = [
       {
         path: "/detalles",
         name: "detalles",
-        omponent: () => import("pages/DetallesRegistros.vue"),
+        component: () => import("pages/DetallesRegistros.vue"),
         props: true, // Permite pasar los parámetros como props
       },
     ],
@@ -31,6 +35,10 @@ const routes = [
   {
     path: "/login",
     component: () => import("pages/LoginPage.vue"),
+  },
+  {
+    path: "/Recover",
+    component: () => import("pages/RecoverPage.vue"),
   },
 
   // Always leave this as last one,

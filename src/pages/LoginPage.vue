@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-center content-center paginaCompleta">
     <div class="q-pa-md" style="max-width: 400px">
-      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+      <q-form @submit="onSubmit" class="q-gutter-md">
         <q-img
           src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
           loading="lazy"
@@ -59,10 +59,10 @@ const email = ref("");
 const password = ref("");
 
 function onSubmit() {
-  if (!isEmailValid()) {
-    alert("Por favor, ingresa un correo válido de @misena.edu.co");
-    return;
-  }
+  // if (!isEmailValid()) {
+  //   alert("Por favor, ingresa un correo válido de @misena.edu.co");
+  //   return;
+  // }
 
   // Realizar el inicio de sesión con Firebase
 
@@ -86,16 +86,7 @@ function isEmailValid() {
 
 //Función para recuperar la contraseña
 function recoverPasword() {
-  sendPasswordResetEmail(auth, email)
-    .then(() => {
-      // Password reset email sent!
-      // ..
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ..
-    });
+  router.push("/Recover");
 }
 </script>
 
