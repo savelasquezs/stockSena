@@ -40,6 +40,11 @@ const routes = [
     path: "/Recover",
     component: () => import("pages/RecoverPage.vue"),
   },
+  {
+    path: "/Registrar",
+    component: () => import("pages/RegisterPage.vue"),
+  },
+
 
   // Always leave this as last one,
   // but you can also remove it
