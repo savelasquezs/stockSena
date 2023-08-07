@@ -16,11 +16,13 @@ onAuthStateChanged(auth, (user) => {
     // https://firebase.google.com/docs/reference/js/auth.user
     const uid = user.uid;
     console.log(user.email);
+    localStorage.setItem("user", user.email);
     userEmail.value = user.email;
     console.log("El usuario inicio la sesión (app)");
     // ...
   } else {
     console.log("El usuario cerro sesion (app)");
+    localStorage.setItem("user", "");
     // ...
   }
 });
