@@ -35,22 +35,19 @@
           <q-btn label="Entrar" type="submit" color="primary" />
         </div>
       </q-form>
-      <div>
-        <q-btn
-          @click="recoverPasword()"
-          color="primary"
-          label="Recuperar contraseña"
-        />
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { auth } from "src/firebaseInit";
-import { sendPasswordResetEmail } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 //redireccion de rutas
 import { useRouter } from "vue-router";
@@ -59,40 +56,33 @@ const email = ref("");
 const password = ref("");
 
 function onSubmit() {
-  if (!isEmailValid()) {
-    alert("Por favor, ingresa un correo válido de @misena.edu.co");
-    return;
-  }
+  // if (!isEmailValid()) {
+  //   alert("Por favor, ingresa un correo válido de @misena.edu.co");
+  //   return;
+  // }
 
-  // Realizar el inicio de sesión con Firebase
+  //Registrar un usuario
 
-  signInWithEmailAndPassword(auth, email.value, password.value)
+  const auth = getAuth();
+  createUserWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
-      if (userCredential.user.emailVerified) {
-        router.push("/");
-        console.log("Inicio de sesión exitoso", userCredential.user);
-      } else {
-        alert("Por favor verifica tu email");
-        signOut(auth);
-      }
-      // El inicio de sesión fue exitoso, aquí puedes realizar acciones
-      // como redireccionar al usuario a otra página o mostrar un mensaje de bienvenida.
+      // Signed in
+      const user = userCredential.user;
+      sendEmailVerification(userCredential.user);
+      signOut(auth);
+      // ...
     })
     .catch((error) => {
-      // Si ocurre un error, puedes mostrar un mensaje de error al usuario.
-      console.error("Error al iniciar sesión", error);
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
     });
 }
-
-function isEmailValid() {
-  // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
-  return email.value.endsWith("@misena.edu.co");
-}
-
-//Función para recuperar la contraseña
-function recoverPasword() {
-  router.push("/Recover");
-}
+sendEmailVerification;
+// function isEmailValid() {
+//   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
+//   return email.value.endsWith("@misena.edu.co");
+// }
 </script>
 
 <style>

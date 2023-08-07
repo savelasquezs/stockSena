@@ -43,6 +43,10 @@ const email = ref("");
 const password = ref("");
 
 function recoverPasword() {
+  if (!isEmailValid()) {
+    alert("Por favor, ingresa un correo válido de @misena.edu.co");
+    return;
+  }
   sendPasswordResetEmail(auth, email.value)
     .then(() => {
       // Password reset email sent!
