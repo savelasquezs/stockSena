@@ -6,15 +6,22 @@
           src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
           loading="lazy"
           spinner-color="white"
-          width="300px"
+          width="150px"
           class=""
+        />
+        <q-input
+          filled
+          type="string"
+          v-model="email"
+          label="Ingrese su nombre *"
+          lazy-rules
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
         <q-input
           filled
           type="email"
           v-model="email"
           label="Ingresa tu correo *"
-          hint="Correo electronico"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
@@ -30,9 +37,21 @@
               (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
           ]"
         />
+        <q-input
+          filled
+          type="password"
+          v-model="password"
+          label="Repita su contraseña *"
+          lazy-rules
+          :rules="[
+            (val) =>
+              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
+          ]"
+        />
 
         <div>
-          <q-btn label="Entrar" type="submit" color="primary" />
+          <q-btn label="Registrar" type="submit" color="primary" />
+          <q-btn @click="returnLogin()" color="primary" label="Regresar" />
         </div>
       </q-form>
     </div>
@@ -56,10 +75,10 @@ const email = ref("");
 const password = ref("");
 
 function onSubmit() {
-  // if (!isEmailValid()) {
-  //   alert("Por favor, ingresa un correo válido de @misena.edu.co");
-  //   return;
-  // }
+  if (!isEmailValid()) {
+    alert("Por favor, ingresa un correo válido de @misena.edu.co");
+    return;
+  }
 
   //Registrar un usuario
 
@@ -71,6 +90,7 @@ function onSubmit() {
       sendEmailVerification(userCredential.user);
       signOut(auth);
       // ...
+      returnLogin();
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -79,10 +99,14 @@ function onSubmit() {
     });
 }
 sendEmailVerification;
-// function isEmailValid() {
-//   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
-//   return email.value.endsWith("@misena.edu.co");
-// }
+function isEmailValid() {
+  // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
+  return email.value.endsWith("@misena.edu.co");
+}
+
+function returnLogin() {
+  router.push("/Login");
+}
 </script>
 
 <style>
