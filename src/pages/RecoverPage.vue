@@ -8,13 +8,12 @@
           spinner-color="white"
           width="300px"
           class=""
-        />
+        />||
         <q-input
           filled
           type="email"
           v-model="email"
           label="Ingresa tu correo *"
-          hint="Correo electronico"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
@@ -25,6 +24,7 @@
           color="primary"
           label="Recuperar contraseña"
         />
+        <q-btn @click="returnLogin()" color="primary" label="Regresar" />
       </div>
     </div>
   </div>
@@ -65,6 +65,9 @@ function recoverPasword() {
 function isEmailValid() {
   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
   return email.value.endsWith("@misena.edu.co");
+}
+function returnLogin() {
+  router.push("/Login");
 }
 </script>
 

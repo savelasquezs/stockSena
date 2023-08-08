@@ -14,7 +14,6 @@
           type="email"
           v-model="email"
           label="Ingresa tu correo *"
-          hint="Correo electronico"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
@@ -40,6 +39,11 @@
           @click="recoverPasword()"
           color="primary"
           label="Recuperar contraseña"
+        />
+        <q-btn
+          @click="registerUser()"
+          color="primary"
+          label="Registrar Correo"
         />
       </div>
     </div>
@@ -92,6 +96,9 @@ function isEmailValid() {
 //Función para recuperar la contraseña
 function recoverPasword() {
   router.push("/Recover");
+}
+function registerUser() {
+  router.push("/Register");
 }
 </script>
 
