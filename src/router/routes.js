@@ -49,7 +49,7 @@ const routes = [
     component: () => import("pages/RecoverPage.vue"),
   },
   {
-    path: "/Registrar",
+    path: "/Register",
     component: () => import("pages/RegisterPage.vue"),
   },
 
