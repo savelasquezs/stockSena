@@ -11,8 +11,8 @@
         />
 
         <q-toolbar-title> Quasar App </q-toolbar-title>
-        <div style="margin-right: 16px">
-          <text-h6>{{ userEmail }}</text-h6>
+        <div>
+          <p class="text-subtitle1 q-ma-sm">{{ userEmail }}</p>
         </div>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
