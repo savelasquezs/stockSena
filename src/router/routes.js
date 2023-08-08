@@ -41,16 +41,24 @@ const routes = [
     ],
   },
   {
-    path: "/login",
-    component: () => import("pages/LoginPage.vue"),
-  },
-  {
-    path: "/Recover",
-    component: () => import("pages/RecoverPage.vue"),
-  },
-  {
-    path: "/Register",
-    component: () => import("pages/RegisterPage.vue"),
+    path: "/account",
+ 
+
+    component: () => import("layouts/AccountLayout.vue"),
+    children: [
+      {
+        path: "/login",
+        component: () => import("pages/LoginPage.vue"),
+      },
+      {
+        path: "/recover",
+        component: () => import("pages/RecoverPage.vue"),
+      },
+      {
+        path: "/register",
+        component: () => import("pages/RegisterPage.vue"),
+      },
+    ],
   },
 
   // Always leave this as last one,

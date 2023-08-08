@@ -1,61 +1,49 @@
 <template>
-  <div class="flex flex-center content-center paginaCompleta">
-    <div class="q-pa-md" style="max-width: 400px">
-      <q-form @submit="onSubmit" class="q-gutter-md">
-        <q-img
-          src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-          loading="lazy"
-          spinner-color="white"
-          width="150px"
-          class=""
-        />
-        <q-input
-          filled
-          type="string"
-          v-model="email"
-          label="Ingrese su nombre *"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-        />
-        <q-input
-          filled
-          type="email"
-          v-model="email"
-          label="Ingresa tu correo *"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-        />
+  <q-form @submit="onSubmit" class="q-gutter-md">
+    <q-input
+      filled
+      type="string"
+      v-model="email"
+      label="Ingrese su nombre *"
+      lazy-rules
+      :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+    />
+    <q-input
+      filled
+      type="email"
+      v-model="email"
+      label="Ingresa tu correo *"
+      lazy-rules
+      :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+    />
 
-        <q-input
-          filled
-          type="password"
-          v-model="password"
-          label="Ingresa tu contraseña *"
-          lazy-rules
-          :rules="[
-            (val) =>
-              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
-          ]"
-        />
-        <q-input
-          filled
-          type="password"
-          v-model="password"
-          label="Repita su contraseña *"
-          lazy-rules
-          :rules="[
-            (val) =>
-              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
-          ]"
-        />
-
-        <div>
-          <q-btn label="Registrar" type="submit" color="primary" />
-          <q-btn @click="returnLogin()" color="primary" label="Regresar" />
-        </div>
-      </q-form>
+    <q-input
+      filled
+      type="password"
+      v-model="password"
+      label="Ingresa tu contraseña *"
+      lazy-rules
+      :rules="[
+        (val) =>
+          (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
+      ]"
+    />
+    <q-input
+      filled
+      type="password"
+      v-model="password"
+      label="Repita su contraseña *"
+      lazy-rules
+      :rules="[
+        (val) =>
+          (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
+      ]"
+    />
+    <div class="q-gutter-md">
+      <q-btn label="Registrar" type="submit" color="primary" />
+      <q-btn @click="returnLogin()" color="primary" label="Regresar" />
     </div>
-  </div>
+  </q-form>
 </template>
 
 <script setup>
@@ -105,7 +93,7 @@ function isEmailValid() {
 }
 
 function returnLogin() {
-  router.push("/Login");
+  router.push("/login");
 }
 </script>
 
