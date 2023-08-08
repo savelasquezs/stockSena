@@ -1,32 +1,21 @@
 <template>
-  <div class="flex flex-center content-center paginaCompleta">
-    <div class="q-pa-md" style="max-width: 400px">
-      <q-form @submit="recoverPasword" class="q-gutter-md">
-        <q-img
-          src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-          loading="lazy"
-          spinner-color="white"
-          width="300px"
-          class=""
-        />
-        <q-input
-          filled
-          type="email"
-          v-model="email"
-          label="Ingresa tu correo *"
-          hint="Correo electronico"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-        />
-      </q-form>
-      <div>
-        <q-btn
-          @click="recoverPasword"
-          color="primary"
-          label="Recuperar contraseña"
-        />
-      </div>
-    </div>
+  <q-form @submit="recoverPasword" class="q-gutter-md">
+    <q-input
+      filled
+      type="email"
+      v-model="email"
+      label="Ingresa tu correo *"
+      lazy-rules
+      :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+    />
+  </q-form>
+  <div class="q-gutter-md">
+    <q-btn
+      @click="recoverPasword"
+      color="primary"
+      label="Recuperar contraseña"
+    />
+    <q-btn @click="returnLogin()" color="primary" label="Regresar" />
   </div>
 </template>
 
@@ -65,6 +54,9 @@ function recoverPasword() {
 function isEmailValid() {
   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
   return email.value.endsWith("@misena.edu.co");
+}
+function returnLogin() {
+  router.push("/login");
 }
 </script>
 

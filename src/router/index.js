@@ -41,12 +41,15 @@ export default route(function (/* { store, ssrContext } */) {
       console.log(user);
       if (user && user !== "") {
         next();
+        return;
       } else {
         next("/login");
+        return;
       }
     }
     if (to.path == "/login" && auth.currentUser) {
       next(from.path);
+      return;
     }
 
     next();

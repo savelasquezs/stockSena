@@ -1,49 +1,42 @@
 <template>
-  <div class="flex flex-center content-center paginaCompleta">
-    <div class="q-pa-md" style="max-width: 400px">
-      <q-form @submit="onSubmit" class="q-gutter-md">
-        <q-img
-          src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-          loading="lazy"
-          spinner-color="white"
-          width="300px"
-          class=""
-        />
-        <q-input
-          filled
-          type="email"
-          v-model="email"
-          label="Ingresa tu correo *"
-          hint="Correo electronico"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-        />
+  <q-form @submit="onSubmit" class="q-gutter-md">
+    <q-input
+      type="email"
+      filled
+      v-model="email"
+      label="Ingresa tu correo *"
+      lazy-rules
+      :rules="[
+        (val) => (val && val.length > 0) || 'Por favor ingresa tu correo',
+      ]"
+    />
 
-        <q-input
-          filled
-          type="password"
-          v-model="password"
-          label="Ingresa tu contraseña *"
-          lazy-rules
-          :rules="[
-            (val) =>
-              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
-          ]"
-        />
+    <q-input
+      filled
+      type="password"
+      v-model="password"
+      label="Ingresa tu contraseña *"
+      lazy-rules
+      :rules="[
+        (val) =>
+          (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
+      ]"
+    />
 
-        <div>
-          <q-btn label="Entrar" type="submit" color="primary" />
-        </div>
-      </q-form>
-      <div>
-        <q-btn
-          @click="recoverPasword()"
-          color="primary"
-          label="Recuperar contraseña"
-        />
-      </div>
-    </div>
-  </div>
+    <q-btn
+      label="Entrar"
+      type="submit"
+      color="primary"
+      class="q-gutter-ml"
+      style="he"
+    />
+    <q-btn
+      @click="recoverPasword()"
+      color="primary"
+      label="Recuperar contraseña"
+    />
+    <q-btn @click="registerUser()" color="primary" label="Registrar Cuenta" />
+  </q-form>
 </template>
 
 <script setup>
@@ -91,7 +84,10 @@ function isEmailValid() {
 
 //Función para recuperar la contraseña
 function recoverPasword() {
-  router.push("/Recover");
+  router.push("/recover");
+}
+function registerUser() {
+  router.push("/register");
 }
 </script>
 

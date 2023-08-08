@@ -1,12 +1,19 @@
 <template>
   <router-view />
+  <li>
+    {{ productosStore.productosDatabase }}
+  </li>
 </template>
 
 <script setup>
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebaseInit";
 import { provide, ref } from "vue";
+import { useProductosStore } from "stores/productosStore";
 
+const productosStore = useProductosStore();
+productosStore.listenChanges();
+productosStore.ponerValores();
 const userEmail = ref("");
 provide("userEmail", userEmail);
 
