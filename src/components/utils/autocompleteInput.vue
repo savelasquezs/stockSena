@@ -9,6 +9,7 @@
     @filter="filterFn"
     style="width: 250px"
     @update:model-value="$emit('cambioModel', model)"
+    :rules="[(value) => value !== '' || 'Este valor no puede ir vacio']"
   >
     <template v-slot:no-option>
       <q-item>
@@ -19,14 +20,15 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 defineEmits(["cambioModel"]);
 
-const props = defineProps({ stringOptions: Array });
+const props = defineProps({ stringOptions: Array, modelValue: String });
 
 const options = ref([]);
 
-const model = ref("jajaja");
+const model = ref("");
+
 function filterFn(val, update) {
   if (val === "") {
     update(() => {
