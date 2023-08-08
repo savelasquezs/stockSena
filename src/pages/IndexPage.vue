@@ -30,70 +30,10 @@
         <div class="text-subtitle2 text-center">Historial</div>
       </q-card-section>
     </q-card>
-    <q-card class="my-card q-px-lg">
-      <q-icon
-        name="article"
-        size="100px"
-        color="primary"
-        style="
-           {
-            margin: 0 auto;
-          }
-        "
-      />
-      <q-card-section>
-        <div class="text-subtitle2 text-center">Historial</div>
-      </q-card-section>
-    </q-card>
 
     <date-picker @guardarFecha="(fecha) => console.log(fecha)" />
   </div>
-  <q-page class="flex flex-center">
-    <div class="q-pa-md" style="max-width: 400px">
-      <q-form @submit="onSubmit" class="q-gutter-md">
-        <q-input
-          v-model="name"
-          label="Your name *"
-          hint="Name and surname"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-        />
-
-        <q-input
-          filled
-          type="number"
-          v-model="age"
-          label="Your age *"
-          lazy-rules
-          :rules="[
-            (val) => (val !== null && val !== '') || 'Please type your age',
-            (val) => (val > 0 && val < 100) || 'Please type a real age',
-          ]"
-        />
-
-        <div>
-          <q-btn label="Submit" type="submit" color="primary" />
-          <q-btn
-            label="Reset"
-            type="reset"
-            color="primary"
-            flat
-            class="q-ml-sm"
-          />
-        </div>
-        <autocomplete-input
-          :stringOptions="options"
-          @cambioModel="(algo) => (pais = algo)"
-        />
-      </q-form>
-    </div>
-
-    <!-- <q-list bordered separator>
-      <q-item clickable v-ripple v-for="registro in data" :key="registro.docId">
-        <q-item-section>{{ registro.name }}</q-item-section>
-      </q-item>
-    </q-list> -->
-  </q-page>
+  <q-page class="flex flex-center"> </q-page>
 </template>
 
 <script setup>
