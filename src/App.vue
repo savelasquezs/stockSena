@@ -13,7 +13,6 @@ import { useProductosStore } from "stores/productosStore";
 
 const productosStore = useProductosStore();
 productosStore.listenChanges();
-productosStore.ponerValores();
 const userEmail = ref("");
 provide("userEmail", userEmail);
 

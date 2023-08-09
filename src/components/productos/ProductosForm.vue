@@ -42,15 +42,7 @@
                 />
               </q-item-section>
             </q-item>
-            <q-item>
-              <q-item-section>
-                <q-input
-                  outlined
-                  v-model="formulario.descripcion"
-                  label="Descripción"
-                />
-              </q-item-section>
-            </q-item>
+            <q-item> </q-item>
             <q-item>
               <q-item-section>
                 <q-input
@@ -62,18 +54,10 @@
               </q-item-section>
             </q-item>
             <q-item>
-              <date-picker @guardar-fecha="(fecha) => (dueDate = fecha)" />
-              <q-input v-model="dueDate" />
+              <!-- <date-picker @guardar-fecha="(fecha) => (dueDate = fecha)" /> -->
+              <!-- <q-input v-model="dueDate" /> -->
             </q-item>
-            <q-item>
-              <q-item-section>
-                <q-input
-                  outlined
-                  v-model="formulario.categoria"
-                  label="Categoría"
-                />
-              </q-item-section>
-            </q-item>
+            <q-item> </q-item>
             <q-item>
               <q-item-section class="q-mt-md">
                 <q-btn type="submit" label="Guardar" color="primary" />
@@ -90,9 +74,7 @@
           <div>Nombre: {{ formulario.nombre }}</div>
           <div>Consumible: {{ formulario.consumible }}</div>
           <div>Stock Total: {{ formulario.stockTotal }}</div>
-          <div>Descripción: {{ formulario.descripcion }}</div>
           <div>Código de Barra: {{ formulario.codigoBarra }}</div>
-          <div>Categoría: {{ formulario.categoria }}</div>
         </q-card-section>
       </q-card>
     </q-container>
@@ -104,7 +86,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import DatePicker from "components/utils/DatePicker.vue";
+// import DatePicker from "components/utils/DatePicker.vue";
 const router = useRouter();
 const formulario = ref({});
 const dueDate = ref("");
@@ -116,12 +98,8 @@ async function submitForm() {
     name: formulario.value.nombre,
     consumable: formulario.value.consumible,
     totalStock: formulario.value.stockTotal,
-    description: formulario.value.descripcion,
     barCode: formulario.value.codigoBarra,
-    category: formulario.value.categoria,
-    created: new Date().getTime(),
     borrowedQuantity: 0,
-    dueDate: dueDate.value,
     almacen: "tics",
   };
   const refDoc = await addDoc(tabla, data);

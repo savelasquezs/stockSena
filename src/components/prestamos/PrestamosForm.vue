@@ -21,7 +21,7 @@
         class="q-mt-md"
       />
     </div>
-    <div v-if="cliente">
+    <q-form @submit="prestarProducto" v-if="cliente">
       <q-item>
         <q-item-section top avatar>
           <q-avatar>
@@ -37,14 +37,40 @@
       <q-item class="flex flex-center" clickable @click="addproductList">
         <q-icon name="add_circle" size="30px" color="primary"></q-icon>
       </q-item>
-      <q-scroll-area style="height: 200px; max-width: 700px; width: 500px">
+      <q-scroll-area style="height: 200px; max-width: 700px; width: 550px">
         <div
           class="flex q-my-lg"
-          v-for="producto in productosList"
+          v-for="(producto, index) in productosList"
           :key="producto"
         >
-          <AutocompleteInput :stringOptions="opciones" class="q-mx-sm" />
-          <q-input v-model.number="cantidad" type="number" outlined />
+          <AutocompleteInput
+            :stringOptions="productosStore.productosNombres"
+            class="q-mx-sm"
+            @cambioModel="(nombreProducto) => setProduct(nombreProducto, index)"
+          />
+
+          <q-input
+            type="number"
+            outlined
+            v-model="producto.cantidad"
+            :rules="[
+              (value) => value > 0 || 'La cantida debe ser mayor a 0',
+              (value) =>
+                value <= producto.maxQuantity ||
+                `Solo contamos con ${producto.maxQuantity} unidades`,
+            ]"
+            :max="producto.maxQuantity"
+          />
+
+          <q-item
+            clickable
+            dense
+            class="items-center"
+            style="height: 56px"
+            @click="deleteProductList(index)"
+          >
+            <q-icon name="delete" size="24px" color="red-8"></q-icon>
+          </q-item>
         </div>
       </q-scroll-area>
       <q-input
@@ -57,12 +83,12 @@
       />
       <q-btn
         v-if="productosList.length > 0"
-        @click="prestarProducto"
         color="positive"
+        type="submit"
         label="Prestar"
         class="q-mt-md"
       />
-    </div>
+    </q-form>
   </q-page>
 </template>
 
@@ -78,17 +104,37 @@ import { db } from "src/firebaseInit";
 import { ref, reactive, computed } from "vue";
 import AutocompleteInput from "../utils/autocompleteInput.vue";
 import { useQuasar } from "quasar";
+import { useProductosStore } from "src/stores/productosStore";
 
 const $q = useQuasar();
+const productosStore = useProductosStore();
 const productosList = ref([]);
 
 function addproductList() {
-  productosList.value.push({ producto: "", cantidad: 1 });
+  productosList.value.unshift({ producto: "", cantidad: 1 });
+}
+function deleteProductList(index) {
+  productosList.value.splice(index, 1);
+}
+
+function setProduct(nombreProducto, index) {
+  if (
+    productosList.value.some((registro) => registro.producto == nombreProducto)
+  ) {
+    alert("Ya existe este producto en tu lista de prestamos");
+    deleteProductList(index);
+    return;
+  }
+  productosList.value[index].producto = nombreProducto;
+  const producto = productosStore.productosDatabase.find(
+    (producto) => producto.name == nombreProducto
+  );
+  productosList.value[index].maxQuantity =
+    producto.totalStock - producto.borrowedQuantity;
 }
 
 const selectedDocumentType = ref(null);
 const documentNumber = ref(null);
-const opciones = reactive(["Computador", "HDMI", "Cargador"]);
 const cantidad = ref(1);
 const cliente = ref(null);
 const text = ref("");
@@ -139,4 +185,8 @@ const buscarDocumento = () => {
     `Tipo de documento: ${selectedDocumentType.value}\nNúmero de documento: ${documentNumber.value}`
   );
 };
+
+function prestarProducto() {
+  console.log(productosList);
+}
 </script>
