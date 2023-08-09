@@ -13,7 +13,7 @@
 
         <q-toolbar-title> Quasar App </q-toolbar-title>
         <div>
-          <p class="text-subtitle1 q-ma-sm q-mr-lg">{{ userEmail }}</p>
+          <p class="text-subtitle1 q-ma-sm q-mr-lg">{{ user.email }}</p>
         </div>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
@@ -86,7 +86,7 @@ import { auth } from "src/firebaseInit";
 //redireccion
 import { useRouter } from "vue-router";
 
-const user = inject("user") || "raro";
+const user = inject("user");
 
 const linksList = ref([
   {
