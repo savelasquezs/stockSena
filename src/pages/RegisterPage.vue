@@ -2,8 +2,8 @@
   <q-form @submit="onSubmit" class="q-gutter-md">
     <q-input
       filled
-      type="string"
-      v-model="email"
+      type="textarea"
+      v-model="name"
       label="Ingrese su nombre *"
       lazy-rules
       :rules="[(val) => (val && val.length > 0) || 'Please type something']"
@@ -61,6 +61,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const email = ref("");
 const password = ref("");
+const name = ref("");
 
 function onSubmit() {
   if (!isEmailValid()) {
@@ -71,7 +72,7 @@ function onSubmit() {
   //Registrar un usuario
 
   const auth = getAuth();
-  createUserWithEmailAndPassword(auth, email.value, password.value)
+  createUserWithEmailAndPassword(auth, email.value, name.value, password.value)
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
