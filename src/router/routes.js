@@ -17,10 +17,6 @@ const routes = [
         component: () => import("pages/ClientesOpciones.vue"),
       },
       {
-        path: "/datos",
-        component: () => import("pages/ClientesDatos.vue"),
-      },
-      {
         path: "/productos",
         component: () => import("pages/ProductosRegistro.vue"),
       },
@@ -46,7 +42,6 @@ const routes = [
   },
   {
     path: "/account",
- 
 
     component: () => import("layouts/AccountLayout.vue"),
     children: [

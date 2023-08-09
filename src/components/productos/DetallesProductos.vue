@@ -49,6 +49,17 @@
     </div>
 
     <div class="q-tables">
+      <div class="flex q-my-sm justify-end">
+        <q-btn style="width: 250px" class="q-mx-lg" rounded>
+          <q-icon name="add_circle_outline" class="q-mr-sm" />
+          <span>Agregar Producto</span></q-btn
+        >
+        <q-btn style="width: 200px" rounded>
+          <q-icon name="download" class="q-mx-sm" /><span
+            >Descargar</span
+          ></q-btn
+        >
+      </div>
       <q-table
         style="height: 400px"
         flat
@@ -57,7 +68,6 @@
         :columns="columns"
         row-key="index"
         virtual-scroll
-        v-model="pagination"
         :rows-per-page-options="[0]"
         class="my-card flex shadow-5 shadow-up-3"
         table-header-style="background-color:#00af00; color:#ffff; shadow-n"
