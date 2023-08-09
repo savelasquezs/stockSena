@@ -141,7 +141,7 @@ function onSubmit() {
 // }
 
 function returnLogin() {
-  router.push("/Login");
+  router.push("/login");
 }
 </script>
 

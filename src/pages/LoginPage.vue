@@ -19,31 +19,32 @@
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
 
-        <q-input
-          filled
-          type="password"
-          v-model="password"
-          label="Ingresa tu contraseña *"
-          lazy-rules
-          :rules="[
-            (val) =>
-              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
-          ]"
-        />
+    <q-input
+      filled
+      type="password"
+      v-model="password"
+      label="Ingresa tu contraseña *"
+      lazy-rules
+      :rules="[
+        (val) =>
+          (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
+      ]"
+    />
 
-        <div>
-          <q-btn label="Entrar" type="submit" color="primary" />
-        </div>
-      </q-form>
-      <div>
-        <q-btn
-          @click="recoverPasword()"
-          color="primary"
-          label="Recuperar contraseña"
-        />
-      </div>
-    </div>
-  </div>
+    <q-btn
+      label="Entrar"
+      type="submit"
+      color="primary"
+      class="q-gutter-ml"
+      style="he"
+    />
+    <q-btn
+      @click="recoverPasword()"
+      color="primary"
+      label="Recuperar contraseña"
+    />
+    <q-btn @click="registerUser()" color="primary" label="Registrar Cuenta" />
+  </q-form>
 </template>
 
 <script setup>
@@ -74,7 +75,7 @@ function onSubmit() {
       router.push("/");
       console.log("Inicio de sesión exitoso", userCredential.user);
 
-     
+
     })
     .catch((error) => {
       // Si ocurre un error, puedes mostrar un mensaje de error al usuario.
@@ -89,7 +90,10 @@ function isEmailValid() {
 
 //Función para recuperar la contraseña
 function recoverPasword() {
-  router.push("/Recover");
+  router.push("/recover");
+}
+function registerUser() {
+  router.push("/register");
 }
 </script>
 
