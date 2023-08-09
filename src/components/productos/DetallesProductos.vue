@@ -1,6 +1,56 @@
 <template>
-  <div class="q-pa-md">
-    <h5 class="text text-center">Tabla Productos asdsd</h5>
+  <div style="background-color: #f5f5f5">
+    <!-- Contenido aquí -->
+
+    <div class="q-pa-md">
+      <q-input v-model="searchTerm" label="Buscar" />
+
+      <div class="q-pa-md row items-start q-gutter-md flex justify-center">
+        <q-item clickable to="/">
+          <q-img
+            src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
+            loading="lazy"
+            spinner-color="white"
+            width="80px"
+            class=""
+          />
+        </q-item>
+        <q-card class="my-card flex shadow-5 shadow-up-3">
+          <q-card-section class="bg-white text-black">
+            <div class="text-h5" style="font-size: 1.8em; font-weight: bold">
+              Inventario General
+            </div>
+          </q-card-section>
+
+          <q-separator />
+
+          <q-card-section class="bg-withe text-blue">
+            <div class="text-h5" style="font-size: 1.1em; font-weight: bold">
+              Total de Productos
+            </div>
+            <div class="text-subtitle2">1.809</div>
+            <div class="text-subtitle3">Ultimos 7 dias</div>
+          </q-card-section>
+
+          <q-card-section class="bg-withe text-green">
+            <div class="text-h5" style="font-size: 1.1em; font-weight: bold">
+              Lo más Vendido
+            </div>
+            <div class="text-subtitle2">5</div>
+            <div class="text-subtitle3">Ultimos 7 dias</div>
+          </q-card-section>
+
+          <q-card-section class="bg-withe-8 text-red">
+            <div class="text-h5" style="font-size: 1.1em; font-weight: bold">
+              Acciones de Bajas
+            </div>
+            <div class="text-subtitle2">334</div>
+            <div class="text-subtitle3">Ultimos 7 dias</div>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+
     <q-table
       style="height: 400px"
       flat
@@ -14,24 +64,6 @@
       class="my-sticky-header-table q-mt-xl shadow-4 shadow-up-4"
       table-header-style="background-color:#00af00; color:#ffff; shadow-n"
     >
-      <template v-slot:body-cell-name="props">
-        <q-td :props="props" auto-width>
-          <q-item>
-            <q-item-section side>
-              <q-item-label caption lines="2">{{
-                props.row.description
-              }}</q-item-label>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Single line item</q-item-label>
-              <q-item-label caption lines="2"
-                >Secondary line text. Lorem ipsum dolor sit amet, consectetur
-                adipiscit elit.</q-item-label
-              >
-            </q-item-section>
-          </q-item>
-        </q-td>
-      </template>
     </q-table>
   </div>
 </template>
@@ -43,11 +75,6 @@ import { db } from "../../firebaseInit";
 
 const columns = ref([
   {
-    name: "index",
-    label: "Id",
-    field: "index",
-  },
-  {
     name: "name",
     required: true,
     label: "Nombre",
@@ -56,6 +83,7 @@ const columns = ref([
     format: (val) => `${val}`,
     sortable: true,
   },
+
   {
     name: "Consumible",
     align: "center",
@@ -69,20 +97,15 @@ const columns = ref([
     field: "totalStock",
     sortable: true,
   },
-  { name: "Descripción", label: "Descripción", field: "description" },
+
   {
     name: "Código de barra",
     label: "Código de barra",
     field: "barCode",
   },
-  { name: "Categoria", label: "Categoria", field: "category" },
-  { name: "Fecha-Ingreso", label: "Fecha-Ingreso", field: "created" },
+
   { name: "Stock-Prestamo", label: "Stock-Prestamo", field: "totalStock" },
-  {
-    name: "Fecha-Vencimiento",
-    label: "Fecha-Vencimiento",
-    field: "dueDate",
-  },
+
   { name: "Almacen", label: "Almacen", field: "almacen" },
 ]);
 

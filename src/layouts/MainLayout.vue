@@ -86,7 +86,7 @@ import { auth } from "src/firebaseInit";
 //redireccion
 import { useRouter } from "vue-router";
 
-const userEmail = inject("userEmail");
+const user = inject("user") || "raro";
 
 const linksList = ref([
   {
