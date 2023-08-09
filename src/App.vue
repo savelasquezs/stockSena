@@ -1,35 +1,82 @@
 <template>
   <router-view />
-  <li>
-    {{ productosStore.productosDatabase }}
-  </li>
 </template>
 
 <script setup>
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebaseInit";
+import { useQuasar } from "quasar";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth, db } from "./firebaseInit";
 import { provide, ref } from "vue";
 import { useProductosStore } from "stores/productosStore";
+import { useRouter } from "vue-router";
+
+const $q = useQuasar();
+
+const router = useRouter();
+import { collection, doc, getDoc } from "firebase/firestore";
 
 const productosStore = useProductosStore();
 productosStore.listenChanges();
-const userEmail = ref("");
-provide("userEmail", userEmail);
 
-onAuthStateChanged(auth, (user) => {
+const usuario = ref("");
+provide("user", usuario);
+
+let timer;
+
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     // User is signed in, see docs for a list of available properties
     // https://firebase.google.com/docs/reference/js/auth.user
     const uid = user.uid;
     console.log(user.email);
     localStorage.setItem("user", user.email);
-    userEmail.value = user.email;
+    await getDoc(doc(collection(db, "users"), uid)).then((doc) => {
+      if (doc.exists()) {
+        console.log(doc.data().almacen);
+        localStorage.setItem("user", JSON.stringify(doc.data()));
+
+        usuario.value = doc.data();
+      }
+    });
+
     console.log("El usuario inicio la sesión (app)");
+    // timer = setTimeout(async () => {
+    //   await signOut(auth);
+    //   router.push("/login");
+    //   $q.notify("Ha superado el tiempo de inactividad");
+    //   $q.notify("Ha superado el tiempo de inactividad");
+    //   $q.dialog({
+    //     title: "Sesión Expirada",
+    //     message: "Se supero el tiempo de inactividad",
+    //   });
+    //   console.log("Ya");
+    //   document.addEventListener("mousemove", resetTimer);
+    //   document.addEventListener("mousedown", resetTimer);
+    //   document.addEventListener("keypress", resetTimer);
+    //   document.addEventListener("touchmove", resetTimer);
+    // }, 1000 * 60 * 60 * 60);
     // ...
   } else {
     console.log("El usuario cerro sesion (app)");
     localStorage.setItem("user", "");
+    // clearTimeout(timer);
     // ...
+    // document.removeEventListener("mousemove", resetTimer, true);
+    // document.removeEventListener("mousedown", resetTimer, true);
+    // document.removeEventListener("keypress", resetTimer, true);
+    // document.removeEventListener("touchmove", resetTimer, true);
   }
 });
+
+// function resetTimer() {
+//   clearTimeout(timer);
+//   timer = setTimeout(async () => {
+//     await signOut(auth);
+//     router.push("/login");
+//     $q.dialog({
+//       title: "Sesión Expirada",
+//       message: "Se supero el tiempo de inactividad",
+//     });
+//   }, 1000 * 60 * 60 * 60);
+// }
 </script>
