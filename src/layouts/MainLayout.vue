@@ -8,21 +8,15 @@
           icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
-          style="width: 60px"
         />
 
         <q-toolbar-title> Quasar App </q-toolbar-title>
         <div>
-          <p class="text-subtitle1 q-ma-sm q-mr-lg">{{ user.email }}</p>
+          <p class="text-subtitle1 q-ma-sm">{{ user.email }}</p>
         </div>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
-        <q-btn
-          class="btn-exit q-mr-lg"
-          @click="cerrarSesion"
-          icon="logout"
-          style="width: 50px; box-shadow: none; background-color: $secondary"
-        />
+        <q-btn @click="cerrarSesion" label="Cerrar Sesión" />
       </q-toolbar>
     </q-header>
     <!--
@@ -44,7 +38,6 @@
           height: calc(100% - 150px);
           margin-top: 150px;
           border-right: 1px solid #ddd;
-          color: rgb(0, 0, 0);
         "
       >
         <q-list padding>
@@ -52,7 +45,6 @@
             v-for="link in linksList"
             :key="link.title"
             v-bind="link"
-            style=""
           />
         </q-list>
       </q-scroll-area>
@@ -86,7 +78,7 @@ import { auth } from "src/firebaseInit";
 //redireccion
 import { useRouter } from "vue-router";
 
-const user = inject("user");
+const user = inject("user") || "raro";
 
 const linksList = ref([
   {
@@ -94,7 +86,6 @@ const linksList = ref([
     caption: "Productos de almacen tics",
     icon: "inventory",
     to: "/productos",
-    iconColor: "#00af00",
   },
   {
     title: "Usuarios",
@@ -135,9 +126,3 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
-
-<style>
-.btn-exit:hover {
-  background-color: red;
-}
-</style>

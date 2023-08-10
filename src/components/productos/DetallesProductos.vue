@@ -48,7 +48,6 @@
             class="my-card flex shadow-5 shadow-up-3"
             table-header-style="background-color:#00af00; color:#ffff; shadow-n"
           >
-            a
           </q-table>
         </div>
       </div>
