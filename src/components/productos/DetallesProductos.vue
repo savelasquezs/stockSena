@@ -32,38 +32,26 @@
           text-color="text-red-6"
         />
       </div>
-    </div>
-    <div class="search-bar">
-      <div class="search-icon">
-        <i class="material-icons">search</i>
+      <div>
+        <search-bar />
+        <div class="q-tables">
+          <q-table
+            style="height: 400px"
+            flat
+            bordered
+            :rows="rows"
+            :columns="columns"
+            row-key="index"
+            :rows-per-page-options="[0]"
+            v-model="pagination"
+            virtual-scroll
+            class="my-card flex shadow-5 shadow-up-3"
+            table-header-style="background-color:#00af00; color:#ffff; shadow-n"
+          >
+            a
+          </q-table>
+        </div>
       </div>
-      <input
-        class="search-input"
-        type="text"
-        v-model="searchQuery"
-        placeholder="Buscar producto"
-      />
-      <div class="clear-icon" v-if="searchQuery" @click="clearSearch">
-        <i class="material-icons">clear</i>
-      </div>
-    </div>
-
-    <div class="q-tables">
-      <q-table
-        style="height: 400px"
-        flat
-        bordered
-        :rows="rows"
-        :columns="columns"
-        row-key="index"
-        virtual-scroll
-        v-model="pagination"
-        :rows-per-page-options="[0]"
-        class="my-card flex shadow-5 shadow-up-3"
-        table-header-style="background-color:#00af00; color:#ffff; shadow-n"
-      >
-        a
-      </q-table>
     </div>
   </div>
 </template>
@@ -105,6 +93,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { ref } from "vue";
 import { db } from "../../firebaseInit";
 import StadisticTableItem from "../utils/StadisticTableItem.vue";
+import SearchBar from "components/utils/SearchBar.vue";
 
 const columns = ref([
   {
