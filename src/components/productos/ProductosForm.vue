@@ -6,6 +6,7 @@
           <q-form @submit="submitForm">
             <q-item>
               <q-item-section>
+                <h3>Ingresa Producto</h3>
                 <q-input
                   outlined
                   v-model="formulario.nombre"
@@ -107,7 +108,7 @@ async function submitForm() {
 
   // Redirigir a la página de detalles y pasar los datos mediante una ruta con parámetros
   router.push({
-    name: "detalles",
+    name: "tabla",
   });
 }
 </script>
