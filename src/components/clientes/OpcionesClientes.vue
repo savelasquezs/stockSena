@@ -1,68 +1,70 @@
 <template>
-  <div class="flex justify-evenly q-mt-lg">
-    <q-card class="my-card q-px-lg">
-      <q-icon
-        name="article"
-        size="100px"
-        color="primary"
-        style="
-           {
-            margin: 0 auto;
-          }
-        "
-      />
-      <q-card-section>
-        <div class="tetxt-subtitle2 text-center">Historial</div>
-      </q-card-section>
-    </q-card>
-    <q-card class="my-card q-px-lg">
-      <q-icon
-        name="real_estate_agent"
-        size="100px"
-        color="primary"
-        style="
-           {
-            margin: 0 auto;
-          }
-        "
-      />
-      <q-card-section>
-        <div class="tetxt-subtitle2 text-center">Prestar</div>
-      </q-card-section>
-    </q-card>
+  <q-item-section style="background-color: #f5f5f5">
+    <div class="flex justify-evenly q-mt-lg">
+      <q-card class="my-card q-px-lg">
+        <q-icon
+          name="article"
+          size="100px"
+          color="primary"
+          style="
+             {
+              margin: 0 auto;
+            }
+          "
+        />
+        <q-card-section>
+          <div class="tetxt-subtitle2 text-center">Historial</div>
+        </q-card-section>
+      </q-card>
+      <q-card class="my-card q-px-lg">
+        <q-icon
+          name="real_estate_agent"
+          size="100px"
+          color="primary"
+          style="
+             {
+              margin: 0 auto;
+            }
+          "
+        />
+        <q-card-section>
+          <div class="tetxt-subtitle2 text-center">Prestar</div>
+        </q-card-section>
+      </q-card>
 
-    <q-card class="my-card q-px-lg">
-      <q-icon
-        name="published_with_changes"
-        size="100px"
-        color="primary"
-        style="
-           {
-            margin: 0 auto;
-          }
-        "
-      />
-      <q-card-section>
-        <div class="tetxt-subtitle2 text-center">Cambio</div>
-      </q-card-section>
-    </q-card>
-  </div>
+      <q-card class="my-card q-px-lg">
+        <q-icon
+          name="published_with_changes"
+          size="100px"
+          color="primary"
+          style="
+             {
+              margin: 0 auto;
+            }
+          "
+        />
+        <q-card-section>
+          <div class="tetxt-subtitle2 text-center">Cambio</div>
+        </q-card-section>
+      </q-card>
+    </div>
 
-  <div class="q-pa-xs">
-    <h5 class="text text-center q-mb-x">PRESTAMOS ACTIVOS</h5>
-    <q-table
-      :rows="tableData"
-      :columns="tableColumns"
-      row-key="id"
-      class="my-sticky-header-table q-mt-xl"
-      flat
-      bordered
-      table-header-style="background-color:#00af00; color:#ffff"
-      virtual-scroll
-      :rows-per-page-options="[0]"
-    >
-    </q-table>
-  </div>
+    <search-bar />
+    <div>
+      <q-table
+        :rows="tableData"
+        :columns="tableColumns"
+        row-key="id"
+        class="my-sticky-header-table q-mt-lg"
+        flat
+        bordered
+        table-header-style="background-color:#00af00; color:#ffff"
+        virtual-scroll
+        :rows-per-page-options="[0]"
+      >
+      </q-table>
+    </div>
+  </q-item-section>
 </template>
 
 <script setup>
@@ -106,6 +108,10 @@ const tableData = [
   { id: 2, name: "Jane Smith", age: 25 },
   { id: 3, name: "Michael Johnson", age: 40 },
 ];
+</script>
+
+<script>
+import SearchBar from "components/utils/SearchBar.vue";
 </script>
 
 <style>

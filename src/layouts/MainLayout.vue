@@ -12,7 +12,7 @@
 
         <q-toolbar-title> Quasar App </q-toolbar-title>
         <div>
-          <p class="text-subtitle1 q-ma-sm">{{ userEmail }}</p>
+          <p class="text-subtitle1 q-ma-sm">{{ user.email }}</p>
         </div>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
@@ -78,7 +78,7 @@ import { auth } from "src/firebaseInit";
 //redireccion
 import { useRouter } from "vue-router";
 
-const userEmail = inject("userEmail");
+const user = inject("user") || "raro";
 
 const linksList = ref([
   {
@@ -104,6 +104,12 @@ const linksList = ref([
     caption: "productos de Almacen tics",
     icon: "shopping_cart",
     to: "/prestamos",
+  },
+  {
+    title:"Permisos de cuentas",
+    caption:"Autorización a nuevos usuarios",
+    icon:"supervisor_account",
+    to:"/cuentas",
   },
 ]);
 
