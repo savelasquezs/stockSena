@@ -53,7 +53,7 @@ onAuthStateChanged(auth, (user) => {
       document.addEventListener("mousedown", resetTimer);
       document.addEventListener("keypress", resetTimer);
       document.addEventListener("touchmove", resetTimer);
-    }, 1000 * 60);
+    }, 1000 * 600);
     // ...
   } else {
     console.log("El usuario cerro sesion (app)");
@@ -76,6 +76,6 @@ function resetTimer() {
       title: "Sesión Expirada",
       message: "Se supero el tiempo de inactividad",
     });
-  }, 1000 * 60);
+  }, 1000 * 600);
 }
 </script>

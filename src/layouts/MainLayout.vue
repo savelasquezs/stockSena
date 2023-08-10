@@ -106,6 +106,12 @@ const linksList = ref([
     icon: "shopping_cart",
     to: "/prestamos",
   },
+  {
+    title:"Permisos de cuentas",
+    caption:"Autorización a nuevos usuarios",
+    icon:"supervisor_account",
+    to:"/cuentas",
+  },
 ]);
 
 //cierre de sesión del usuario

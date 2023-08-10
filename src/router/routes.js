@@ -38,11 +38,15 @@ const routes = [
         path: "/Dashboard",
         component: () => import("pages/PageDashboard.vue"),
       },
+      {
+        path: "/cuentas",
+        component: () => import("pages/CuentasManejo.vue"),
+      },
     ],
   },
   {
     path: "/account",
- 
+
 
     component: () => import("layouts/AccountLayout.vue"),
     children: [

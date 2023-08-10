@@ -45,6 +45,8 @@
     />
     <q-btn @click="registerUser()" color="primary" label="Registrar Cuenta" />
   </q-form>
+    </div>
+  </div>
 </template>
 
 <script setup>
