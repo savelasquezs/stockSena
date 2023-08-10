@@ -19,32 +19,36 @@
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
 
-    <q-input
-      filled
-      type="password"
-      v-model="password"
-      label="Ingresa tu contraseña *"
-      lazy-rules
-      :rules="[
-        (val) =>
-          (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
-      ]"
-    />
+        <q-input
+          filled
+          type="password"
+          v-model="password"
+          label="Ingresa tu contraseña *"
+          lazy-rules
+          :rules="[
+            (val) =>
+              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
+          ]"
+        />
 
-    <q-btn
-      label="Entrar"
-      type="submit"
-      color="primary"
-      class="q-gutter-ml"
-      style="he"
-    />
-    <q-btn
-      @click="recoverPasword()"
-      color="primary"
-      label="Recuperar contraseña"
-    />
-    <q-btn @click="registerUser()" color="primary" label="Registrar Cuenta" />
-  </q-form>
+        <q-btn
+          label="Entrar"
+          type="submit"
+          color="primary"
+          class="q-gutter-ml"
+          style="he"
+        />
+        <q-btn
+          @click="recoverPasword()"
+          color="primary"
+          label="Recuperar contraseña"
+        />
+        <q-btn
+          @click="registerUser()"
+          color="primary"
+          label="Registrar Cuenta"
+        />
+      </q-form>
     </div>
   </div>
 </template>
@@ -76,8 +80,6 @@ function onSubmit() {
       // como redireccionar al usuario a otra página o mostrar un mensaje de bienvenida.
       router.push("/");
       console.log("Inicio de sesión exitoso", userCredential.user);
-
-
     })
     .catch((error) => {
       // Si ocurre un error, puedes mostrar un mensaje de error al usuario.

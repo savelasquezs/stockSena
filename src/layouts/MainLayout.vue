@@ -80,7 +80,6 @@ import { useRouter } from "vue-router";
 
 const user = inject("user") || "raro";
 
-
 const linksList = ref([
   {
     title: "Productos",
