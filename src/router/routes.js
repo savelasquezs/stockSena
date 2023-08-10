@@ -29,9 +29,9 @@ const routes = [
         component: () => import("pages/tblPrestamos.vue"),
       },
       {
-        path: "/detalles",
-        name: "detalles",
-        component: () => import("pages/DetallesRegistros.vue"),
+        path: "/tablaProductos",
+        name: "tablaProductos",
+        component: () => import("src/pages/TablaRegistros.vue"),
         props: true, // Permite pasar los parámetros como props
       },
       {
