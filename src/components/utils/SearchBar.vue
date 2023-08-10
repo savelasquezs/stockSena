@@ -5,7 +5,7 @@
       v-model="searchQuery"
       @input="handleInput"
       label="Buscar"
-      :dense="dense"
+      dense
       style="
         border-radius: 24px;
         margin: 0 auto;

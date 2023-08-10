@@ -19,6 +19,7 @@
         color="positive"
         label="Buscar"
         class="q-mt-md"
+        style="width: 250px"
       />
     </div>
     <q-form @submit="prestarProducto" v-if="cliente">
@@ -76,7 +77,7 @@
       <q-input
         v-if="productosList.length > 0"
         label="Descripción"
-        v-model="text"
+        v-model="description"
         autogrow
         class="q-ma-sm"
         outlined
@@ -94,10 +95,13 @@
 
 <script setup>
 import {
+  addDoc,
   collection,
+  doc,
   getDocs,
   getDocsFromCache,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "src/firebaseInit";
@@ -105,6 +109,10 @@ import { ref, reactive, computed } from "vue";
 import AutocompleteInput from "../utils/autocompleteInput.vue";
 import { useQuasar } from "quasar";
 import { useProductosStore } from "src/stores/productosStore";
+import { data } from "autoprefixer";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const $q = useQuasar();
 const productosStore = useProductosStore();
@@ -129,15 +137,17 @@ function setProduct(nombreProducto, index) {
   const producto = productosStore.productosDatabase.find(
     (producto) => producto.name == nombreProducto
   );
+
   productosList.value[index].maxQuantity =
     producto.totalStock - producto.borrowedQuantity;
+  productosList.value[index].docId = producto.docId;
+  productosList.value[index].cantidadPrestada = producto.borrowedQuantity;
 }
 
 const selectedDocumentType = ref(null);
 const documentNumber = ref(null);
-const cantidad = ref(1);
 const cliente = ref(null);
-const text = ref("");
+const description = ref("");
 
 async function buscarCliente() {
   $q.loading.show();
@@ -187,6 +197,44 @@ const buscarDocumento = () => {
 };
 
 function prestarProducto() {
-  console.log(productosList);
+  const dateBorrowed = new Date().getTime();
+  const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+  const dueDate = new Date(dateBorrowed + sevenDaysInMilliseconds).getTime();
+  const listaProductos = productosList.value.map((registro) => {
+    return {
+      productId: registro.docId,
+      product: registro.producto,
+      quantity: registro.cantidad,
+      dateBorrowed,
+      dueDate,
+    };
+  });
+  const data = {
+    productosList: listaProductos,
+    customer: {
+      documentNumber: documentNumber.value,
+      name: cliente.value.nombre,
+      documentType: selectedDocumentType.value,
+    },
+    description: description.value,
+    dateBorrowed,
+  };
+
+  productosList.value.forEach(async (product) => {
+    console.log(product);
+    const docref = doc(db, "products", product.docId);
+    await updateDoc(docref, {
+      borrowedQuantity:
+        parseInt(product.cantidadPrestada) + parseInt(product.cantidad),
+    });
+  });
+
+  addDoc(collection(db, "borrowings"), data)
+    .then(() => {
+      router.push("/tablaPrestamos");
+      console.log("el prestamo fue guardado exitosamente");
+    })
+    .catch((err) => console.log(err));
+  console.log(data);
 }
 </script>
