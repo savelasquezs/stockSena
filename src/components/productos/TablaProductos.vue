@@ -37,23 +37,28 @@
       </div>
       <div class="q-tables">
         <div class="flex justify-end q-mt-xl q-mr-lg">
-          <q-btn
-            @click="toggleVentanaEmergente"
-            label="Agregar Producto"
-            icon="add_circle_outline"
-            color="primary"
-            style="width: 210px"
-            class="q-mx-sm flex flex start"
-          />
-          <q-btn
-            @click="exportTable"
-            icon="file_download"
-            color="primary"
-            label="Archivo Excel"
-            class="q-mx-sm flex flex start"
-            style="width: 210px"
-          >
-          </q-btn>
+          <div>
+            <q-input v-model="filtro" />
+          </div>
+          <div>
+            <q-btn
+              @click="toggleVentanaEmergente"
+              label="Agregar Producto"
+              icon="add_circle_outline"
+              color="primary"
+              style="width: 210px"
+              class="q-mx-sm flex flex start"
+            />
+            <q-btn
+              @click="exportTable"
+              icon="file_download"
+              color="primary"
+              label="Descargar tabla"
+              class="q-mx-sm flex flex start"
+              style="width: 210px"
+            >
+            </q-btn>
+          </div>
         </div>
         <div class="q-tables">
           <q-dialog v-model="mostrarVentanaEmergente">
@@ -76,6 +81,7 @@
             :rows-per-page-options="[0]"
             v-model="pagination"
             virtual-scroll
+            :filter="filtro"
             class="my-card flex shadow-5 shadow-up-3"
             table-header-style="background-color:#00af00; color:#ffff; shadow-n"
           >
@@ -130,6 +136,7 @@ import SearchBar from "components/utils/SearchBar.vue";
 const mostrarVentanaEmergente = ref(false);
 import { exportFile } from "quasar";
 
+const filtro = ref("");
 function toggleVentanaEmergente() {
   mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
 }

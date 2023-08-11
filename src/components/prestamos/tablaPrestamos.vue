@@ -1,36 +1,9 @@
 <template>
   <div style="background-color: #f5f5f5">
     <div class="q-pa-md">
-      <div class="q-pa-md row items-start q-gutter-md flex justify-center">
-        <q-item clickable to="/">
-          <q-img
-            src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-            loading="lazy"
-            spinner-color="white"
-            width="100px"
-            class=""
-          />
-          <StadisticTableItem
-            text-color="light-green-14"
-            titulo="Total productos"
-            valor="15000"
-            periodo="Ultima semana"
-          />
-          <stadistic-table-item
-            text-color="light-green-14"
-            titulo="Productos prestados"
-            valor="300"
-            periodo="Ultima semana"
-          />
-          <stadistic-table-item
-            text-color="light-green-14"
-            titulo="Productos devueltos"
-            valor="210"
-            periodo="Ultima semana"
-          />
-        </q-item>
+      <div class="flex justify-center">
+        <stadisticTableBar :stadisticTableBarInfo="stadisticTableBarInfo" />
       </div>
-      <SearchBar />
     </div>
     <q-table
       flat
@@ -39,7 +12,24 @@
       :rows="rows"
       :columns="columns"
       row-key="name"
+      :filter="search"
     >
+      <template v-slot:top>
+        <q-input v-model="search" placeholder="Buscar">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+        <q-space />
+        <q-btn color="primary" label="Descargar" icon="download" />
+        <q-btn
+          v-if="rows.length !== 0"
+          class="q-ml-sm"
+          color="primary"
+          label="Remove row"
+        />
+      </template>
+
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th auto-width />
@@ -82,10 +72,13 @@
   </div>
 </template>
 <script setup>
-import StadisticTableItem from "../utils/StadisticTableItem.vue";
 import SearchBar from "../utils/SearchBar.vue";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
+import stadisticTableBar from "../prestamos/StadisticTableBar.vue";
+
 import { ref } from "vue";
+
+const search = ref("");
 
 const rows = ref([]);
 const prestamosStore = UsePrestamosStore();
@@ -93,6 +86,33 @@ prestamosStore.listenChanges().then(() => {
   console.log(prestamosStore.prestamosDatabase);
   rows.value = prestamosStore.prestamosDatabase;
 });
+
+const stadisticTableBarInfo = ref([
+  {
+    text_color: "light-green-14",
+    titulo: "Productos devueltos",
+    valor: "210",
+    periodo: "Ultima semana",
+  },
+  {
+    text_color: "light-green-14",
+    titulo: "Productos prestados",
+    valor: "300",
+    periodo: "Ultima semana",
+  },
+  {
+    text_color: "light-green-14",
+    titulo: "Total productos",
+    valor: "15000",
+    periodo: "Ultima semana",
+  },
+  {
+    text_color: "pink",
+    titulo: "Total pink",
+    valor: "15000000",
+    periodo: "Ultima semana",
+  },
+]);
 
 const columns = [
   {
@@ -160,50 +180,4 @@ const internalColumns = [
     format: (val) => new Date(val).toLocaleDateString(),
   },
 ];
-
-// const rows = [
-//   {
-//     document: 159,
-//     name: "Frozen Yogurt",
-//     ficha: 6.0,
-//     date: 24,
-//     amout: 4.0,
-//   },
-//   {
-//     document: 237,
-//     name: "Ice cream sandwich",
-//     ficha: 9.0,
-//     date: 37,
-//     amout: 4.3,
-//   },
-//   {
-//     document: 262,
-//     name: "Eclair",
-//     ficha: 16.0,
-//     date: 23,
-//     amout: 6.0,
-//   },
-//   {
-//     document: 305,
-//     name: "Cupcake",
-//     ficha: 3.7,
-//     date: 67,
-//     amout: 4.3,
-//   },
-//   {
-//     document: 356,
-//     name: "Gingerbread",
-//     ficha: 16.0,
-//     date: 49,
-//     amout: 3.9,
-//   },
-//   {
-//     document: 375,
-//     name: "Jelly bean",
-//     ficha: 0.0,
-//     date: 94,
-//     amout: 0.0,
-//   },
-// ];
 </script>
-

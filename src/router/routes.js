@@ -22,11 +22,7 @@ const routes = [
       },
       {
         path: "/prestamos",
-        component: () => import("pages/PrestamosRegistro.vue"),
-      },
-      {
-        path: "/tablaPrestamos",
-        component: () => import("pages/tblPrestamos.vue"),
+        component: () => import("src/pages/PrestamosPage.vue"),
       },
       {
         path: "/tablaProductos",
@@ -46,8 +42,6 @@ const routes = [
   },
   {
     path: "/account",
-
-
 
     component: () => import("layouts/AccountLayout.vue"),
     children: [
