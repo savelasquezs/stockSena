@@ -1,7 +1,15 @@
 <template>
-  <q-page class="flex justify-evenly content-center">
-    <div class="q-gutter-md">
-      <h6>Registro de prestamos</h6>
+  <div>
+    <div class="flex column flex-center">
+      <q-avatar
+        icon="real_estate_agent"
+        color="accent"
+        text-color="white"
+        class="text-center"
+      />
+      <h3 class="text-h6 text-center">Registro de prestamos</h3>
+    </div>
+    <div class="" v-if="!cliente">
       <q-select
         outlined
         v-model="selectedDocumentType"
@@ -13,6 +21,7 @@
         v-model="documentNumber"
         label="Número de documento"
         :rules="[numberRule]"
+        class="q-my-sm"
       />
       <q-btn
         @click="buscarCliente"
@@ -38,9 +47,12 @@
       <q-item class="flex flex-center" clickable @click="addproductList">
         <q-icon name="add_circle" size="30px" color="primary"></q-icon>
       </q-item>
-      <q-scroll-area style="height: 200px; max-width: 700px; width: 550px">
+      <q-scroll-area
+        style="height: 200px; max-width: 700px; width: 500px"
+        visible
+      >
         <div
-          class="flex q-my-lg"
+          class="flex q-my-sm"
           v-for="(producto, index) in productosList"
           :key="producto"
         >
@@ -53,9 +65,17 @@
           <q-input
             type="number"
             outlined
+            style="width: 150px"
+            :disable="producto.maxQuantity == 0"
             v-model="producto.cantidad"
+            :hint="
+              producto.maxQuantity == 0
+                ? '😔 No tenemos Stock de este producto'
+                : ''
+            "
             :rules="[
               (value) => value > 0 || 'La cantida debe ser mayor a 0',
+
               (value) =>
                 value <= producto.maxQuantity ||
                 `Solo contamos con ${producto.maxQuantity} unidades`,
@@ -88,9 +108,10 @@
         type="submit"
         label="Prestar"
         class="q-mt-md"
+        :loading="guardandoPrestamo"
       />
     </q-form>
-  </q-page>
+  </div>
 </template>
 
 <script setup>
@@ -112,6 +133,8 @@ import { useProductosStore } from "src/stores/productosStore";
 import { data } from "autoprefixer";
 import { useRouter } from "vue-router";
 
+const emit = defineEmits(["prestamoGuardado"]);
+const guardandoPrestamo = ref(false);
 const router = useRouter();
 
 const $q = useQuasar();
@@ -197,6 +220,7 @@ const buscarDocumento = () => {
 };
 
 function prestarProducto() {
+  guardandoPrestamo.value = true;
   const dateBorrowed = new Date().getTime();
   const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
   const dueDate = new Date(dateBorrowed + sevenDaysInMilliseconds).getTime();
@@ -231,8 +255,11 @@ function prestarProducto() {
 
   addDoc(collection(db, "borrowings"), data)
     .then(() => {
-      router.push("/tablaPrestamos");
-      console.log("el prestamo fue guardado exitosamente");
+      emit("prestamoGuardado");
+      $q.notify({
+        message: "Pedido Guardado exitosamente",
+        color: "accent",
+      });
     })
     .catch((err) => console.log(err));
   console.log(data);

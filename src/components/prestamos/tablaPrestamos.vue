@@ -5,28 +5,57 @@
         <stadisticTableBar :stadisticTableBarInfo="stadisticTableBarInfo" />
       </div>
     </div>
+
+    <q-dialog v-model="openedForm">
+      <q-card>
+        <q-card-section class="row justify-end q-pb-none">
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section>
+          <prestamos-form @prestamoGuardado="openedForm = false" />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
     <q-table
       flat
       bordered
-      title="Préstamos"
+      title="Prestamos"
       :rows="rows"
       :columns="columns"
       row-key="name"
       :filter="search"
+      virtual-scroll
+      :rows-per-page-options="[0]"
+      style="height: 600px"
+      class="q-mx-sm"
     >
       <template v-slot:top>
-        <q-input v-model="search" placeholder="Buscar">
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
+        <div class="col-2 q-table__title">Productos</div>
+
+        <q-space />
+        <div class="flex shadow-1 q-pa-lg q-mx-lg">
+          <q-input v-model="search" placeholder="Buscar">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+
+          <DatePicker
+            range
+            @guardarFecha="filterByDate"
+            @cleanedDates="resetTable"
+          />
+        </div>
+
         <q-space />
         <q-btn color="primary" label="Descargar" icon="download" />
         <q-btn
           v-if="rows.length !== 0"
           class="q-ml-sm"
           color="primary"
-          label="Remove row"
+          label="Agregar prestamo"
+          icon="add_circle"
+          @click="openedForm = true"
         />
       </template>
 
@@ -44,7 +73,7 @@
           <q-td auto-width>
             <q-btn
               size="sm"
-              color="positive"
+              color="accent"
               round
               @click="props.row.expand = !props.row.expand"
               :icon="props.row.expand ? 'remove' : 'add'"
@@ -75,17 +104,50 @@
 import SearchBar from "../utils/SearchBar.vue";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import stadisticTableBar from "../prestamos/StadisticTableBar.vue";
+import dataRange from "../utils/dataRange.vue";
+import DatePicker from "../utils/DatePicker.vue";
+import PrestamosForm from "components/prestamos/PrestamosForm.vue";
 
 import { ref } from "vue";
 
+const openedForm = ref(false);
 const search = ref("");
-
+const rangoFechas = ref(null);
 const rows = ref([]);
 const prestamosStore = UsePrestamosStore();
+
 prestamosStore.listenChanges().then(() => {
   console.log(prestamosStore.prestamosDatabase);
-  rows.value = prestamosStore.prestamosDatabase;
+  resetTable();
 });
+
+function resetTable() {
+  rows.value = prestamosStore.prestamosDatabase;
+}
+
+function configureFecha(fecha) {
+  const fechaNormal = fecha.split("-");
+  const nuevaFecha =
+    fechaNormal[1] + "-" + fechaNormal[0] + "-" + fechaNormal[2];
+  return nuevaFecha;
+}
+
+function filterByDate(valorFechas) {
+  rangoFechas.value = valorFechas;
+  if (rangoFechas.value != null) {
+    const fromDate = new Date(configureFecha(rangoFechas.value.from)).getTime();
+    const toDate = new Date(configureFecha(rangoFechas.value.to)).setHours(
+      23,
+      59,
+      59
+    );
+    const filtro = prestamosStore.prestamosDatabase.filter((prestamo) => {
+      return prestamo.dateBorrowed > fromDate && prestamo.dateBorrowed < toDate;
+    });
+    rows.value = filtro;
+    rangoFechas.value = null;
+  }
+}
 
 const stadisticTableBarInfo = ref([
   {
@@ -101,15 +163,15 @@ const stadisticTableBarInfo = ref([
     periodo: "Ultima semana",
   },
   {
-    text_color: "light-green-14",
+    text_color: "text-yellow",
     titulo: "Total productos",
     valor: "15000",
     periodo: "Ultima semana",
   },
   {
-    text_color: "pink",
-    titulo: "Total pink",
-    valor: "15000000",
+    text_color: "text-pink",
+    titulo: "Diandry",
+    valor: "8569522",
     periodo: "Ultima semana",
   },
 ]);
