@@ -106,6 +106,12 @@ const linksList = ref([
     to: "/prestamos",
   },
   {
+    title: "Movimientos",
+    caption: "Entrada y salida de productos",
+    icon: "compare_arrows",
+    to: "/movimientos",
+  },
+  {
     title:"Permisos de cuentas",
     caption:"Autorización a nuevos usuarios",
     icon:"supervisor_account",
