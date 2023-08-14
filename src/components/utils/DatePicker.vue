@@ -1,37 +1,75 @@
 <template>
-  <div class="q-pa-md">
-    <div class="q-mb-sm">
-      <q-badge color="teal"> Model: {{ dueDate }} </q-badge>
+  <div class="q-mx-xl">
+    <div>
+      <q-btn icon="event" round color="accent" class="q-mx-sm">
+        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+          <q-date
+            today-btn
+            mask="DD-MM-YYYY"
+            v-model="dueDate"
+            :locale="myLocale"
+            :options="options ? dateOptionsFn : emptyDate"
+            :range="range"
+          >
+            <div class="row items-center justify-end q-gutter-sm">
+              <q-btn
+                label="Cancel"
+                color="primary"
+                flat
+                v-close-popup
+                @click="resetModel"
+              />
+              <q-btn
+                label="OK"
+                color="primary"
+                flat
+                v-close-popup
+                @click="$emit('guardarFecha', dueDate)"
+              />
+            </div>
+          </q-date>
+        </q-popup-proxy>
+      </q-btn>
+      <q-btn
+        v-if="dueDate.from"
+        icon="cleaning_services"
+        color="accent"
+        round
+        class="q-mx-lg"
+        @click="resetModel"
+      />
     </div>
-
-    <q-btn icon="event" round color="primary">
-      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-        <q-date
-          today-btn
-          mask="DD-MM-YYYY"
-          v-model="dueDate"
-          :locale="myLocale"
-          :options="dateOptionsFn"
+    <div v-if="dueDate.from">
+      <q-input disable>
+        <template v-slot:prepend
+          ><span class="text-subtitle1"
+            >Desde: {{ dueDate.from }}
+          </span></template
         >
-          <div class="row items-center justify-end q-gutter-sm">
-            <q-btn label="Cancel" color="primary" flat v-close-popup />
-            <q-btn
-              label="OK"
-              color="primary"
-              flat
-              v-close-popup
-              @click="$emit('guardarFecha', dueDate)"
-            />
-          </div>
-        </q-date>
-      </q-popup-proxy>
-    </q-btn>
+      </q-input>
+      <q-input disable>
+        <template v-slot:prepend
+          ><span class="text-subtitle1">Hasta:{{ dueDate.to }} </span></template
+        >
+      </q-input>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from "vue";
-defineEmits(["guardarFecha"]);
+const emit = defineEmits(["guardarFecha", "cleanedDates"]);
+
+const props = defineProps({
+  range: {
+    type: Boolean,
+    default: false,
+  },
+  options: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const myLocale = ref({
   /* starting with Sunday */
@@ -47,6 +85,11 @@ const myLocale = ref({
   pluralDay: "dias",
 });
 const dueDate = ref(todayDate());
+
+function resetModel() {
+  dueDate.value = todayDate();
+  emit("cleanedDates");
+}
 
 function completeValue(value) {
   if (value < 10) {
@@ -84,6 +127,10 @@ function dateOptionsFn(date) {
     "/" +
     completeValue(fechaAlRevez[1]);
   return date >= newFecha;
+}
+
+function emptyDate(date) {
+  return true;
 }
 </script>
 

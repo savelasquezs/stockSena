@@ -17,36 +17,31 @@ const routes = [
         component: () => import("pages/ClientesOpciones.vue"),
       },
       {
-        path: "/datos",
-        component: () => import("pages/ClientesDatos.vue"),
-      },
-      {
         path: "/productos",
         component: () => import("pages/ProductosRegistro.vue"),
       },
       {
         path: "/prestamos",
-        component: () => import("pages/PrestamosRegistro.vue"),
+        component: () => import("src/pages/PrestamosPage.vue"),
       },
       {
-        path: "/tablaPrestamos",
-        component: () => import("pages/tblPrestamos.vue"),
-      },
-      {
-        path: "/detalles",
-        name: "detalles",
-        component: () => import("pages/DetallesRegistros.vue"),
+        path: "/tablaProductos",
+        name: "tablaProductos",
+        component: () => import("src/pages/TablaRegistros.vue"),
         props: true, // Permite pasar los parámetros como props
       },
       {
         path: "/Dashboard",
         component: () => import("pages/PageDashboard.vue"),
       },
+      {
+        path: "/cuentas",
+        component: () => import("pages/CuentasManejo.vue"),
+      },
     ],
   },
   {
     path: "/account",
- 
 
     component: () => import("layouts/AccountLayout.vue"),
     children: [
