@@ -3,10 +3,10 @@
     <q-container>
       <q-card class="q-mb-md">
         <q-card-section>
-          <q-form @submit="submitForm">
+          <q-form @submit="submitForm" class="q-gutter-md">
             <q-item>
               <q-item-section>
-                <h3>Ingresa Producto</h3>
+                <h4>Ingresa Producto</h4>
                 <q-input
                   outlined
                   v-model="formulario.nombre"
@@ -43,7 +43,6 @@
                 />
               </q-item-section>
             </q-item>
-            <q-item> </q-item>
             <q-item>
               <q-item-section>
                 <q-input
@@ -55,13 +54,13 @@
               </q-item-section>
             </q-item>
             <q-item>
-              <!-- <date-picker @guardar-fecha="(fecha) => (dueDate = fecha)" /> -->
-              <!-- <q-input v-model="dueDate" /> -->
-            </q-item>
-            <q-item> </q-item>
-            <q-item>
               <q-item-section class="q-mt-md">
-                <q-btn type="submit" label="Guardar" color="primary" />
+                <q-btn
+                  type="submit"
+                  label="Guardar"
+                  color="primary"
+                  @click="toggleVentanaEmergente"
+                />
               </q-item-section>
             </q-item>
           </q-form>

@@ -32,32 +32,31 @@
           text-color="text-red-6"
         />
       </div>
-      <div>
-        <search-bar />
-      </div>
       <div class="q-tables">
-        <div class="flex justify-end q-mt-xl q-mr-lg">
+        <div class="q-mr-lg">
           <div>
-            <q-input v-model="filtro" />
+            <q-input class="q-ml-xl" v-model="filtro" style="width: 300px" />
           </div>
-          <div>
-            <q-btn
-              @click="toggleVentanaEmergente"
-              label="Agregar Producto"
-              icon="add_circle_outline"
-              color="primary"
-              style="width: 210px"
-              class="q-mx-sm flex flex start"
-            />
-            <q-btn
-              @click="exportTable"
-              icon="file_download"
-              color="primary"
-              label="Descargar tabla"
-              class="q-mx-sm flex flex start"
-              style="width: 210px"
-            >
-            </q-btn>
+          <div class="flex justify-end">
+            <div>
+              <q-btn
+                @click="toggleVentanaEmergente"
+                label="Agregar Producto"
+                icon="add_circle_outline"
+                color="primary"
+                style="width: 210px"
+                class="q-ml-sm"
+              />
+              <q-btn
+                @click="exportTable"
+                icon="file_download"
+                color="primary"
+                label="Descargar tabla"
+                class="q-ml-sm"
+                style="width: 210px"
+              >
+              </q-btn>
+            </div>
           </div>
         </div>
         <div class="q-tables">
@@ -67,7 +66,13 @@
                 <productos-form />
               </q-card-section>
               <q-card-actions>
-                <q-btn flat label="Cerrar" @click="toggleVentanaEmergente" />
+                <q-btn
+                  dense
+                  flat
+                  round
+                  icon="close"
+                  @click="toggleVentanaEmergente"
+                />
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -167,7 +172,7 @@ const exportTable = () => {
     type: "text/csv;charset=UTF-8",
   });
 
-  // Descarga el archivo CSV utilizando Quasar exportFile
+  // Descarga el archivo CSV utilizanseado Quasar exportFile
   exportFile("table-export.csv", blob);
 };
 
