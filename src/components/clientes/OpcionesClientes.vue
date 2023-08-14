@@ -49,7 +49,6 @@
       </q-card>
     </div>
 
-    <search-bar />
     <div>
       <q-table
         :rows="tableData"
