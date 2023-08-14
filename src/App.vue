@@ -68,15 +68,15 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// function resetTimer() {
-//   clearTimeout(timer);
-//   timer = setTimeout(async () => {
-//     await signOut(auth);
-//     router.push("/login");
-//     $q.dialog({
-//       title: "Sesión Expirada",
-//       message: "Se supero el tiempo de inactividad",
-//     });
-//   }, 1000 * 60 * 60 * 60);
-// }
+function resetTimer() {
+  clearTimeout(timer);
+  timer = setTimeout(async () => {
+    await signOut(auth);
+    router.push("/login");
+    $q.dialog({
+      title: "Sesión Expirada",
+      message: "Se supero el tiempo de inactividad",
+    });
+  }, 1000 * 60);
+}
 </script>

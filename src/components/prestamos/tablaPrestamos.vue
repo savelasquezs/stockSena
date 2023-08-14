@@ -1,24 +1,64 @@
 <template>
-  <div class="q-pa-md" style="background-color: #f5f5f5">
-    <div class="q-pa-md row items-start q-gutter-md flex justify-center">
-      <q-item clickable to="/">
-        <q-img
-          src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-          loading="lazy"
-          spinner-color="white"
-          width="80px"
-          class=""
-        />
-      </q-item>
+  <div style="background-color: #f5f5f5">
+    <div class="q-pa-md">
+      <div class="flex justify-center">
+        <stadisticTableBar :stadisticTableBarInfo="stadisticTableBarInfo" />
+      </div>
     </div>
+
+    <q-dialog v-model="openedForm">
+      <q-card>
+        <q-card-section class="row justify-end q-pb-none">
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section>
+          <prestamos-form @prestamoGuardado="openedForm = false" />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
     <q-table
       flat
       bordered
-      title="Préstamos"
+      title="Prestamos"
       :rows="rows"
       :columns="columns"
       row-key="name"
+      :filter="search"
+      virtual-scroll
+      :rows-per-page-options="[0]"
+      style="height: 600px"
+      class="q-mx-sm"
     >
+      <template v-slot:top>
+        <div class="col-2 q-table__title">Productos</div>
+
+        <q-space />
+        <div class="flex shadow-1 q-pa-lg q-mx-lg">
+          <q-input v-model="search" placeholder="Buscar">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+
+          <DatePicker
+            range
+            @guardarFecha="filterByDate"
+            @cleanedDates="resetTable"
+          />
+        </div>
+
+        <q-space />
+        <q-btn color="primary" label="Descargar" icon="download" />
+        <q-btn
+          v-if="rows.length !== 0"
+          class="q-ml-sm"
+          color="primary"
+          label="Agregar prestamo"
+          icon="add_circle"
+          @click="openedForm = true"
+        />
+      </template>
+
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th auto-width />
@@ -33,20 +73,27 @@
           <q-td auto-width>
             <q-btn
               size="sm"
-              color="positive"
+              color="accent"
               round
-              dense
-              @click="props.expand = !props.expand"
-              :icon="props.expand ? 'remove' : 'add'"
+              @click="props.row.expand = !props.row.expand"
+              :icon="props.row.expand ? 'remove' : 'add'"
             />
           </q-td>
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             {{ col.value }}
           </q-td>
         </q-tr>
-        <q-tr v-show="props.expand" :props="props">
+        <q-tr v-show="props.row.expand" :props="props">
           <q-td colspan="100%">
-            <div class="text-left">Descripción préstamo:</div>
+            <div class="text-left">
+              Descripción préstamo:
+              <q-table
+                :rows="props.row.productosList"
+                :columns="internalColumns"
+                dark
+              >
+              </q-table>
+            </div>
           </q-td>
         </q-tr>
       </template>
@@ -54,12 +101,87 @@
   </div>
 </template>
 <script setup>
+import SearchBar from "../utils/SearchBar.vue";
+import { UsePrestamosStore } from "src/stores/prestamosStore";
+import stadisticTableBar from "../prestamos/StadisticTableBar.vue";
+import dataRange from "../utils/dataRange.vue";
+import DatePicker from "../utils/DatePicker.vue";
+import PrestamosForm from "components/prestamos/PrestamosForm.vue";
+
+import { ref } from "vue";
+
+const openedForm = ref(false);
+const search = ref("");
+const rangoFechas = ref(null);
+const rows = ref([]);
+const prestamosStore = UsePrestamosStore();
+
+prestamosStore.listenChanges().then(() => {
+  console.log(prestamosStore.prestamosDatabase);
+  resetTable();
+});
+
+function resetTable() {
+  rows.value = prestamosStore.prestamosDatabase;
+}
+
+function configureFecha(fecha) {
+  const fechaNormal = fecha.split("-");
+  const nuevaFecha =
+    fechaNormal[1] + "-" + fechaNormal[0] + "-" + fechaNormal[2];
+  return nuevaFecha;
+}
+
+function filterByDate(valorFechas) {
+  rangoFechas.value = valorFechas;
+  if (rangoFechas.value != null) {
+    const fromDate = new Date(configureFecha(rangoFechas.value.from)).getTime();
+    const toDate = new Date(configureFecha(rangoFechas.value.to)).setHours(
+      23,
+      59,
+      59
+    );
+    const filtro = prestamosStore.prestamosDatabase.filter((prestamo) => {
+      return prestamo.dateBorrowed > fromDate && prestamo.dateBorrowed < toDate;
+    });
+    rows.value = filtro;
+    rangoFechas.value = null;
+  }
+}
+
+const stadisticTableBarInfo = ref([
+  {
+    text_color: "light-green-14",
+    titulo: "Productos devueltos",
+    valor: "210",
+    periodo: "Ultima semana",
+  },
+  {
+    text_color: "light-green-14",
+    titulo: "Productos prestados",
+    valor: "300",
+    periodo: "Ultima semana",
+  },
+  {
+    text_color: "text-yellow",
+    titulo: "Total productos",
+    valor: "15000",
+    periodo: "Ultima semana",
+  },
+  {
+    text_color: "text-pink",
+    titulo: "Diandry",
+    valor: "8569522",
+    periodo: "Ultima semana",
+  },
+]);
+
 const columns = [
   {
     name: "document",
     align: "center",
     label: "Documento",
-    field: "document",
+    field: (row) => row.customer.documentNumber,
     sortable: true,
   },
   {
@@ -67,86 +189,57 @@ const columns = [
     required: true,
     label: "Nombre",
     align: "left",
-    field: (row) => row.name,
+    field: (row) => row.customer.name,
     format: (val) => `${val}`,
     sortable: true,
   },
   { name: "ficha", label: "Ficha", field: "ficha", sortable: true },
-  { name: "date", label: "Fecha préstamo", field: "date" },
-  { name: "amout", label: "Cantida", field: "amout" },
+  {
+    name: "date",
+    label: "Fecha préstamo",
+    field: (row) => row.dateBorrowed,
+    format: (val) => new Date(val).toLocaleDateString(),
+  },
+  {
+    name: "amout",
+    label: "Cantida",
+    field: (row) => row.productosList[0].quantity,
+  },
 ];
 
-const rows = [
+const internalColumns = [
   {
-    document: 159,
-    name: "Frozen Yogurt",
-    ficha: 6.0,
-    date: 24,
-    amout: 4.0,
+    name: "productoId",
+    align: "center",
+    label: "Id Producto",
+    field: (row) => row.productId,
+    sortable: true,
   },
   {
-    document: 237,
-    name: "Ice cream sandwich",
-    ficha: 9.0,
-    date: 37,
-    amout: 4.3,
+    name: "product",
+    required: true,
+    label: "Producto",
+    align: "left",
+    field: (row) => row.product,
+    sortable: true,
   },
   {
-    document: 262,
-    name: "Eclair",
-    ficha: 16.0,
-    date: 23,
-    amout: 6.0,
+    name: "cantidad",
+    label: "Cantidad",
+    field: (row) => row.quantity,
+    sortable: true,
   },
   {
-    document: 305,
-    name: "Cupcake",
-    ficha: 3.7,
-    date: 67,
-    amout: 4.3,
+    name: "fechaPrestado",
+    label: "Fecha préstamo",
+    field: (row) => row.dateBorrowed,
+    format: (val) => new Date(val).toLocaleDateString(),
   },
   {
-    document: 356,
-    name: "Gingerbread",
-    ficha: 16.0,
-    date: 49,
-    amout: 3.9,
-  },
-  {
-    document: 375,
-    name: "Jelly bean",
-    ficha: 0.0,
-    date: 94,
-    amout: 0.0,
-  },
-  {
-    document: 392,
-    name: "Lollipop",
-    ficha: 0.2,
-    date: 98,
-    amout: 0,
-  },
-  {
-    document: 408,
-    name: "Honeycomb",
-    ficha: 3.2,
-    date: 87,
-    amout: 6.5,
-  },
-  {
-    document: 452,
-    name: "Donut",
-    ficha: 25.0,
-    date: 51,
-    amout: 4.9,
-  },
-  {
-    document: 518,
-    name: "KitKat",
-    ficha: 26.0,
-    date: 65,
-    amout: 7,
+    name: "fechaEntrega",
+    label: "Fecha Entrega",
+    field: (row) => row.dueDate,
+    format: (val) => new Date(val).toLocaleDateString(),
   },
 ];
 </script>
-

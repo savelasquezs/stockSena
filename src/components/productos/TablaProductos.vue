@@ -34,7 +34,43 @@
       </div>
       <div>
         <search-bar />
+      </div>
+      <div class="q-tables">
+        <div class="flex justify-end q-mt-xl q-mr-lg">
+          <div>
+            <q-input v-model="filtro" />
+          </div>
+          <div>
+            <q-btn
+              @click="toggleVentanaEmergente"
+              label="Agregar Producto"
+              icon="add_circle_outline"
+              color="primary"
+              style="width: 210px"
+              class="q-mx-sm flex flex start"
+            />
+            <q-btn
+              @click="exportTable"
+              icon="file_download"
+              color="primary"
+              label="Descargar tabla"
+              class="q-mx-sm flex flex start"
+              style="width: 210px"
+            >
+            </q-btn>
+          </div>
+        </div>
         <div class="q-tables">
+          <q-dialog v-model="mostrarVentanaEmergente">
+            <q-card>
+              <q-card-section>
+                <productos-form />
+              </q-card-section>
+              <q-card-actions>
+                <q-btn flat label="Cerrar" @click="toggleVentanaEmergente" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
           <q-table
             style="height: 400px"
             flat
@@ -45,6 +81,7 @@
             :rows-per-page-options="[0]"
             v-model="pagination"
             virtual-scroll
+            :filter="filtro"
             class="my-card flex shadow-5 shadow-up-3"
             table-header-style="background-color:#00af00; color:#ffff; shadow-n"
           >
@@ -88,11 +125,60 @@
 </style>
 
 <script setup>
+import ProductosForm from "./ProductosForm.vue";
+import { defineComponent } from "vue";
+import { QDialog, QCard, QCardSection, QCardActions, QBtn } from "quasar";
 import { collection, onSnapshot } from "firebase/firestore";
 import { ref } from "vue";
 import { db } from "../../firebaseInit";
 import StadisticTableItem from "../utils/StadisticTableItem.vue";
 import SearchBar from "components/utils/SearchBar.vue";
+const mostrarVentanaEmergente = ref(false);
+import { exportFile } from "quasar";
+
+const filtro = ref("");
+function toggleVentanaEmergente() {
+  mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
+}
+
+const exportTable = () => {
+  const columnLabels = columns.value.map((col) => col.label);
+  const dataRows = rows.value.map((row) =>
+    columns.value.map((col) =>
+      wrapCsvValue(
+        typeof col.field === "function"
+          ? col.field(row)
+          : row[col.field === void 0 ? col.name : col.field],
+        col.format,
+        row
+      )
+    )
+  );
+
+  const content = [columnLabels].concat(dataRows);
+  const csvContent = content
+    .map((row) => row.map((cell) => wrapCsvValue(cell)).join(";"))
+    .join("\r\n");
+
+  // Codificar el contenido en UTF-8 y agregar el BOM
+  const encodedContent = new TextEncoder().encode("\uFEFF" + csvContent);
+
+  const blob = new Blob([encodedContent], {
+    type: "text/csv;charset=UTF-8",
+  });
+
+  // Descarga el archivo CSV utilizando Quasar exportFile
+  exportFile("table-export.csv", blob);
+};
+
+const wrapCsvValue = (val, formatFn, row) => {
+  let formatted = formatFn !== void 0 ? formatFn(val, row) : val;
+
+  formatted =
+    formatted === void 0 || formatted === null ? "" : String(formatted);
+
+  return formatted;
+};
 
 const columns = ref([
   {

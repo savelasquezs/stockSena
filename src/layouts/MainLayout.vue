@@ -111,6 +111,12 @@ const linksList = ref([
     icon: "compare_arrows",
     to: "/movimientos",
   },
+  {
+    title:"Permisos de cuentas",
+    caption:"Autorización a nuevos usuarios",
+    icon:"supervisor_account",
+    to:"/cuentas",
+  },
 ]);
 
 //cierre de sesión del usuario
