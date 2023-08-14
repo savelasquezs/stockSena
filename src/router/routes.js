@@ -38,6 +38,10 @@ const routes = [
         path: "/Dashboard",
         component: () => import("pages/PageDashboard.vue"),
       },
+      {
+        path: "/movimientos",
+        component: () => import("pages/MovimientosProductos.vue"),
+      },
     ],
   },
   {

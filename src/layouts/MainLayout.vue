@@ -105,6 +105,12 @@ const linksList = ref([
     icon: "shopping_cart",
     to: "/prestamos",
   },
+  {
+    title: "Movimientos",
+    caption: "Entrada y salida de productos",
+    icon: "compare_arrows",
+    to: "/movimientos",
+  },
 ]);
 
 //cierre de sesión del usuario
