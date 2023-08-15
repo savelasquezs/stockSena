@@ -14,28 +14,28 @@
           />
         </q-item>
         <StadisticTableItem
-          titulo="Total Productos"
+          titulo="TOTAL PRODUCTOS"
           valor="34.000"
           periodo="ultima semana"
           text-color="text-orange"
         />
         <StadisticTableItem
-          titulo="Lo más Prestado"
+          titulo="LO MÁS PRESTADO"
           valor="6.890"
           periodo="ultima semana"
           text-color="text-green"
         />
         <StadisticTableItem
-          titulo="Bajas"
+          titulo="BAJAS"
           valor="4.000"
           periodo="ultima semana"
-          text-color="text-red-6"
+          text-color="text-red-14"
         />
       </div>
       <div class="q-tables">
         <div class="q-mr-lg">
           <div>
-            <q-input class="q-ml-xl" v-model="filtro" style="width: 300px" />
+            <q-input class="q-ml-sm" v-model="filtro" style="width: 410px" />
           </div>
           <div class="flex justify-end">
             <div>
@@ -65,6 +65,13 @@
               <q-card-section>
                 <productos-form />
               </q-card-section>
+
+              <q-card-section> </q-card-section>
+
+              <q-card-section> </q-card-section>
+
+              <q-card-section> </q-card-section>
+
               <q-card-actions>
                 <q-btn
                   dense
@@ -77,7 +84,7 @@
             </q-card>
           </q-dialog>
           <q-table
-            style="height: 400px"
+            style="height: 500px"
             flat
             bordered
             :rows="rows"
@@ -90,6 +97,34 @@
             class="my-card flex shadow-5 shadow-up-3"
             table-header-style="background-color:#00af00; color:#ffff; shadow-n"
           >
+            <template v-slot:body-cell-acciones="props">
+              <q-td :props="props">
+                <q-btn
+                  @click="verVentanaEmergente"
+                  icon="visibility"
+                  rounded
+                  size="10px"
+                  style="width: 20px; margin-right: 8px"
+                  text-color="blue-5"
+                />
+                <q-btn
+                  @click="editarVentanaEmergente"
+                  icon="edit"
+                  rounded
+                  size="10px"
+                  style="width: 20px; margin-right: 8px"
+                  text-color="secondary"
+                />
+                <q-btn
+                  @click="eliminarVentanaEmergente"
+                  icon="delete_forever"
+                  rounded
+                  size="10px"
+                  style="width: 20px; margin-right: 8px"
+                  text-color="red-8"
+                />
+              </q-td>
+            </template>
           </q-table>
         </div>
       </div>
@@ -99,7 +134,7 @@
 
 <style scoped>
 .q-tables {
-  padding: 20px;
+  padding: 5px;
   background-color: #f5f5f5;
 }
 .search-bar {
@@ -145,7 +180,12 @@ const filtro = ref("");
 function toggleVentanaEmergente() {
   mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
 }
-
+function verVentanaEmergente() {
+  mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
+}
+function editarVentanaEmergente() {
+  mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
+}
 const exportTable = () => {
   const columnLabels = columns.value.map((col) => col.label);
   const dataRows = rows.value.map((row) =>
@@ -219,6 +259,7 @@ const columns = ref([
   { name: "Stock-Prestamo", label: "Stock-Prestamo", field: "totalStock" },
 
   { name: "Almacen", label: "Almacen", field: "almacen" },
+  { name: "acciones", label: "Acciones", field: "acciones" },
 ]);
 
 const rows = ref([]);
