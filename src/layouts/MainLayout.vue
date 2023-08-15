@@ -85,7 +85,7 @@ const linksList = ref([
     title: "Productos",
     caption: "Productos de almacen tics",
     icon: "inventory",
-    to: "/tablaproductos",
+    to: "/productos",
   },
   {
     title: "Usuarios",

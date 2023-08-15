@@ -130,13 +130,12 @@
 </style>
 
 <script setup>
-import ProductosForm from "./ProductosForm.vue";
+import ProductosForm from "../components/productos/ProductosForm.vue";
 import { defineComponent } from "vue";
-import { QDialog, QCard, QCardSection, QCardActions, QBtn } from "quasar";
 import { collection, onSnapshot } from "firebase/firestore";
 import { ref } from "vue";
-import { db } from "../../firebaseInit";
-import StadisticTableItem from "../utils/StadisticTableItem.vue";
+import { db } from "../firebaseInit";
+import StadisticTableItem from "../components/utils/StadisticTableItem.vue";
 import SearchBar from "components/utils/SearchBar.vue";
 const mostrarVentanaEmergente = ref(false);
 import { exportFile } from "quasar";
