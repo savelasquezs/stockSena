@@ -61,7 +61,7 @@
         </div>
         <div class="q-tables">
           <q-dialog v-model="mostrarVentanaEmergente">
-            <q-card>
+            <q-card style="width: 700px; max-width: 80vw">
               <q-card-section>
                 <productos-form />
               </q-card-section>
