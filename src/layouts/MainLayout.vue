@@ -106,10 +106,10 @@ const linksList = ref([
     to: "/prestamos",
   },
   {
-    title:"Permisos de cuentas",
-    caption:"Autorización a nuevos usuarios",
-    icon:"supervisor_account",
-    to:"/cuentas",
+    title: "Permisos de cuentas",
+    caption: "Autorización a nuevos usuarios",
+    icon: "supervisor_account",
+    to: "/cuentas",
   },
 ]);
 

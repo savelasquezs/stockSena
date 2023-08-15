@@ -17,6 +17,10 @@ const routes = [
         component: () => import("pages/ClientesOpciones.vue"),
       },
       {
+        path: "/datosClientes",
+        component: () => import("pages/ClientesDatos.vue"),
+      },
+      {
         path: "/productos",
         component: () => import("pages/ProductosRegistro.vue"),
       },

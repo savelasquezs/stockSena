@@ -3,12 +3,14 @@
     <div class="flex content-evenly paginaCompleta">
       <div class="q-pa-md" style="display: flex; max-width: 100%; margin: auto">
         <!-- Imagen a la izquierda -->
-        <div style="flex: 1" class="q-ml-xl">
+        <div style="flex: 1" class="q-ml-md">
           <q-img
             src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
+            class=""
             loading="lazy"
             spinner-color="white"
             width="300px"
+            style="width: 300px"
           />
         </div>
 

@@ -47,6 +47,7 @@
           <div class="tetxt-subtitle2 text-center">Cambio</div>
         </q-card-section>
       </q-card>
+      <tarjeta-estad />
     </div>
 
     <div>
@@ -111,6 +112,7 @@ const tableData = [
 
 <script>
 import SearchBar from "components/utils/SearchBar.vue";
+import TarjetaEstad from "../dashboard/TarjetaEstad.vue";
 </script>
 
 <style>
