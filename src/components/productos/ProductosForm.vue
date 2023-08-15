@@ -1,83 +1,82 @@
 <template>
   <q-page class="q-pa-md">
-    <q-container>
-      <q-card class="q-mb-md">
-        <q-card-section>
-          <q-form @submit="submitForm" class="q-gutter-md">
-            <q-item>
-              <q-item-section>
-                <h4>Ingresa Producto</h4>
-                <q-input
-                  outlined
-                  v-model="formulario.nombre"
-                  label="Nombre"
-                  required
-                  :rules="[
-                    (val) => val.length > 2 || 'Por favor un nombre valido',
-                  ]"
-                />
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-select
-                  outlined
-                  v-model="formulario.consumible"
-                  label="Consumible"
-                  :options="['Sí', 'No']"
-                  use-input
-                  emit-value
-                  map-options
-                />
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-input
-                  outlined
-                  v-model.number="formulario.stockTotal"
-                  label="Stock Total"
-                  type="number"
-                  required
-                  :rules="[(val) => val > 0 || 'El valor debe ser mayor a 0']"
-                />
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-input
-                  outlined
-                  v-model.number="formulario.codigoBarra"
-                  label="Código de Barra"
-                  required
-                />
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section class="q-mt-md">
-                <q-btn
-                  type="submit"
-                  label="Guardar"
-                  color="primary"
-                  @click="toggleVentanaEmergente"
-                />
-              </q-item-section>
-            </q-item>
-          </q-form>
-        </q-card-section>
-      </q-card>
+    <q-card class="q-mb-md">
+      <q-card-section>
+        <q-form @submit="submitForm">
+          <q-item>
+            <q-item-section>
+              <h3>Ingresa Producto</h3>
+              <q-input
+                outlined
+                v-model="formulario.nombre"
+                label="Nombre"
+                required
+                :rules="[
+                  (val) => val.length > 2 || 'Por favor un nombre valido',
+                ]"
+              />
+            </q-item-section>
+          </q-item>
+          <q-item>
+            <q-item-section>
+              <q-select
+                outlined
+                v-model="formulario.consumible"
+                label="Consumible"
+                :options="['Sí', 'No']"
+                use-input
+                emit-value
+                map-options
+              />
+            </q-item-section>
+          </q-item>
+          <q-item>
+            <q-item-section>
+              <q-input
+                outlined
+                v-model.number="formulario.stockTotal"
+                label="Stock Total"
+                type="number"
+                required
+                :rules="[(val) => val > 0 || 'El valor debe ser mayor a 0']"
+              />
+            </q-item-section>
+          </q-item>
+          <q-item> </q-item>
+          <q-item>
+            <q-item-section>
+              <q-input
+                outlined
+                v-model.number="formulario.codigoBarra"
+                label="Código de Barra"
+                required
+              />
+            </q-item-section>
+          </q-item>
+          <q-item>
+            <!-- <date-picker @guardar-fecha="(fecha) => (dueDate = fecha)" /> -->
+            <!-- <q-input v-model="dueDate" /> -->
+          </q-item>
+          <q-item> </q-item>
+          <q-item>
+            <q-item-section class="q-mt-md">
+              <q-btn type="submit" label="Guardar" color="primary" />
+            </q-item-section>
+          </q-item>
+        </q-form>
+      </q-card-section>
+    </q-card>
 
-      <!-- Mostrar detalles ingresados -->
-      <q-card v-if="showDetails" class="q-mb-md">
-        <q-card-section>
-          <div class="text-h6">Detalles ingresados:</div>
-          <div>Nombre: {{ formulario.nombre }}</div>
-          <div>Consumible: {{ formulario.consumible }}</div>
-          <div>Stock Total: {{ formulario.stockTotal }}</div>
-          <div>Código de Barra: {{ formulario.codigoBarra }}</div>
-        </q-card-section>
-      </q-card>
-    </q-container>
+    <!-- Mostrar detalles ingresados -->
+    <q-card v-if="showDetails" class="q-mb-md">
+      <q-card-section>
+        <div class="text-h6">Detalles ingresados:</div>
+        <div>Nombre: {{ formulario.nombre }}</div>
+        <div>Consumible: {{ formulario.consumible }}</div>
+        <div>Stock Total: {{ formulario.stockTotal }}</div>
+        <div>Código de Barra: {{ formulario.codigoBarra }}</div>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
