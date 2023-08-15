@@ -14,46 +14,50 @@
           />
         </q-item>
         <StadisticTableItem
-          titulo="Total Productos"
+          titulo="TOTAL PRODUCTOS"
           valor="34.000"
           periodo="ultima semana"
           text-color="text-orange"
         />
         <StadisticTableItem
-          titulo="Lo más Prestado"
+          titulo="LO MÁS PRESTADO"
           valor="6.890"
           periodo="ultima semana"
           text-color="text-green"
         />
         <StadisticTableItem
-          titulo="Bajas"
+          titulo="BAJAS"
           valor="4.000"
           periodo="ultima semana"
-          text-color="text-red-6"
+          text-color="text-red-14"
         />
       </div>
-      <div>
-        <search-bar />
-      </div>
       <div class="q-tables">
-        <div class="flex justify-end q-mt-xl q-mr-lg">
-          <q-btn
-            @click="toggleVentanaEmergente"
-            label="Agregar Producto"
-            icon="add_circle_outline"
-            color="primary"
-            style="width: 210px"
-            class="q-mx-sm flex flex start"
-          />
-          <q-btn
-            @click="exportTable"
-            icon="file_download"
-            color="primary"
-            label="Archivo Excel"
-            class="q-mx-sm flex flex start"
-            style="width: 210px"
-          >
-          </q-btn>
+        <div class="q-mr-lg">
+          <div>
+            <q-input class="q-ml-sm" v-model="filtro" style="width: 410px" />
+          </div>
+          <div class="flex justify-end">
+            <div>
+              <q-btn
+                @click="toggleVentanaEmergente"
+                label="Agregar Producto"
+                icon="add_circle_outline"
+                color="primary"
+                style="width: 210px"
+                class="q-ml-sm"
+              />
+              <q-btn
+                @click="exportTable"
+                icon="file_download"
+                color="primary"
+                label="Descargar tabla"
+                class="q-ml-sm"
+                style="width: 210px"
+              >
+              </q-btn>
+            </div>
+          </div>
         </div>
         <div class="q-tables">
           <q-dialog v-model="mostrarVentanaEmergente">
@@ -61,13 +65,26 @@
               <q-card-section>
                 <productos-form />
               </q-card-section>
+
+              <q-card-section> </q-card-section>
+
+              <q-card-section> </q-card-section>
+
+              <q-card-section> </q-card-section>
+
               <q-card-actions>
-                <q-btn flat label="Cerrar" @click="toggleVentanaEmergente" />
+                <q-btn
+                  dense
+                  flat
+                  round
+                  icon="close"
+                  @click="toggleVentanaEmergente"
+                />
               </q-card-actions>
             </q-card>
           </q-dialog>
           <q-table
-            style="height: 400px"
+            style="height: 500px"
             flat
             bordered
             :rows="rows"
@@ -76,9 +93,38 @@
             :rows-per-page-options="[0]"
             v-model="pagination"
             virtual-scroll
+            :filter="filtro"
             class="my-card flex shadow-5 shadow-up-3"
             table-header-style="background-color:#00af00; color:#ffff; shadow-n"
           >
+            <template v-slot:body-cell-acciones="props">
+              <q-td :props="props">
+                <q-btn
+                  @click="verVentanaEmergente"
+                  icon="visibility"
+                  rounded
+                  size="10px"
+                  style="width: 20px; margin-right: 8px"
+                  text-color="blue-5"
+                />
+                <q-btn
+                  @click="editarVentanaEmergente"
+                  icon="edit"
+                  rounded
+                  size="10px"
+                  style="width: 20px; margin-right: 8px"
+                  text-color="secondary"
+                />
+                <q-btn
+                  @click="eliminarVentanaEmergente"
+                  icon="delete_forever"
+                  rounded
+                  size="10px"
+                  style="width: 20px; margin-right: 8px"
+                  text-color="red-8"
+                />
+              </q-td>
+            </template>
           </q-table>
         </div>
       </div>
@@ -88,7 +134,7 @@
 
 <style scoped>
 .q-tables {
-  padding: 20px;
+  padding: 5px;
   background-color: #f5f5f5;
 }
 .search-bar {
@@ -119,21 +165,26 @@
 </style>
 
 <script setup>
-import ProductosForm from "./ProductosForm.vue";
+import ProductosForm from "../components/productos/ProductosForm.vue";
 import { defineComponent } from "vue";
-import { QDialog, QCard, QCardSection, QCardActions, QBtn } from "quasar";
 import { collection, onSnapshot } from "firebase/firestore";
 import { ref } from "vue";
-import { db } from "../../firebaseInit";
-import StadisticTableItem from "../utils/StadisticTableItem.vue";
+import { db } from "../firebaseInit";
+import StadisticTableItem from "../components/utils/StadisticTableItem.vue";
 import SearchBar from "components/utils/SearchBar.vue";
 const mostrarVentanaEmergente = ref(false);
 import { exportFile } from "quasar";
 
+const filtro = ref("");
 function toggleVentanaEmergente() {
   mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
 }
-
+function verVentanaEmergente() {
+  mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
+}
+function editarVentanaEmergente() {
+  mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
+}
 const exportTable = () => {
   const columnLabels = columns.value.map((col) => col.label);
   const dataRows = rows.value.map((row) =>
@@ -160,7 +211,7 @@ const exportTable = () => {
     type: "text/csv;charset=UTF-8",
   });
 
-  // Descarga el archivo CSV utilizando Quasar exportFile
+  // Descarga el archivo CSV utilizanseado Quasar exportFile
   exportFile("table-export.csv", blob);
 };
 
@@ -207,6 +258,7 @@ const columns = ref([
   { name: "Stock-Prestamo", label: "Stock-Prestamo", field: "totalStock" },
 
   { name: "Almacen", label: "Almacen", field: "almacen" },
+  { name: "acciones", label: "Acciones", field: "acciones" },
 ]);
 
 const rows = ref([]);

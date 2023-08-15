@@ -12,7 +12,7 @@
 const props = defineProps({
   textColor: String,
   titulo: String,
-  valor: Number,
+  valor: String,
   periodo: String,
 });
 </script>
