@@ -1,9 +1,7 @@
 <template>
   <div style="background-color: #f5f5f5">
     <div class="q-pa-md">
-      <div class="flex justify-center">
-        <stadisticTableBar :stadisticTableBarInfo="stadisticTableBarInfo" />
-      </div>
+      <stadisticTableBar :stadisticTableBarInfo="stadisticTableBarInfo" />
     </div>
 
     <q-dialog v-model="openedForm">
@@ -103,7 +101,7 @@
 <script setup>
 import SearchBar from "../utils/SearchBar.vue";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
-import stadisticTableBar from "../prestamos/StadisticTableBar.vue";
+import stadisticTableBar from "../utils/StadisticTableBar.vue";
 import dataRange from "../utils/dataRange.vue";
 import DatePicker from "../utils/DatePicker.vue";
 import PrestamosForm from "components/prestamos/PrestamosForm.vue";
