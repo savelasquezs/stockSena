@@ -32,7 +32,6 @@
 
 <script>
 import AutocompleteInput from "components/utils/autocompleteInput.vue";
-import autocompleteinput from "components/utils/autocompleteInput.vue";
 export default {
   data() {
     return {
