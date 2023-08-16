@@ -7,14 +7,19 @@ const routes = [
 
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("pages/IndexPage.vue") },
+      { path: "", component: () => import("pages/DashboardPage.vue") },
+      { path: "/index", component: () => import("pages/IndexPage.vue") },
       {
         path: "/clientes",
-        component: () => import("pages/ClientesRegistro.vue"),
+        component: () => import("pages/ClientesPage.vue"),
       },
       {
-        path: "/opciones",
+        path: "/clientes/:id",
         component: () => import("pages/ClientesOpciones.vue"),
+      },
+      {
+        path: "/datosClientes",
+        component: () => import("pages/ClientesDatos.vue"),
       },
       {
         path: "/prestamos",
@@ -28,7 +33,7 @@ const routes = [
       },
       {
         path: "/Dashboard",
-        component: () => import("pages/PageDashboard.vue"),
+        component: () => import("pages/DashboardPage.vue"),
       },
       {
         path: "/movimientos",

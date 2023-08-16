@@ -1,83 +1,85 @@
 <template>
-  <q-page class="q-pa-md">
-    <q-card class="q-mb-md">
-      <q-card-section>
-        <q-form @submit="submitForm">
-          <q-item>
-            <q-item-section>
-              <h3>Ingresa Producto</h3>
-              <q-input
-                outlined
-                v-model="formulario.nombre"
-                label="Nombre"
-                required
-                :rules="[
-                  (val) => val.length > 2 || 'Por favor un nombre valido',
-                ]"
-              />
-            </q-item-section>
-          </q-item>
-          <q-item>
-            <q-item-section>
-              <q-select
-                outlined
-                v-model="formulario.consumible"
-                label="Consumible"
-                :options="['Sí', 'No']"
-                use-input
-                emit-value
-                map-options
-              />
-            </q-item-section>
-          </q-item>
-          <q-item>
-            <q-item-section>
-              <q-input
-                outlined
-                v-model.number="formulario.stockTotal"
-                label="Stock Total"
-                type="number"
-                required
-                :rules="[(val) => val > 0 || 'El valor debe ser mayor a 0']"
-              />
-            </q-item-section>
-          </q-item>
-          <q-item> </q-item>
-          <q-item>
-            <q-item-section>
-              <q-input
-                outlined
-                v-model.number="formulario.codigoBarra"
-                label="Código de Barra"
-                required
-              />
-            </q-item-section>
-          </q-item>
-          <q-item>
-            <!-- <date-picker @guardar-fecha="(fecha) => (dueDate = fecha)" /> -->
-            <!-- <q-input v-model="dueDate" /> -->
-          </q-item>
-          <q-item> </q-item>
-          <q-item>
-            <q-item-section class="q-mt-md">
-              <q-btn type="submit" label="Guardar" color="primary" />
-            </q-item-section>
-          </q-item>
-        </q-form>
-      </q-card-section>
-    </q-card>
+  <div class="">
+    <q-form @submit="submitForm" class="">
+      <div class="flex column flex-center">
+        <q-img
+          src="https://s3.amazonaws.com/s3.timetoast.com/public/uploads/photos/12312176/logo-tic.png"
+          loading="lazy"
+          spinner-color="white"
+          width="80px"
+        />
+        <div class="text-h6 text-center q-my-xl">INGRESAR PRODUCTO</div>
+      </div>
 
-    <!-- Mostrar detalles ingresados -->
-    <q-card v-if="showDetails" class="q-mb-md">
-      <q-card-section>
-        <div class="text-h6">Detalles ingresados:</div>
-        <div>Nombre: {{ formulario.nombre }}</div>
-        <div>Consumible: {{ formulario.consumible }}</div>
-        <div>Stock Total: {{ formulario.stockTotal }}</div>
-        <div>Código de Barra: {{ formulario.codigoBarra }}</div>
-      </q-card-section>
-    </q-card>
-  </q-page>
+      <q-input
+        outlined
+        v-model="formulario.nombre"
+        label="Nombre"
+        required
+        :rules="[(val) => val.length > 2 || 'Por favor un nombre valido']"
+      >
+        <template v-slot:append>
+          <q-icon
+            name="user
+                "
+          />
+        </template>
+      </q-input>
+
+      <q-select
+        outlined
+        v-model="formulario.consumible"
+        label="Consumible"
+        :options="['Sí', 'No']"
+        emit-value
+        map-options
+      />
+
+      <q-input
+        outlined
+        v-model.number="formulario.stockTotal"
+        label="Stock Total"
+        type="number"
+        required
+        :rules="[(val) => val > 0 || 'El valor debe ser mayor a 0']"
+        class="q-my-lg"
+      />
+
+      <q-input
+        outlined
+        v-model.number="formulario.codigoBarra"
+        label="Código de Barra"
+        required
+        class="q-my-lg"
+      >
+        <template v-slot:append>
+          <q-icon
+            name="view_week
+                "
+          />
+        </template>
+      </q-input>
+
+      <q-btn
+        type="submit"
+        icon="save"
+        label="Guardar"
+        color="primary"
+        @click="toggleVentanaEmergente"
+      />
+    </q-form>
+  </div>
+
+  <!-- Mostrar detalles ingresados -->
+  <q-card v-if="showDetails" class="q-mb-md">
+    <q-card-section>
+      <div class="text-h6">Detalles ingresados:</div>
+      <div>Nombre: {{ formulario.nombre }}</div>
+      <div>Consumible: {{ formulario.consumible }}</div>
+      <div>Stock Total: {{ formulario.stockTotal }}</div>
+      <div>Código de Barra: {{ formulario.codigoBarra }}</div>
+    </q-card-section>
+  </q-card>
 </template>
 
 <script setup>
@@ -114,28 +116,4 @@ async function submitForm() {
 <style>
 /* Estilos personalizados */
 /* ... */
-</style>
-<style>
-/* Agrega aquí estilos personalizados para mejorar la apariencia del formulario */
-.q-card {
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.q-item {
-  margin-bottom: 15px;
-}
-
-.q-item-section {
-  display: flex;
-  align-items: center;
-}
-
-.q-item-section:first-child {
-  flex: 1;
-}
-
-.q-btn {
-  width: 100%;
-}
 </style>
