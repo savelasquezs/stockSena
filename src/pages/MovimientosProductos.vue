@@ -1,8 +1,8 @@
 <template>
   <StadisticTableBar :stadisticTableBarInfo="movimientosStore.stadistics" />
 
-  <q-dialog v-model="formOppened" full-width>
-    <q-card>
+  <q-dialog v-model="formOppened">
+    <q-card style="width: 800px; max-width: 80vw">
       <q-card-section class="flex row justify-end q-pb-none">
         <q-btn dense round flat icon="close" v-close-popup style="width: 30px">
           <q-tooltip class="bg-white text-red">Cerrar</q-tooltip>
