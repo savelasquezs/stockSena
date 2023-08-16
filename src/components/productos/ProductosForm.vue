@@ -3,10 +3,10 @@
     <q-form @submit="submitForm" class="">
       <div class="flex column flex-center">
         <q-img
-          src="https://s3.amazonaws.com/s3.timetoast.com/public/uploads/photos/12312176/logo-tic.png"
+          src="https://th.bing.com/th/id/OIP.o9e2Vz_Xf5LNHNozfLc1YQHaHa?pid=ImgDet&rs=1"
           loading="lazy"
           spinner-color="white"
-          width="80px"
+          width="800px"
         />
         <div class="text-h6 text-center q-my-xl">INGRESAR PRODUCTO</div>
       </div>
@@ -20,8 +20,9 @@
       >
         <template v-slot:append>
           <q-icon
-            name="user
+            name="person_outline
                 "
+            color="accent"
           />
         </template>
       </q-input>
@@ -30,10 +31,18 @@
         outlined
         v-model="formulario.consumible"
         label="Consumible"
+        map-options
         :options="['Sí', 'No']"
         emit-value
-        map-options
-      />
+      >
+        <template v-slot:append>
+          <q-icon
+            name="fastfood
+                "
+            color="accent"
+          />
+        </template>
+      </q-select>
 
       <q-input
         outlined
@@ -43,8 +52,15 @@
         required
         :rules="[(val) => val > 0 || 'El valor debe ser mayor a 0']"
         class="q-my-lg"
-      />
-
+      >
+        <template v-slot:append>
+          <q-icon
+            name="numbers
+                "
+            color="accent"
+          />
+        </template>
+      </q-input>
       <q-input
         outlined
         v-model.number="formulario.codigoBarra"
@@ -56,6 +72,7 @@
           <q-icon
             name="view_week
                 "
+            color="accent"
           />
         </template>
       </q-input>
