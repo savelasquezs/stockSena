@@ -107,7 +107,7 @@ const linksList = ref([
   },
   {
     title: "Movimientos",
-    caption: "Entrada y salida de productos",
+    caption: "Entradas y salidas de productos",
     icon: "compare_arrows",
     to: "/movimientos",
   },

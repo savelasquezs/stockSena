@@ -5,28 +5,28 @@
     <div class="q-pa-md q-gutter-md" style="width: 70%; padding: 20px">
       <div class="flex no-wrap justify-evenly">
         <TarjetaEstad
-          icono="settings"
-          titulo="586"
-          subtitulo="Config"
+          icono="inventory"
+          titulo="202"
+          subtitulo="Total de prestamos"
           iconColor="light-blue-13"
         />
         <TarjetaEstad
-          icono="settings"
+          icono="transfer_within_a_station"
           titulo="586"
-          subtitulo="Config"
+          subtitulo="Devoluciones"
           iconColor="light-blue-13"
         />
 
         <TarjetaEstad
-          icono="settings"
-          titulo="586"
-          subtitulo="Config"
+          icono="multiple_stop"
+          titulo="300"
+          subtitulo="Cambios"
           iconColor="light-blue-13"
         />
         <TarjetaEstad
-          icono="settings"
-          titulo="586"
-          subtitulo="Config"
+          icono="error"
+          titulo="121"
+          subtitulo="Produc. agotados"
           iconColor="light-blue-13"
         />
       </div>
@@ -41,8 +41,8 @@
       />
 
       <!-- importacion de la tabla -->
-      <!-- fin importacion de la tabla -->
       <TablaVue />
+      <!-- fin importacion de la tabla -->
     </div>
 
     <!-- fin de lado derecho -->
@@ -52,13 +52,13 @@
         <TarjetaEstad
           icono="settings"
           titulo="586"
-          subtitulo="Config"
+          subtitulo="Productos"
           iconColor="light-blue-13"
         />
         <TarjetaEstad
           icono="settings"
           titulo="586"
-          subtitulo="Config"
+          subtitulo="Prestados"
           iconColor="light-blue-13"
         />
       </div>
@@ -66,13 +66,13 @@
         <TarjetaEstad
           icono="settings"
           titulo="586"
-          subtitulo="Config"
+          subtitulo="Profesores"
           iconColor="light-blue-13"
         />
         <TarjetaEstad
           icono="settings"
           titulo="586"
-          subtitulo="Config"
+          subtitulo="Estudiantes"
           iconColor="light-blue-13"
         />
       </div>
@@ -107,7 +107,7 @@
 </template>
 
 <script setup>
-import TarjetaEstad from "./TarjetaEstad.vue";
+import TarjetaEstad from "components/dashboard/TarjetaEstad.vue";
 import GraficasView from "components/dashboard/GraphVue.vue";
 import TablaVue from "components/dashboard/TablaVue.vue";
 import GraphPrueba from "components/dashboard/PruebaVue.vue";
@@ -118,36 +118,36 @@ const lowStockItems = [
     avatarColor: "accent",
     icon: "highlight_off",
     iconColor: "yellow-3",
-    name: "nonono",
+    name: "Computador",
+    remainingQuantity: "2",
+  },
+  {
+    avatarColor: "accent",
+    icon: "priority_high",
+    iconColor: "yellow-3",
+    name: "Destornillador",
     remainingQuantity: "12",
   },
   {
     avatarColor: "accent",
-    icon: "highlight_off",
+    icon: "notification_important",
     iconColor: "yellow-3",
-    name: "nonono",
-    remainingQuantity: "12",
+    name: "Taladro",
+    remainingQuantity: "1",
   },
   {
     avatarColor: "accent",
-    icon: "highlight_off",
+    icon: "notification_important",
     iconColor: "yellow-3",
-    name: "nonono",
-    remainingQuantity: "12",
+    name: "Microfono",
+    remainingQuantity: "5",
   },
   {
     avatarColor: "accent",
-    icon: "highlight_off",
+    icon: "battery_alert",
     iconColor: "yellow-3",
-    name: "nonono",
-    remainingQuantity: "12",
-  },
-  {
-    avatarColor: "accent",
-    icon: "highlight_off",
-    iconColor: "yellow-3",
-    name: "nonono",
-    remainingQuantity: "12",
+    name: "Cuadernos",
+    remainingQuantity: "4",
   },
 ];
 </script>
