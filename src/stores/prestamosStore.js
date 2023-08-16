@@ -103,7 +103,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
     async listenChanges() {
       const q = query(collection(db, "borrowings"), orderBy("dateBorrowed"));
 
-      onSnapshot(q, (snapshot) => {
+      onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type == "added") {
             if (
@@ -133,6 +133,10 @@ export const UsePrestamosStore = defineStore("prestamos", {
               (item) => item.docId != change.doc.id
             );
           }
+          const source = snapshot.metadata.fromCache
+            ? "local cache prestamos"
+            : "server";
+          console.log("Data came from " + source);
         });
       });
     },
