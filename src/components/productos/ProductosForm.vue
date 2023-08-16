@@ -1,7 +1,15 @@
 <template>
   <div class="">
     <q-form @submit="submitForm" class="">
-      <h4>Ingresa Producto</h4>
+      <div class="flex column flex-center">
+        <q-img
+          src="https://s3.amazonaws.com/s3.timetoast.com/public/uploads/photos/12312176/logo-tic.png"
+          loading="lazy"
+          spinner-color="white"
+          width="80px"
+        />
+        <div class="text-h6 text-center q-my-xl">INGRESAR PRODUCTO</div>
+      </div>
 
       <q-input
         outlined
@@ -12,7 +20,7 @@
       >
         <template v-slot:append>
           <q-icon
-            name="chat
+            name="user
                 "
           />
         </template>
@@ -46,7 +54,7 @@
       >
         <template v-slot:append>
           <q-icon
-            name="inventory_2
+            name="view_week
                 "
           />
         </template>
@@ -54,6 +62,7 @@
 
       <q-btn
         type="submit"
+        icon="save"
         label="Guardar"
         color="primary"
         @click="toggleVentanaEmergente"

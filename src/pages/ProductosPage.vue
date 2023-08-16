@@ -17,13 +17,13 @@
           titulo="TOTAL PRODUCTOS"
           valor="34.000"
           periodo="ultima semana"
-          text-color="text-orange"
+          text-color="text-orange-14"
         />
         <StadisticTableItem
           titulo="LO MÁS PRESTADO"
           valor="6.890"
           periodo="ultima semana"
-          text-color="text-green"
+          text-color="text-green-10"
         />
         <StadisticTableItem
           titulo="BAJAS"
@@ -63,24 +63,20 @@
           <q-dialog v-model="mostrarVentanaEmergente">
             <q-card style="width: 700px; max-width: 80vw">
               <q-card-section>
+                <q-card-section class="flex row justify-end q-pb-none">
+                  <q-btn
+                    dense
+                    round
+                    flat
+                    icon="close"
+                    v-close-popup
+                    style="width: 30px"
+                  >
+                    <q-tooltip class="bg-white text-red">Cerrar</q-tooltip>
+                  </q-btn>
+                </q-card-section>
                 <productos-form />
               </q-card-section>
-
-              <q-card-section> </q-card-section>
-
-              <q-card-section> </q-card-section>
-
-              <q-card-section> </q-card-section>
-
-              <q-card-actions>
-                <q-btn
-                  dense
-                  flat
-                  round
-                  icon="close"
-                  @click="toggleVentanaEmergente"
-                />
-              </q-card-actions>
             </q-card>
           </q-dialog>
           <q-table
@@ -105,7 +101,7 @@
                   rounded
                   size="10px"
                   style="width: 20px; margin-right: 8px"
-                  text-color="blue-5"
+                  text-color="green-7"
                 />
                 <q-btn
                   @click="editarVentanaEmergente"
