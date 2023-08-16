@@ -21,17 +21,13 @@ const routes = [
         component: () => import("pages/ClientesDatos.vue"),
       },
       {
-        path: "/productos",
-        component: () => import("pages/ProductosRegistro.vue"),
-      },
-      {
         path: "/prestamos",
         component: () => import("src/pages/PrestamosPage.vue"),
       },
       {
-        path: "/tablaProductos",
-        name: "tablaProductos",
-        component: () => import("src/pages/TablaRegistros.vue"),
+        path: "/productos",
+        name: "productos",
+        component: () => import("src/pages/ProductosPage.vue"),
         props: true, // Permite pasar los parámetros como props
       },
       {
