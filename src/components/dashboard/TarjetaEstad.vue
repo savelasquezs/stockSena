@@ -21,9 +21,4 @@ const props = defineProps({
 });
 </script>
 
-<style lang="scss" scoped>
-// .tarjeta {
-//   height: 120px;
-//   width: 116px;
-// }
-</style>
+<style lang="scss" scoped></style>
