@@ -13,14 +13,18 @@ const planetChartData = {
   type: "bar",
   data: {
     labels: [
-      "Mercury",
-      "Venus",
-      "Earth",
-      "Mars",
-      "Jupiter",
-      "Saturn",
-      "Uranus",
-      "Neptune",
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre ",
+      "Diciembre",
     ],
     datasets: [
       {
@@ -43,7 +47,7 @@ const planetChartData = {
       },
       {
         type: "bar",
-        label: "Planetary Mass (relative to the Sun x 10^-6)",
+        label: "No morosos",
         data: [0.166, 2.081, 3.003, 0.323, 54.792, 85.886, 43.662, 51.514],
         backgroundColor: "rgba(71, 183,132,.5)",
         borderColor: "#47b784",
