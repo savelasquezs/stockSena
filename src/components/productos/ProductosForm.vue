@@ -6,7 +6,7 @@
           src="https://th.bing.com/th/id/OIP.o9e2Vz_Xf5LNHNozfLc1YQHaHa?pid=ImgDet&rs=1"
           loading="lazy"
           spinner-color="white"
-          width="800px"
+          width="100px"
         />
         <div class="text-h6 text-center q-my-xl">INGRESAR PRODUCTO</div>
       </div>
