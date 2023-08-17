@@ -79,6 +79,28 @@
               </q-card-section>
             </q-card>
           </q-dialog>
+          <div class="q-tables">
+            <!-- ventana emergente para ver detalle de producto -->
+            <q-dialog v-model="mostrarVentanaEmergenteVer">
+              <q-card style="width: 700px; max-width: 80vw">
+                <q-card-section>
+                  <q-card-section class="flex row justify-end q-pb-none">
+                    <q-btn
+                      dense
+                      round
+                      flat
+                      icon="close"
+                      v-close-popup
+                      style="width: 30px"
+                    >
+                      <q-tooltip class="bg-white text-red">Cerrar</q-tooltip>
+                    </q-btn>
+                  </q-card-section>
+                  <detalles-productos />
+                </q-card-section>
+              </q-card>
+            </q-dialog>
+          </div>
           <q-table
             style="height: 500px"
             flat
@@ -112,7 +134,7 @@
                   text-color="secondary"
                 />
                 <q-btn
-                  @click="eliminarVentanaEmergente"
+                  @click="eliminarProducto(props.rowIndex)"
                   icon="delete_forever"
                   rounded
                   size="10px"
@@ -162,6 +184,7 @@
 
 <script setup>
 import ProductosForm from "../components/productos/ProductosForm.vue";
+import detallesProductos from "../components/productos/detallesProductos.vue";
 import { defineComponent } from "vue";
 import { collection, onSnapshot } from "firebase/firestore";
 import { ref } from "vue";
@@ -169,6 +192,7 @@ import { db } from "../firebaseInit";
 import StadisticTableItem from "../components/utils/StadisticTableItem.vue";
 import SearchBar from "components/utils/SearchBar.vue";
 const mostrarVentanaEmergente = ref(false);
+const mostrarVentanaEmergenteVer = ref(false);
 import { exportFile } from "quasar";
 
 const filtro = ref("");
@@ -176,7 +200,7 @@ function toggleVentanaEmergente() {
   mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
 }
 function verVentanaEmergente() {
-  mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
+  mostrarVentanaEmergenteVer.value = !mostrarVentanaEmergenteVer.value;
 }
 function editarVentanaEmergente() {
   mostrarVentanaEmergente.value = !mostrarVentanaEmergente.value;
