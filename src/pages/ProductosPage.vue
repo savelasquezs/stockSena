@@ -32,29 +32,19 @@
           text-color="text-red-14"
         />
       </div>
-      <div class="q-tables">
-        <div class="q-mr-lg">
-          <div>
-            <q-input class="q-ml-sm" v-model="filtro" style="width: 410px" />
-          </div>
-          <div class="flex justify-end">
-            <div>
+      <q-dialog v-model="mostrarVentanaEmergente">
+        <q-card style="width: 700px; max-width: 80vw">
+          <q-card-section>
+            <q-card-section class="flex row justify-end q-pb-none">
               <q-btn
-                @click="toggleVentanaEmergente"
-                label="Agregar Producto"
-                icon="add_circle_outline"
-                color="primary"
-                style="width: 210px"
-                class="q-ml-sm"
-              />
-              <q-btn
-                @click="exportTable"
-                icon="file_download"
-                color="primary"
-                label="Descargar tabla"
-                class="q-ml-sm"
-                style="width: 210px"
+                dense
+                round
+                flat
+                icon="close"
+                v-close-popup
+                style="width: 30px"
               >
+                <q-tooltip class="bg-white text-red">Cerrar</q-tooltip>
               </q-btn>
             </div>
           </div>
@@ -146,51 +136,33 @@
           </q-table>
         </div>
       </div>
+            </q-card-section>
+            <productos-form />
+          </q-card-section>
+        </q-card>
+      </q-dialog>
+      //Aca va la tabla
+      <SimpleTable
+        :rows="dataTableArray"
+        :columns="productosStore.columns"
+        agregarElementoLabel="Agregar producto"
+      />
     </div>
   </div>
 </template>
 
-<style scoped>
-.q-tables {
-  padding: 5px;
-  background-color: #f5f5f5;
-}
-.search-bar {
-  display: flex;
-  align-items: center;
-  border: 2px solid #ccc;
-  border-radius: 24px;
-  padding: 3px;
-  margin-bottom: 5px;
-  max-width: 700px;
-  margin: 0 auto;
-  padding-right: 8px;
-}
-
-.search-icon,
-.clear-icon {
-  padding: 6px;
-  cursor: pointer;
-}
-
-.search-input {
-  border: none;
-  flex: 1;
-  padding: 6px;
-  background-color: #f5f5f5;
-  outline: none;
-}
-</style>
+<style scoped></style>
 
 <script setup>
 import ProductosForm from "../components/productos/ProductosForm.vue";
 import detallesProductos from "../components/productos/detallesProductos.vue";
 import { defineComponent } from "vue";
 import { collection, onSnapshot } from "firebase/firestore";
+import StadisticTableItem from "components/utils/StadisticTableItem.vue";
+import { useProductosStore } from "stores/productosStore";
+import SimpleTable from "components/utils/SimpleTable.vue";
 import { ref } from "vue";
-import { db } from "../firebaseInit";
-import StadisticTableItem from "../components/utils/StadisticTableItem.vue";
-import SearchBar from "components/utils/SearchBar.vue";
+
 const mostrarVentanaEmergente = ref(false);
 const mostrarVentanaEmergenteVer = ref(false);
 import { exportFile } from "quasar";
@@ -292,4 +264,7 @@ onSnapshot(tableRef, (snapshot) => {
     }
   });
 });
+const productosStore = useProductosStore();
+const dataTableArray = ref([]);
+dataTableArray.value = productosStore.productosDatabase;
 </script>

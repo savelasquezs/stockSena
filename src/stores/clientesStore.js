@@ -111,7 +111,7 @@ export const UseClientesStore = defineStore("clientes", {
     async listenChanges() {
       const q = query(collection(db, "customers"), orderBy("nombre"));
 
-      onSnapshot(q, (snapshot) => {
+      onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type == "added") {
             if (
@@ -139,6 +139,10 @@ export const UseClientesStore = defineStore("clientes", {
               (item) => item.docId != change.doc.id
             );
           }
+          const source = snapshot.metadata.fromCache
+            ? "local cache clientes"
+            : "server";
+          console.log("Data came from " + source);
         });
       });
     },

@@ -1,11 +1,46 @@
 import { defineStore } from "pinia";
-import { useDatabaseStore } from "./DatabaseStore";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 
 export const useProductosStore = defineStore("productos", {
   state: () => ({
     productosDatabase: [],
+    columns: [
+      {
+        name: "name",
+        required: true,
+        label: "Nombre",
+        align: "left",
+        field: (row) => row.name,
+        format: (val) => `${val}`,
+        sortable: true,
+      },
+
+      {
+        name: "Consumible",
+        align: "center",
+        label: "Consumible",
+        field: "consumable",
+        sortable: true,
+      },
+      {
+        name: "Stock Total",
+        label: "Stock Total",
+        field: "totalStock",
+        sortable: true,
+      },
+
+      {
+        name: "Código de barra",
+        label: "Código de barra",
+        field: "barCode",
+      },
+
+      { name: "Stock-Prestamo", label: "Stock-Prestamo", field: "totalStock" },
+
+      { name: "Almacen", label: "Almacen", field: "almacen" },
+      { name: "acciones", label: "Acciones", field: "acciones" },
+    ],
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,
@@ -28,10 +63,10 @@ export const useProductosStore = defineStore("productos", {
   },
 
   actions: {
-    listenChanges() {
+    async listenChanges() {
       const q = query(collection(db, "products"), orderBy("name"));
 
-      onSnapshot(q, (snapshot) => {
+      onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type == "added") {
             if (
@@ -61,6 +96,10 @@ export const useProductosStore = defineStore("productos", {
               (item) => item.docId != change.doc.id
             );
           }
+          const source = snapshot.metadata.fromCache
+            ? "local cache productos"
+            : "server";
+          console.log("Data came from " + source);
         });
       });
     },
