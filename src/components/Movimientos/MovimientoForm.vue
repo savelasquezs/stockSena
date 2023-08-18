@@ -88,7 +88,7 @@
               >
                 <template v-slot:append>
                   <q-icon
-                    name="chat 
+                    name="inventory_2
                 "
                   />
                 </template>
@@ -109,7 +109,7 @@
           <q-input color="teal" outlined v-model="proveedor" label="Proveedor">
             <template v-slot:append>
               <q-icon
-                name="precision_manufacturing 
+                name="precision_manufacturing
                 "
               />
             </template>
@@ -123,7 +123,7 @@
           >
             <template v-slot:append>
               <q-icon
-                name="chat 
+                name="chat
                 "
               />
             </template>

@@ -7,32 +7,33 @@ const routes = [
 
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("pages/IndexPage.vue") },
+      { path: "", component: () => import("pages/DashboardPage.vue") },
+      { path: "/index", component: () => import("pages/IndexPage.vue") },
       {
         path: "/clientes",
-        component: () => import("pages/ClientesRegistro.vue"),
+        component: () => import("pages/ClientesPage.vue"),
       },
       {
-        path: "/opciones",
+        path: "/clientes/:id",
         component: () => import("pages/ClientesOpciones.vue"),
       },
       {
-        path: "/productos",
-        component: () => import("pages/ProductosRegistro.vue"),
+        path: "/datosClientes",
+        component: () => import("pages/ClientesDatos.vue"),
       },
       {
         path: "/prestamos",
         component: () => import("src/pages/PrestamosPage.vue"),
       },
       {
-        path: "/tablaProductos",
-        name: "tablaProductos",
-        component: () => import("src/pages/TablaRegistros.vue"),
+        path: "/productos",
+        name: "productos",
+        component: () => import("src/pages/ProductosPage.vue"),
         props: true, // Permite pasar los parámetros como props
       },
       {
         path: "/Dashboard",
-        component: () => import("pages/PageDashboard.vue"),
+        component: () => import("pages/DashboardPage.vue"),
       },
       {
         path: "/movimientos",

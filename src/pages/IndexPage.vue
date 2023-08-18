@@ -33,7 +33,7 @@
 
     <date-picker @guardarFecha="(fecha) => console.log(fecha)" />
   </div>
-  <CustomFilterTable />
+
   <q-page class="flex flex-center"> </q-page>
 </template>
 
@@ -43,8 +43,6 @@ import AutocompleteInput from "components/utils/autocompleteInput.vue";
 import { db } from "src/firebaseInit";
 import { ref } from "vue";
 import DatePicker from "components/utils/DatePicker.vue";
-
-import CustomFilterTable from "src/components/utils/CustomFilterTable.vue";
 
 const options = ref(["Hola", "care", "nalgas"]);
 const name = ref("");

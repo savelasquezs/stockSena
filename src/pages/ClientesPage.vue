@@ -1,5 +1,5 @@
 <template>
-  <StadisticTableBar :stadisticTableBarInfo="movimientosStore.stadistics" />
+  <StadisticTableBar :stadisticTableBarInfo="clientesStore.stadistics" />
 
   <q-dialog v-model="formOppened">
     <q-card style="width: 800px; max-width: 80vw">
@@ -9,34 +9,36 @@
         </q-btn>
       </q-card-section>
       <q-card-section>
-        <movimiento-form @movimientoGuardado="formOppened = false" />
+        <ClientesForm @clienteGuardado="formOppened = false" />
       </q-card-section>
     </q-card>
   </q-dialog>
 
   <TableReuse
-    :dataArray="movimientosStore.movimientosDatabase"
-    :columns="movimientosStore.columns"
-    title="Tabla de movimientos"
-    :internalColumns="movimientosStore.internalColumns"
-    addText="Agregar Movimiento"
+    :dataArray="clientesStore.clientesDatabase"
+    :columns="clientesStore.columns"
+    title="Tabla de clientes"
+    :internalColumns="clientesStore.internalColumns"
+    addText="Agregar Cliente"
     @add="formOppened = true"
   />
 </template>
 
 <script setup>
-import MovimientoForm from "components/Movimientos/MovimientoForm.vue";
 import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import TableReuse from "components/utils/TableReuse.vue";
 import { ref } from "vue";
-import { UseMovimientosStore } from "stores/movimientosStore";
+import { UseClientesStore } from "stores/clientesStore";
+import ClientesForm from "src/components/clientes/ClientesForm.vue";
+import { data } from "autoprefixer";
 
 const formOppened = ref(false);
 const dataTableArray = ref([]);
-const movimientosStore = UseMovimientosStore();
+const clientesStore = UseClientesStore();
 
-movimientosStore.listenChanges().then(() => {
-  dataTableArray.value = movimientosStore.movimientosDatabase;
+clientesStore.listenChanges().then(() => {
+  dataTableArray.value = clientesStore.clientesDatabase;
+  console.log(clientesStore.clientesDatabase);
 });
 </script>
 

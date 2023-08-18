@@ -1,21 +1,37 @@
 <template>
-  <q-form @submit="recoverPasword" class="q-gutter-md">
-    <q-input
-      filled
-      type="email"
-      v-model="email"
-      label="Ingresa tu correo *"
-      lazy-rules
-      :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-    />
-  </q-form>
-  <div class="q-gutter-md">
-    <q-btn
-      @click="recoverPasword"
-      color="primary"
-      label="Recuperar contraseña"
-    />
-    <q-btn @click="returnLogin()" color="primary" label="Regresar" />
+  <div class="q-pa-md q-gutter-md q-flex">
+    <div>
+      <h5 class="text-h5 q-mb-md" style="">INGRESA A TU ALMACÉN</h5>
+      <p class="q-mb-md" style="color: #858282">
+        Ingresa con tu email y contraseña de tu almacén
+      </p>
+    </div>
+    <div class="">
+      <q-form @submit="recoverPasword" class="">
+        <q-input
+          filled
+          type="email"
+          v-model="email"
+          label="Ingresa tu correo *"
+          lazy-rules
+          style="width: 340px"
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+        />
+      </q-form>
+    </div>
+
+    <div class="q-gutter-md">
+      <q-btn
+        @click="recoverPasword"
+        color="primary"
+        label="Recuperar contraseña"
+      />
+      <q-btn
+        @click="returnLogin()"
+        label="Regresar"
+        style="background-color: red; color: #ffff"
+      />
+    </div>
   </div>
 </template>
 

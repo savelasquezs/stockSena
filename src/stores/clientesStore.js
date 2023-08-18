@@ -2,28 +2,42 @@ import { defineStore } from "pinia";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 
-export const UseMovimientosStore = defineStore("movimientos", {
+export const UseClientesStore = defineStore("clientes", {
   state: () => ({
-    movimientosDatabase: [],
+    clientesDatabase: [],
     columns: [
       {
-        name: "TipoMovimiento",
+        name: "TipoDoc",
         align: "center",
-        label: "Tipo de movimiento",
-        field: (row) => row.movimiento,
+        label: "Tipo de Documento",
+        field: (row) => row.tipoDoc,
         sortable: true,
       },
 
       {
-        name: "date",
-        label: "Fecha Movimiento",
-        field: (row) => row.fecha,
-        format: (val) => new Date(val).toLocaleDateString(),
+        name: "doc",
+        label: "Numero Documento",
+        field: (row) => row.numero_id,
       },
       {
-        name: "proveedor",
-        label: "Proveedor",
-        field: (row) => row.proveedor,
+        name: "nombre",
+        label: "Nombre",
+        field: (row) => row.nombre,
+      },
+      {
+        name: "apellido",
+        label: "Apellido",
+        field: (row) => row.apellido,
+      },
+      {
+        name: "area",
+        label: "Area",
+        field: (row) => row.area,
+      },
+      {
+        name: "rol",
+        label: "Rol",
+        field: (row) => row.rol,
       },
     ],
     internalColumns: [
@@ -95,40 +109,38 @@ export const UseMovimientosStore = defineStore("movimientos", {
 
   actions: {
     async listenChanges() {
-      const q = query(collection(db, "stockMovements"), orderBy("fecha"));
+      const q = query(collection(db, "customers"), orderBy("nombre"));
 
       onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type == "added") {
             if (
-              !this.movimientosDatabase.some(
-                (item) => item.docId == change.doc.id
-              )
+              !this.clientesDatabase.some((item) => item.docId == change.doc.id)
             ) {
               const data = {
                 docId: change.doc.id,
                 ...change.doc.data(),
               };
-              this.movimientosDatabase.unshift(data);
+              this.clientesDatabase.unshift(data);
             }
           } else if (change.type == "modified") {
-            let cambio = this.movimientosDatabase.find(
+            let cambio = this.clientesDatabase.find(
               (item) => item.docId == change.doc.id
             );
-            let index = this.movimientosDatabase.findIndex(
+            let index = this.clientesDatabase.findIndex(
               (item) => item.docId == change.doc.id
             );
-            this.movimientosDatabase[index] = {
+            this.clientesDatabase[index] = {
               ...cambio,
               ...change.doc.data(),
             };
           } else if (change.type == "removed") {
-            this.movimientosDatabase = this.movimientosDatabase.filter(
+            this.clientesDatabase = this.clientesDatabase.filter(
               (item) => item.docId != change.doc.id
             );
           }
           const source = snapshot.metadata.fromCache
-            ? "local cache movimientos"
+            ? "local cache clientes"
             : "server";
           console.log("Data came from " + source);
         });

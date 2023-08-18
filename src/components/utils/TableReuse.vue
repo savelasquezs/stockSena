@@ -37,7 +37,6 @@
         style="width: 200px"
       />
       <q-btn
-        v-if="rows.length !== 0"
         class="q-ml-sm"
         color="primary"
         :label="addText"

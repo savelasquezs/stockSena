@@ -52,7 +52,7 @@
         <TarjetaEstad
           icono="settings"
           titulo="586"
-          subtitulo="Almacen"
+          subtitulo="Productos"
           iconColor="light-blue-13"
         />
         <TarjetaEstad
@@ -107,7 +107,7 @@
 </template>
 
 <script setup>
-import TarjetaEstad from "./TarjetaEstad.vue";
+import TarjetaEstad from "components/dashboard/TarjetaEstad.vue";
 import GraficasView from "components/dashboard/GraphVue.vue";
 import TablaVue from "components/dashboard/TablaVue.vue";
 import GraphPrueba from "components/dashboard/PruebaVue.vue";

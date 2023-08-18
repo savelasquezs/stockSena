@@ -1,20 +1,18 @@
 <template>
-  <div class="flex flex-center content-center paginaCompleta">
+  <div class="flex flex-center">
+    <div>
+      <h5 class="text-h5 q-mb-md" style="">INGRESA A TU ALMACÉN</h5>
+      <p class="q-mb-md" style="color: #858282">
+        Ingresa con tu email y contraseña del tu almacén
+      </p>
+    </div>
     <div class="q-pa-md" style="max-width: 400px">
       <q-form @submit="onSubmit" class="q-gutter-md">
-        <q-img
-          src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-          loading="lazy"
-          spinner-color="white"
-          width="300px"
-          class=""
-        />
         <q-input
           filled
           type="email"
           v-model="email"
-          label="Ingresa tu correo *"
-          hint="Correo electronico"
+          label="Ingresa tu correo*"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
@@ -32,22 +30,26 @@
         />
 
         <q-btn
-          label="Entrar"
+          label="Ingresa"
           type="submit"
           color="primary"
           class="q-gutter-ml"
-          style="he"
+          style="width: 370px; height: 45px"
         />
-        <q-btn
-          @click="recoverPasword()"
-          color="primary"
-          label="Recuperar contraseña"
-        />
-        <q-btn
-          @click="registerUser()"
-          color="primary"
-          label="Registrar Cuenta"
-        />
+        <p style="text-align: center; margin-top: 20px">
+          <span
+            style="color: #1976d2; cursor: pointer"
+            @click="recoverPasword()"
+          >
+            Recuperar contraseña
+          </span>
+        </p>
+        <p style="text-align: center; margin-top: 20px">
+          <span> ¿No tienes cuenta </span>
+          <span style="color: #1976d2; cursor: pointer" @click="registerUser()">
+            Registrar Cuenta
+          </span>
+        </p>
       </q-form>
     </div>
   </div>
