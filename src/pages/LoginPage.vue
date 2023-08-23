@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-center content-center paginaCompleta">
-    <div class="q-pa-md" style="max-width: 400px">
+    <div class="q-pa-md" style="max-width: 400px">      
       <q-form @submit="onSubmit" class="q-gutter-md">
         <q-img
           src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
@@ -51,10 +51,12 @@
       </q-form>
     </div>
   </div>
+
 </template>
 
 <script setup>
 import { ref } from "vue";
+
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "src/firebaseInit";
 import { sendPasswordResetEmail } from "firebase/auth";
@@ -99,6 +101,7 @@ function recoverPasword() {
 function registerUser() {
   router.push("/register");
 }
+
 </script>
 
 <style>

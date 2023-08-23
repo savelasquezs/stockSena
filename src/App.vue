@@ -14,6 +14,7 @@ const $q = useQuasar();
 
 const router = useRouter();
 import { collection, doc, getDoc } from "firebase/firestore";
+import CuentasManejoVue from "./pages/CuentasManejo.vue";
 
 const productosStore = useProductosStore();
 productosStore.listenChanges();
