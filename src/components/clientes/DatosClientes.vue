@@ -1,35 +1,77 @@
 <template>
-  <q-page>
-    <!-- Aquí tienes tu formulario con los inputs y campos necesarios -->
-    <q-input v-model="Nombre" label="Nombre" />
-    <q-input v-model="APellido" label="Email" />
+  <div class="client-info-card">
+    <q-card class="q-pa-md">
+      <q-card-section class="text-h6 q-flex justify-between items-center">
+        Información del Cliente
+        <q-btn class="" color="primary" label="Editar" />
+      </q-card-section>
+      <q-card-section> </q-card-section>
+      <q-card-section>
+        <div class="q-gutter-md">
+          <div class="q-mb-md">
+            <strong>Nombre:</strong><span class="info-client">Joan</span>
+            <!-- {{ cliente.nombre }} -->
+          </div>
+          <div class="q-mb-md">
+            <strong>Apellido:</strong>
+            <span class="info-client">Zapata</span>
+            <!-- {{ cliente.apellido }} -->
+          </div>
+          <div class="q-mb-md">
+            <strong>Docuemnto:</strong
+            ><span class="info-client">1027800932</span>
+            <!-- {{ cliente.apellido }} -->
+          </div>
+          <div class="q-mb-md">
+            <strong>Estado:</strong><span class="info-client">Morosos</span>
+            <!-- {{ cliente.apellido }} -->
+          </div>
 
-    <q-btn @click="enviarFormulario" label="Enviar" />
-  </q-page>
+          <!-- Agrega más campos de información del cliente aquí -->
+        </div>
+      </q-card-section>
+    </q-card>
+  </div>
 </template>
 
 <script>
+import AutocompleteInput from "components/utils/autocompleteInput.vue";
 export default {
   data() {
     return {
-      nombre: "",
-      email: "",
+      Tipo_documento: null,
+      options_Tipo_documento: ["SEbas", "Joan"],
     };
-  },
-  methods: {
-    enviarFormulario() {
-      // Aquí podrías realizar alguna validación adicional antes de enviar los datos.
-      // Por ejemplo, asegurarte de que los campos estén llenos correctamente.
-
-      // Enviar los datos a la otra pantalla usando enrutamiento.
-      this.$router.push({
-        name: "mostrar-datos",
-        params: {
-          nombre: this.nombre,
-          email: this.email,
-        },
-      });
-    },
   },
 };
 </script>
+
+<style scoped>
+.client-info-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 50px;
+}
+
+.q-card {
+  max-width: 100%;
+  width: 100%;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.q-card-section {
+  padding: 20px;
+}
+
+.q-gutter-md > * {
+  margin-bottom: 20px;
+}
+
+.text-h6 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+</style>

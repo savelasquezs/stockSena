@@ -1,17 +1,28 @@
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 import { defineStore } from "pinia";
-import { db } from "src/firebaseInit";
+import { auth, db } from "src/firebaseInit";
+import { Notify } from "quasar";
 
-export const useDatabaseStore = defineStore("productos", {
-  state: () => ({
-    productosDatabase: [],
-  }),
-  getters: {
-    doubleCount: (state) => state.counter * 2,
-  },
+const notificar = (message) => {
+  Notify.create({
+    color: "accent",
+    icon: "done_outline",
+    message,
+    timeout: 3500,
+  });
+};
 
+export const useDatabaseStore = defineStore("database", {
   actions: {
-    escucharCambios({ store, tabla, ordenarPor, arrayName }) {
+    async escucharCambios(store, tabla, ordenarPor, arrayName) {
       const q = ordenarPor
         ? query(collection(db, tabla), orderBy(ordenarPor))
         : collection(db, tabla);
@@ -42,12 +53,16 @@ export const useDatabaseStore = defineStore("productos", {
       });
     },
     async saveElement(data, tabla) {
-      const docRef = await addDoc(collection(db, tabla), data);
+      const completedData = { createdBy: auth.currentUser.email, ...data };
+      const docRef = await addDoc(collection(db, tabla), completedData);
+      notificar("Guardado exitosamente");
       return docRef;
     },
     async updateElement(data, tabla, id) {
+      const completedData = { lastUpdatedBy: auth.currentUser.email, ...data };
       const docRef = doc(db, tabla, id);
-      await updateDoc(docRef, data);
+      notificar("Registro actualizado exitosamente");
+      await updateDoc(docRef, completedData);
     },
   },
 });

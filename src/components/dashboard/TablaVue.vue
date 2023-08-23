@@ -1,16 +1,5 @@
 <template>
   <div class="q-pa-md" style="background-color: #f5f5f5">
-    <div class="q-pa-md row items-start q-gutter-md flex justify-center">
-      <q-item clickable to="/">
-        <q-img
-          src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-          loading="lazy"
-          spinner-color="white"
-          width="80px"
-          class=""
-        />
-      </q-item>
-    </div>
     <q-table
       flat
       bordered
@@ -149,4 +138,3 @@ const rows = [
   },
 ];
 </script>
-

@@ -9,115 +9,113 @@
         class=""
       />
     </div>
-    <q-page class="flex content-center">
-      <div class="q-gutter-md q-mx-lg">
-        <q-select
-          outlined
-          label="Tipo documento"
-          v-model="Tipo_documento"
-          :options="options_Tipo_documento"
-          transition-show="flip-up"
-          transition-hide="flip-up"
-          style="width: 250px"
-        />
+    <q-form @submit="guardarCliente">
+      <div class="flex content-center">
+        <div class="q-gutter-md q-mx-lg">
+          <q-select
+            outlined
+            label="Tipo documento"
+            v-model="Tipo_documento"
+            :options="options_Tipo_documento"
+            transition-show="flip-up"
+            transition-hide="flip-up"
+            style="width: 250px"
+          />
+          <q-input
+            outlined
+            label="Numero documento"
+            :rules="[(val) => val > 0 || 'Por favor ingrese documento valido']"
+            v-model="Numero_documento"
+          />
+          <q-input
+            outlined
+            label="Nombre"
+            v-model="Nombre"
+            :rules="[
+              (val) => val.length > 2 || 'Por favor ingrese nombre valido',
+              [],
+            ]"
+          />
+        </div>
+        <div class="q-gutter-md">
+          <q-input
+            outlined
+            label="Apellido"
+            v-model="Apellido"
+            :rules="[
+              (val) => val.length > 2 || 'Por favor ingrese nombre valido',
+            ]"
+          />
 
-        <q-input
-          outlined
-          label="Numero documento"
-          :rules="[(val) => val > 0 || 'Por favor ingrese documento valido']"
-          v-model="Numero_documento"
-        />
+          <q-select outlined label="Rol" v-model="Rol" :options="options_Rol" />
 
-        <q-input
-          outlined
-          label="Nombre"
-          v-model="Nombre"
-          :rules="[
-            (val) => val.length > 2 || 'Por favor ingrese nombre valido',
-            [],
-          ]"
-        />
+          <q-select
+            outlined
+            label="Area"
+            v-model="Area"
+            :options="options_Area"
+          />
+
+          <q-btn type="submit" label="Guardar cliente" color="green-14" />
+        </div>
       </div>
-      <div class="q-gutter-md">
-        <q-input
-          outlined
-          label="Apellido"
-          v-model="Apellido"
-          :rules="[
-            (val) => val.length > 2 || 'Por favor ingrese nombre valido',
-          ]"
-        />
-
-        <q-select outlined label="Rol" v-model="Rol" :options="options_Rol" />
-
-        <q-select
-          outlined
-          label="Area"
-          v-model="Area"
-          :options="options_Area"
-        />
-
-        <q-btn
-          type="submit"
-          label="Iniciar sesión"
-          color="green-14"
-          style="high: 7750px"
-        />
-
-        <q-btn
-          label="Reset"
-          type="reset"
-          color="primary"
-          flat
-          class="q-ml-sm"
-        />
-      </div>
-    </q-page>
+    </q-form>
   </div>
 </template>
 
-<script>
+<script setup>
 import AutocompleteInput from "components/utils/autocompleteInput.vue";
-import autocompleteinput from "components/utils/autocompleteInput.vue";
-export default {
-  data() {
-    return {
-      Tipo_documento: null,
-      options_Tipo_documento: [
-        "Cedula de ciudadania",
-        "Tarjeta de indentidad",
-        "Pasaporte",
-      ],
-      Numero_documento: "",
-      Nombre: "",
-      Apellido: "",
-      Rol: null,
-      options_Rol: ["Instructor", "aprendiz"],
-      Area: null,
-      options_Area: [
-        "Tics",
-        "Manufactura",
-        "Electricidad",
-        "Automotriz",
-        "Automatizacion",
-      ],
-    };
-  },
-  methods: {
-    handleSubmit() {
-      // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
-      // Por ejemplo, puede usar Axios para realizar una solicitud POST al servidor.
-      // Luego, puede manejar la respuesta según sea necesario.
-      console.log("Tipo_documento:", this.Tipo_documento);
-      console.log("Numero documento:", this.Numero_documento);
-      console.log("Nombre:", this.Nombre);
-      console.log("Apellido:", this.Apellido);
-      console.log("Rol:", this.Rol);
-      console.log("Area:", this.Area);
-    },
-  },
-  components: { AutocompleteInput },
-};
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { useQuasar } from "quasar";
+import { db } from "src/firebaseInit";
+import { ref } from "vue";
+
+const Tipo_documento = ref(null);
+const options_Tipo_documento = ref([
+  "Cedula de ciudadania",
+  "Tarjeta de indentidad",
+  "Pasaporte",
+]);
+const Numero_documento = ref("");
+const Nombre = ref("");
+const Apellido = ref("");
+const Rol = ref(null);
+const options_Rol = ref(["Instructor", "aprendiz"]);
+const Area = ref(null);
+const $q = useQuasar();
+
+const emit = defineEmits(["clienteGuardado"]);
+const options_Area = ref([
+  "Tics",
+  "Manufactura",
+  "Electricidad",
+  "Automotriz",
+  "Automatizacion",
+]);
+
+function guardarCliente() {
+  // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
+  // Por ejemplo, puede usar Axios para realizar una solicitud POST al servidor.
+  // Luego, puede manejar la respuesta según sea necesario.
+  const data = {
+    tipoDoc: Tipo_documento.value,
+    numero_id: Numero_documento.value,
+    nombre: Nombre.value,
+    apellido: Apellido.value,
+    rol: Rol.value,
+    area: Area.value,
+  };
+  const docRef = doc(db, "customers", data.numero_id);
+  setDoc(docRef, data)
+    .then(() => {
+      emit("clienteGuardado");
+      $q.notify({
+        message: "Cliente guardado exitosamente",
+        color: "accent",
+      });
+    })
+    .catch((err) => console.log(err));
+}
 </script>
 
 <style scoped>

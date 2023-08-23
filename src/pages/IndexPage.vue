@@ -33,6 +33,7 @@
 
     <date-picker @guardarFecha="(fecha) => console.log(fecha)" />
   </div>
+
   <q-page class="flex flex-center"> </q-page>
 </template>
 

@@ -7,47 +7,50 @@ const routes = [
 
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("pages/IndexPage.vue") },
+      { path: "", component: () => import("pages/DashboardPage.vue") },
+      { path: "/index", component: () => import("pages/IndexPage.vue") },
       {
         path: "/clientes",
-        component: () => import("pages/ClientesRegistro.vue"),
+        component: () => import("pages/ClientesPage.vue"),
       },
       {
-        path: "/opciones",
+        path: "/clientes/:id",
         component: () => import("pages/ClientesOpciones.vue"),
       },
       {
-        path: "/productos",
-        component: () => import("pages/ProductosRegistro.vue"),
+        path: "/datosClientes",
+        component: () => import("pages/ClientesDatos.vue"),
       },
       {
         path: "/prestamos",
-        component: () => import("pages/PrestamosRegistro.vue"),
+        component: () => import("src/pages/PrestamosPage.vue"),
       },
       {
-        path: "/tablaPrestamos",
-        component: () => import("pages/tblPrestamos.vue"),
-      },
-      {
-        path: "/detalles",
-        name: "detalles",
-        component: () => import("pages/DetallesRegistros.vue"),
+        path: "/productos",
+        name: "productos",
+        component: () => import("src/pages/ProductosPage.vue"),
         props: true, // Permite pasar los parámetros como props
       },
       {
         path: "/Dashboard",
-        component: () => import("pages/PageDashboard.vue"),
+        component: () => import("pages/DashboardPage.vue"),
+      },
+      {
+        path: "/movimientos",
+        component: () => import("pages/MovimientosProductos.vue"),
       },
       {
         path: "/cuentas",
         component: () => import("pages/CuentasManejo.vue"),
       },
+      {
+        path: "/experimento",
+        component: () => import("pages/experimentalPage.vue"),
+      },
     ],
   },
   {
     path: "/account",
-
-
 
     component: () => import("layouts/AccountLayout.vue"),
     children: [

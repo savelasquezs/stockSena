@@ -1,6 +1,7 @@
 <template>
   <q-item-section style="background-color: #f5f5f5">
     <div class="flex justify-evenly q-mt-lg">
+      {{ userId }}
       <q-card class="my-card q-px-lg">
         <q-icon
           name="article"
@@ -49,7 +50,6 @@
       </q-card>
     </div>
 
-    <search-bar />
     <div>
       <q-table
         :rows="tableData"
@@ -68,6 +68,18 @@
 </template>
 
 <script setup>
+import SearchBar from "components/utils/SearchBar.vue";
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const userId = ref(route.params.id);
+
+watch(
+  () => route.params.id,
+  (toId, fromId) => {
+    userId.value = toId;
+  }
+);
 const tableColumns = [
   {
     name: "id",
@@ -110,9 +122,7 @@ const tableData = [
 ];
 </script>
 
-<script>
-import SearchBar from "components/utils/SearchBar.vue";
-</script>
+<script></script>
 
 <style>
 .bg-primary {
