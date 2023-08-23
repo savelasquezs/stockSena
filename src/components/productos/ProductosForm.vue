@@ -80,38 +80,40 @@
       <q-btn
         type="submit"
         icon="save"
-        label="Guardar"
+        :label="editando ? 'Actualizar' : 'Guardar'"
         color="primary"
-        @click="toggleVentanaEmergente"
+        style="width: 100%"
       />
     </q-form>
   </div>
 
   <!-- Mostrar detalles ingresados -->
-  <q-card v-if="showDetails" class="q-mb-md">
-    <q-card-section>
-      <div class="text-h6">Detalles ingresados:</div>
-      <div>Nombre: {{ formulario.nombre }}</div>
-      <div>Consumible: {{ formulario.consumible }}</div>
-      <div>Stock Total: {{ formulario.stockTotal }}</div>
-      <div>Código de Barra: {{ formulario.codigoBarra }}</div>
-    </q-card-section>
-  </q-card>
 </template>
 
 <script setup>
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "src/firebaseInit";
-import { computed, ref } from "vue";
+import { useDatabaseStore } from "src/stores/DatabaseStore";
+import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-// import DatePicker from "components/utils/DatePicker.vue";
+const emit = defineEmits(["enviado"]);
+
+const props = defineProps({
+  editando: Boolean,
+  item: Object,
+});
+
+// Watch for changes to the item prop and populate the form fields when in edit mode
+
 const router = useRouter();
 const formulario = ref({});
 const dueDate = ref("");
-
+const DatabaseStore = useDatabaseStore();
+if (props.editando) {
+  formulario.value.nombre = props.item.name;
+  formulario.value.consumible = props.item.consumable;
+  formulario.value.stockTotal = props.item.totalStock;
+  formulario.value.codigoBarra = props.item.barCode;
+}
 async function submitForm() {
-  const tabla = collection(db, "products");
-  console.log(formulario);
   const data = {
     name: formulario.value.nombre,
     consumable: formulario.value.consumible,
@@ -120,13 +122,14 @@ async function submitForm() {
     borrowedQuantity: 0,
     almacen: "tics",
   };
-  const refDoc = await addDoc(tabla, data);
-  console.log("documento guardado exitosamente con id _:", refDoc.id);
+  if (props.editando) {
+    DatabaseStore.updateElement(data, "products", props.item.docId);
+  } else {
+    DatabaseStore.saveElement(data, "products");
+  }
 
+  emit("enviado");
   // Redirigir a la página de detalles y pasar los datos mediante una ruta con parámetros
-  router.push({
-    name: "tabla",
-  });
 }
 </script>
 

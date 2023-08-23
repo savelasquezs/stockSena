@@ -174,9 +174,10 @@ const description = ref("");
 
 async function buscarCliente() {
   $q.loading.show();
+  console.log(documentNumber.value);
   const q = query(
     collection(db, "customers"),
-    where("numero_id", "==", parseInt(documentNumber.value))
+    where("numero_id", "==", documentNumber.value)
   );
   let docs = null;
   let docsFromCache = await getDocsFromCache(q);

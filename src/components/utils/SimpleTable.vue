@@ -7,7 +7,7 @@
       <div class="flex justify-end">
         <div>
           <q-btn
-            @click="$emit('toogleForm')"
+            @click="$emit('agregando')"
             :label="agregarElementoLabel"
             icon="add_circle_outline"
             color="primary"
@@ -43,7 +43,7 @@
         <template v-slot:body-cell-acciones="props">
           <q-td :props="props">
             <q-btn
-              @click="$emit('verProducto', props.rows.docId)"
+              @click="$emit('viendo', props.rows.docId)"
               icon="visibility"
               rounded
               size="10px"
@@ -51,20 +51,12 @@
               text-color="green-7"
             />
             <q-btn
-              @click="$emit('editarProducto', props.rows.docId)"
+              @click="searchData(props.row.docId)"
               icon="edit"
               rounded
               size="10px"
               style="width: 20px; margin-right: 8px"
               text-color="secondary"
-            />
-            <q-btn
-              @click="$emit('eliminarProducto', props.rows.docId)"
-              icon="delete_forever"
-              rounded
-              size="10px"
-              style="width: 20px; margin-right: 8px"
-              text-color="red-8"
             />
           </q-td>
         </template>
@@ -77,6 +69,13 @@
 const props = defineProps(["agregarElementoLabel", "rows", "columns"]);
 import { exportFile } from "quasar";
 import { ref } from "vue";
+const emit = defineEmits(["agregando", "viendo", "editando"]);
+
+function searchData(id) {
+  const item = props.rows.find((item) => item.docId == id);
+  emit("editando", item);
+  return item;
+}
 
 const filtro = ref("");
 const exportTable = () => {
