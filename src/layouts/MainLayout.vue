@@ -70,7 +70,6 @@
 </template>
 
 <script setup>
-import { defineComponent, inject, ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 //importación cierre de sesión
 import { signOut } from "firebase/auth";
