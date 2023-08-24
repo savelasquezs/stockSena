@@ -21,7 +21,7 @@ console.log(DatabaseStore);
 DatabaseStore.escucharCambios(
   productosStore,
   "products",
-  "name",
+  "nombre",
   "productosDatabase"
 );
 
