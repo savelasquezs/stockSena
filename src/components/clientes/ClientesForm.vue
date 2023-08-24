@@ -64,7 +64,7 @@
 
 <script setup>
 import AutocompleteInput from "components/utils/autocompleteInput.vue";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useQuasar } from "quasar";
 import { db } from "src/firebaseInit";
 import { ref } from "vue";
@@ -104,7 +104,8 @@ function guardarCliente() {
     rol: Rol.value,
     area: Area.value,
   };
-  addDoc(collection(db, "customers"), data)
+  const docRef = doc(db, "customers", data.numero_id);
+  setDoc(docRef, data)
     .then(() => {
       emit("clienteGuardado");
       $q.notify({

@@ -43,6 +43,10 @@ const routes = [
         path: "/cuentas",
         component: () => import("pages/CuentasManejo.vue"),
       },
+      {
+        path: "/experimento",
+        component: () => import("pages/experimentalPage.vue"),
+      },
     ],
   },
   {

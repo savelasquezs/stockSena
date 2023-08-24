@@ -97,7 +97,7 @@ export const UseMovimientosStore = defineStore("movimientos", {
     async listenChanges() {
       const q = query(collection(db, "stockMovements"), orderBy("fecha"));
 
-      onSnapshot(q, (snapshot) => {
+      onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type == "added") {
             if (
@@ -127,6 +127,10 @@ export const UseMovimientosStore = defineStore("movimientos", {
               (item) => item.docId != change.doc.id
             );
           }
+          const source = snapshot.metadata.fromCache
+            ? "local cache movimientos"
+            : "server";
+          console.log("Data came from " + source);
         });
       });
     },
