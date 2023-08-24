@@ -10,7 +10,7 @@
       />
       <h5 class="text-h5 q-mb-md" style="">INGRESA A TU ALMACEN</h5>
       <p class="q-mb-md" style="color: #858282">
-        Ingresa con tu email y contraseña del tu alamcen
+        Ingresa con tu email y contraseña de tu alamcen
       </p>
     </div>
     <div class="q-pa-md" style="max-width: 400px">

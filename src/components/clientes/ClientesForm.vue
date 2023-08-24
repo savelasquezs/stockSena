@@ -1,14 +1,13 @@
 <template>
-  <div class="flex justify-evenly content-center complete items-center">
+  <div class="flex column flex-center">
     <div>
       <q-img
         src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
         loading="lazy"
-        spinner-color="white"
-        width="300px"
-        class=""
+        style="width: 90px"
       />
     </div>
+
     <q-form @submit="guardarCliente">
       <div class="flex content-center">
         <div class="q-gutter-md q-mx-lg">
