@@ -53,10 +53,12 @@
       </q-form>
     </div>
   </div>
+
 </template>
 
 <script setup>
 import { ref } from "vue";
+
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "src/firebaseInit";
 import { sendPasswordResetEmail } from "firebase/auth";
@@ -101,6 +103,7 @@ function recoverPasword() {
 function registerUser() {
   router.push("/register");
 }
+
 </script>
 
 <style>
