@@ -70,13 +70,15 @@
 </template>
 
 <script setup>
-import { defineComponent, inject, ref } from "vue";
+
+import { inject, ref } from 'vue';
 import EssentialLink from "components/EssentialLink.vue";
 //importación cierre de sesión
 import { signOut } from "firebase/auth";
 import { auth } from "src/firebaseInit";
 //redireccion
 import { useRouter } from "vue-router";
+
 
 const user = inject("user") || "raro";
 

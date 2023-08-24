@@ -11,7 +11,7 @@ export const useProductosStore = defineStore("productos", {
         required: true,
         label: "Nombre",
         align: "left",
-        field: (row) => row.name,
+        field: (row) => row.nombre,
         format: (val) => `${val}`,
         sortable: true,
       },
@@ -20,13 +20,13 @@ export const useProductosStore = defineStore("productos", {
         name: "Consumible",
         align: "center",
         label: "Consumible",
-        field: "consumable",
+        field: (row) => row.isConsumable,
         sortable: true,
       },
       {
         name: "Stock Total",
         label: "Stock Total",
-        field: "totalStock",
+        field: (row) => row.stockTotal,
         sortable: true,
       },
 
@@ -40,6 +40,32 @@ export const useProductosStore = defineStore("productos", {
 
       { name: "Almacen", label: "Almacen", field: "almacen" },
       { name: "acciones", label: "Acciones", field: "acciones" },
+    ],
+    stadisticTableBarInfo: [
+      {
+        text_color: "light-green-14",
+        titulo: "Productos devueltos",
+        valor: "5652",
+        periodo: "Ultima semana",
+      },
+      {
+        text_color: "light-green-14",
+        titulo: "Productos prestados",
+        valor: "300",
+        periodo: "Ultima semana",
+      },
+      {
+        text_color: "text-yellow",
+        titulo: "Total productos",
+        valor: "15000",
+        periodo: "Ultima semana",
+      },
+      {
+        text_color: "text-pink",
+        titulo: "Diandry",
+        valor: "8569522",
+        periodo: "Ultima semana",
+      },
     ],
   }),
   getters: {

@@ -3,7 +3,7 @@
     <div>
       <h5 class="text-h5 q-mb-md" style="">INGRESA A TU ALMACÉN</h5>
       <p class="q-mb-md" style="color: #858282">
-        Ingresa con tu email y contraseña de tu almacén
+        Ingresa con tu email y contraseña del tu alamcen
       </p>
     </div>
     <div class="q-pa-md" style="max-width: 400px">
@@ -57,6 +57,7 @@
 
 <script setup>
 import { ref } from "vue";
+
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "src/firebaseInit";
 import { sendPasswordResetEmail } from "firebase/auth";

@@ -1,14 +1,13 @@
 <template>
-  <div class="flex justify-evenly content-center complete items-center">
+  <div class="flex column flex-center">
     <div>
       <q-img
         src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
         loading="lazy"
-        spinner-color="white"
-        width="300px"
-        class=""
+        style="width: 90px"
       />
     </div>
+
     <q-form @submit="guardarCliente">
       <div class="flex content-center">
         <div class="q-gutter-md q-mx-lg">
@@ -65,7 +64,7 @@
 
 <script setup>
 import AutocompleteInput from "components/utils/autocompleteInput.vue";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useQuasar } from "quasar";
 import { db } from "src/firebaseInit";
 import { ref } from "vue";
@@ -105,7 +104,8 @@ function guardarCliente() {
     rol: Rol.value,
     area: Area.value,
   };
-  addDoc(collection(db, "customers"), data)
+  const docRef = doc(db, "customers", data.numero_id);
+  setDoc(docRef, data)
     .then(() => {
       emit("clienteGuardado");
       $q.notify({
