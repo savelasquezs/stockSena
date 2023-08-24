@@ -5,7 +5,7 @@
     <div class="q-pa-md q-gutter-md" style="width: 70%; padding: 20px">
       <div class="flex no-wrap justify-evenly">
         <TarjetaEstad
-          icono="inventory"
+          icono="event_available"
           titulo="202"
           subtitulo="Total de prestamos"
           iconColor="light-blue-13"
@@ -18,7 +18,7 @@
         />
 
         <TarjetaEstad
-          icono="multiple_stop"
+          icono="social_distance"
           titulo="300"
           subtitulo="Cambios"
           iconColor="light-blue-13"
@@ -50,7 +50,7 @@
       <!-- inicio tarjetas laterales superiores -->
       <div class="flex no-wrap justify-evenly">
         <TarjetaEstad
-          icono="settings"
+          icono="inventory"
           titulo="586"
           subtitulo="Productos"
           iconColor="light-blue-13"
@@ -104,9 +104,12 @@
       </div>
     </div>
   </div>
+
+  <BarcodeGenerator />
 </template>
 
 <script setup>
+import BarcodeGenerator from "components/dashboard/BarcodeGenerator.vue";
 import TarjetaEstad from "components/dashboard/TarjetaEstad.vue";
 import GraficasView from "components/dashboard/GraphVue.vue";
 import TablaVue from "components/dashboard/TablaVue.vue";
