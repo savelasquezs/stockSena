@@ -1,0 +1,110 @@
+<template>
+  <q-form @submit="$emit('enviado', completedForm)" class="">
+    <div>
+      <q-input
+        outlined
+        v-model="formulario.nombre"
+        label="Nombre"
+        required
+        :rules="[(val) => val.length > 2 || 'Por favor un nombre valido']"
+      >
+        <template v-slot:append>
+          <q-icon
+            name="person_outline
+                "
+            color="accent"
+          />
+        </template>
+      </q-input>
+
+      <q-input
+        outlined
+        v-model.number="formulario.stockTotal"
+        label="Stock Total"
+        type="number"
+        required
+        :rules="[(val) => val > 0 || 'El valor debe ser mayor a 0']"
+        class="q-my-lg"
+      >
+        <template v-slot:append>
+          <q-icon
+            name="numbers
+                "
+            color="accent"
+          />
+        </template>
+      </q-input>
+      <q-input
+        outlined
+        v-model.number="formulario.codigoBarra"
+        label="Código de Barra"
+        required
+        class="q-my-lg"
+      >
+        <template v-slot:append>
+          <q-icon
+            name="view_week
+                "
+            color="accent"
+          />
+        </template>
+      </q-input>
+
+      <q-input
+        outlined
+        v-model.number="formulario.descripcion"
+        label="Descripción"
+        required
+        class="q-my-lg"
+      >
+        <template v-slot:append>
+          <q-icon
+            name="description
+                "
+            color="accent"
+          />
+        </template>
+      </q-input>
+      <q-select
+        outlined
+        required
+        label="Unidad de medida"
+        v-model="formulario.unidadMedida"
+        :options="options"
+        class="q-my-lg"
+      />
+
+      <q-btn
+        type="submit"
+        icon="save"
+        :label="editando ? 'Actualizar' : 'Guardar'"
+        color="primary"
+        style="width: 100%"
+      />
+    </div>
+  </q-form>
+</template>
+
+<script setup>
+import { computed, ref } from "vue";
+
+const props = defineProps({ editando: Boolean, item: Object });
+const formulario = ref({});
+const options = ref(["Unidad", "Libra", "Kilo", "Metro"]);
+const completedForm = computed(() => {
+  return {
+    ...formulario.value,
+    borrowedQuantity: 0,
+    isConsumable: true,
+  };
+});
+
+if (props.editando) {
+  console.log(props.item);
+  formulario.value.nombre = props.item.nombre;
+  formulario.value.stockTotal = props.item.stockTotal;
+  formulario.value.codigoBarra = props.item.codigoBarra;
+}
+</script>
+
+<style lang="scss" scoped></style>
