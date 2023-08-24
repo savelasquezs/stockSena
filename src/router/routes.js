@@ -47,6 +47,10 @@ const routes = [
         path: "/experimento",
         component: () => import("pages/experimentalPage.vue"),
       },
+       {
+        path: "/register",
+        component: () => import("pages/RegisterPage.vue"),
+      },
     ],
   },
   {
@@ -62,10 +66,7 @@ const routes = [
         path: "/recover",
         component: () => import("pages/RecoverPage.vue"),
       },
-      {
-        path: "/register",
-        component: () => import("pages/RegisterPage.vue"),
-      },
+
     ],
   },
 
