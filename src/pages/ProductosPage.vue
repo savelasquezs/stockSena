@@ -42,7 +42,11 @@
         />
       </template>
       <template #devolutivos>
-        <TableReuse :rows="productosStore.productosDevolutivos" />
+        <TableReuse
+          :dataArray="productosStore.devolutivosRows"
+          :columns="productosStore.devolutivosCols"
+          :internalColumns="productosStore.devolutivosInternalCols"
+        />
       </template>
     </Tabs>
   </div>
