@@ -74,18 +74,20 @@ export const useProductosStore = defineStore("productos", {
       const productosNombreArray = state.productosDatabase.map(
         (producto) => producto.name
       );
-      console.log(productosNombreArray);
+
       return productosNombreArray;
     },
-  },
-  getQuantity() {
-    return (nombreProducto) => {
-      const producto = this.productosDatabase.find(
-        (producto) => producto.name == nombreProducto
+    productosConsumibles: (state) => {
+      const consumibles = state.productosDatabase.filter(
+        (producto) => producto.isConsumable
       );
-      console.log(producto);
-      return producto;
-    };
+      return consumibles;
+    },
+    productosDevolutivos: (state) => {
+      return state.productosDatabase.filter(
+        (producto) => !producto.isConsumable
+      );
+    },
   },
 
   actions: {

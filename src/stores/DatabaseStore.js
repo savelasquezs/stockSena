@@ -53,7 +53,12 @@ export const useDatabaseStore = defineStore("database", {
       });
     },
     async saveElement(data, tabla) {
-      const completedData = { createdBy: auth.currentUser.email, ...data };
+      const almacen = JSON.parse(localStorage.getItem("user")).almacen;
+      const completedData = {
+        almacen,
+        createdBy: auth.currentUser.email,
+        ...data,
+      };
       const docRef = await addDoc(collection(db, tabla), completedData);
       notificar("Guardado exitosamente");
       return docRef;
