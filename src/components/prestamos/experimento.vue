@@ -8,13 +8,25 @@
     />
   </div>
   <div class="flex flex-center">
-    <q-radio v-model="formulario" val="programa" class="text-h6"
+    <q-radio
+      checked-icon="task_alt"
+      v-model="formulario"
+      val="programa"
+      class="text-h6"
       >Crear Programar</q-radio
     >
-    <q-radio v-model="formulario" val="materia" class="text-h6"
+    <q-radio
+      checked-icon="task_alt"
+      v-model="formulario"
+      val="materia"
+      class="text-h6"
       >Crear Materia</q-radio
     >
-    <q-radio v-model="formulario" val="resultado" class="text-h6"
+    <q-radio
+      checked-icon="task_alt"
+      v-model="formulario"
+      val="resultado"
+      class="text-h6"
       >Crear Resultado De Aprendizaje</q-radio
     >
   </div>
