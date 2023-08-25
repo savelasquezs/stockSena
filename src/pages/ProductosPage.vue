@@ -1,69 +1,79 @@
 <template>
   <div style="background-color: #f5f5f5">
+    <q-input type="file" @change="handleFileSelect" v-model="fileInput" />
     <!-- Contenido aquí -->
-    <q-dialog v-model="openedForm">
-      <q-card style="width: 500px">
-        <q-card-section class="row justify-end q-pb-none">
-          <q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
-        <q-card-section>
-          <ProductosForm
-            @enviado="openedForm = false"
-            :editando="editando"
-            :item="itemToEdit"
-          />
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-    <q-dialog v-model="openConsumableForm">
-      <q-card>
-        <q-card-section class="row justify-end q-pb-none">
-          <q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
-        <q-card-section>
-          <ComsumiblesForm @productoGuardado="openConsumableForm = false" />
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+    <QDialogo
+      v-model="openedForm"
+      colorButton="secondary"
+      iconButton="add_circle"
+      labelButton="Agregar producto consumible"
+    >
+      <ProductosForm
+        @enviado="openedForm = false"
+        :editando="editando"
+        :item="itemToEdit"
+      />
+    </QDialogo>
 
     <div class="q-pa-md">
       <StadisticTableBar
         :stadisticTableBarInfo="productosStore.stadisticTableBarInfo"
       />
       <div class="flex justify-end">
-        <q-btn
-          label="Agregar producto consumible"
-          icon="add_circle"
-          color="secondary"
-          @click="openConsumableForm = true"
-        />
+        <QDialogo
+          visibleButton
+          v-model="openConsumableForm"
+          colorButton="secondary"
+          iconButton="add_circle"
+          labelButton="Agregar producto consumible"
+        >
+          <ComsumiblesForm @productoGuardado="openConsumableForm = false" />
+        </QDialogo>
       </div>
-      <SimpleTable
-        :rows="dataTableArray"
-        :columns="productosStore.columns"
-        agregarElementoLabel="Agregar producto"
-        @agregando="resetForm"
-        @editando="editElement"
-      />
     </div>
+    <Tabs :tabs="tabs"
+      ><template #consumibles
+        ><SimpleTable
+          :rows="productosStore.productosConsumibles"
+          :columns="productosStore.columns"
+          agregarElementoLabel="Agregar producto"
+          @agregando="resetForm"
+          @editando="editElement"
+        />
+      </template>
+      <template #devolutivos>
+        <TableReuse :rows="productosStore.productosDevolutivos" />
+      </template>
+    </Tabs>
   </div>
 </template>
 
 <style scoped></style>
 
 <script setup>
+import Tabs from "components/utils/Tabs.vue";
+import QDialogo from "components/utils/QDialogo.vue";
 import ProductosForm from "../components/productos/ProductosForm.vue";
 import StadisticTableItem from "components/utils/StadisticTableItem.vue";
 import { useProductosStore } from "stores/productosStore";
 import SimpleTable from "components/utils/SimpleTable.vue";
+import TableReuse from "components/utils/TableReuse.vue";
 import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import ComsumiblesForm from "components/productos/ConsumiblesForm.vue";
 import { ref } from "vue";
+import { QDialog } from "quasar";
 const openedForm = ref(false);
 const filtro = ref("");
 const editando = ref(false);
 const itemToEdit = ref(null);
 const openConsumableForm = ref(false);
+const openForm = ref(false);
+const tabs = [
+  { name: "consumibles", label: "Consumibles" },
+  { name: "devolutivos", label: "Devolutivos" },
+];
+
+const fileInput = ref(null);
 
 function editElement(object) {
   editando.value = true;
@@ -76,9 +86,29 @@ function resetForm() {
   openedForm.value = true;
 }
 
+function handleFileSelect() {
+  const file = fileInput.value[0];
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const data = e.target.result;
+    const workbook = XLSX.read(data, { type: "binary" });
+    const worksheet = workbook.SheetNames[0];
+
+    const XL_row_object = XLSX.utils.sheet_to_row_object_array(
+      workbook.Sheets[worksheet]
+    );
+
+    console.log(XL_row_object);
+
+    databaseStore.saveElement();
+  };
+  reader.onerror = (ex) => {
+    console.log(ex);
+  };
+  reader.readAsBinaryString(file);
+}
+
 const rows = ref([]);
 
 const productosStore = useProductosStore();
-const dataTableArray = ref([]);
-dataTableArray.value = productosStore.productosDatabase;
 </script>
