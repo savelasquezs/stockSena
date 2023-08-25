@@ -1,4 +1,5 @@
 <template>
+  {{ expandedRows }}
   <q-table
     flat
     bordered
@@ -54,7 +55,6 @@
         </q-th>
       </q-tr>
     </template>
-
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td auto-width>
@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import DatePicker from "../utils/DatePicker.vue";
 const search = ref("");
 const rangoFechas = ref(null);
@@ -101,6 +101,14 @@ const props = defineProps({
 });
 rows.value = props.dataArray;
 
+const expandedRows = computed(() => {
+  console.log(props.dataArray);
+  const expanded = props.dataArray.map((elemento) => {
+    const id = elemento.docId;
+    return { [id]: false };
+  });
+  return expanded;
+});
 function configureFecha(fecha) {
   const fechaNormal = fecha.split("-");
   const nuevaFecha =

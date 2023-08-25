@@ -100,10 +100,7 @@ const completedForm = computed(() => {
 });
 
 if (props.editando) {
-  console.log(props.item);
-  formulario.value.nombre = props.item.nombre;
-  formulario.value.stockTotal = props.item.stockTotal;
-  formulario.value.codigoBarra = props.item.codigoBarra;
+  formulario.value = props.item;
 }
 </script>
 

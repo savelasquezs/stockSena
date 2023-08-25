@@ -14,7 +14,7 @@
         v-for="item in listaCampos"
         :key="item.nombreCampo"
         :label="item.nombreCampo"
-        v-model="valueCampos[item.nombreCampo]"
+        v-model="valueCampos.custom[item.nombreCampo]"
       />
       <div v-if="listaCampos.length > 0">
         <q-input v-model="valueCampos.codigoBarra" label="Codigo de Barras" />
@@ -45,7 +45,7 @@ import { useConsumiblesStore } from "stores/consumiblesStore";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
 const consumiblesStore = useConsumiblesStore();
 const listaCampos = ref([]);
-const valueCampos = ref({});
+const valueCampos = ref({ custom: {} });
 const consumableSelected = ref("");
 const DatabaseStore = useDatabaseStore();
 const options = ref(["Excelente", "Funcional desgastado", "No funcional"]);
