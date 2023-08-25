@@ -78,6 +78,7 @@ export const useProductosStore = defineStore("productos", {
           return str.slice(0, -2);
         },
       },
+      { name: "acciones", label: "Acciones", field: "acciones" },
     ],
     columns: [
       {

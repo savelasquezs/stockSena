@@ -78,6 +78,26 @@
               :columns="internalColumns"
               dark
             >
+              <template v-slot:body-cell-acciones="props">
+                <q-td :props="props">
+                  <q-btn
+                    @click="$emit('viendo', props.rows.docId)"
+                    icon="visibility"
+                    rounded
+                    size="10px"
+                    style="width: 20px; margin-right: 8px"
+                    text-color="green-7"
+                  />
+                  <q-btn
+                    @click="$emit('editando', props.row.docId)"
+                    icon="edit"
+                    rounded
+                    size="10px"
+                    style="width: 20px; margin-right: 8px"
+                    text-color="secondary"
+                  />
+                </q-td>
+              </template>
             </q-table>
           </div>
         </q-td>
@@ -92,6 +112,7 @@ import DatePicker from "../utils/DatePicker.vue";
 const search = ref("");
 const rangoFechas = ref(null);
 const rows = ref([]);
+const emit = defineEmits(["editando"]);
 const props = defineProps({
   dataArray: Array,
   columns: Array,
@@ -115,6 +136,7 @@ function configureFecha(fecha) {
     fechaNormal[1] + "-" + fechaNormal[0] + "-" + fechaNormal[2];
   return nuevaFecha;
 }
+
 function filterByDate(valorFechas) {
   rangoFechas.value = valorFechas;
   if (rangoFechas.value != null) {
