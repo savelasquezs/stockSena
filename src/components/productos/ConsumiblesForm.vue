@@ -9,7 +9,7 @@
         class="q-mb-xl"
       />
     </div>
-    <div class="text-h5 text-center">Productos Consumibles</div>
+    <div class="text-h5 text-center">Productos Devolutivos</div>
     <q-input label="Nombre" v-model="nombre" />
 
     <q-dialog v-model="openImage">
@@ -20,7 +20,7 @@
         <q-card-section class="q-pt-none">
           <div class="text-subtitle1 text-center">Ejemplo de campos</div>
           <div class="text-caption text-grey-7 text-center">
-            Este es un ejemplo para crear el producto consumible llamado
+            Este es un ejemplo para crear el producto devolutivo llamado
             'Computador'
           </div>
         </q-card-section>
@@ -79,7 +79,7 @@
           label="Guardar Consumible"
           icon="save"
           color="primary"
-          @click="guardarConsumible"
+          @click="guardarDevolutivo"
         />
       </div>
     </div>
@@ -105,7 +105,7 @@ function deleteProductList(index) {
   listaCampos.value.splice(index, 1);
 }
 
-function guardarConsumible() {
+function guardarDevolutivo() {
   const data = {
     nombre: nombre.value,
     listaCampos: listaCampos.value,
