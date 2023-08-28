@@ -23,8 +23,7 @@
           <div class="text-h6"></div>
         </q-card-section>
 
-        <q-card-section class="q-pt-none"
-          >Ingresa el correo
+        <q-card-section class="q-pt-none">Ingresa el correo
           <q-input
             dense
             v-model="address"
@@ -64,6 +63,7 @@
                 <h4>Usuario Activo</h4>
                 <p>Nombre: {{ userCredential.displayName }}</p>
                 <p>Correo electrónico: {{ userCredential.email }}</p>
+                <p>Rol: {{ userCredential.role }}</p>
               </div>
               <div v-else>
                 <h2>Usuario Activo</h2>
@@ -82,31 +82,13 @@
 <script>
 import { ref, onMounted } from "vue";
 import { getAuth } from "firebase/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 
 export default {
   setup() {
-    return {
-      prompt: ref(false),
-      agregar: ref(""),
-    };
-  },
-  data() {
-    return {
-      Rol: null,
-      options_Rol: ["Administrador", "Invitado"],
-
-    };
-  },
-
-  setup() {
-    return {
-      expanded: ref(false),
-    };
-  },
-
-  setup()
-  {
+    const Rol = ref(null);
+    const address = ref("");
+    const options_Rol= ref(["administrador","invitado"]);
     const prompt = ref(false);
     const agregar = ref("");
     const expanded = ref(false);
@@ -114,6 +96,7 @@ export default {
     const users = ref([]);
     const auth = getAuth();
     const db = getFirestore();
+
 
     onMounted(async () => {
       await imprimirUsuarioActivo();
@@ -141,17 +124,32 @@ export default {
       }
     }
 
+    // async function cambiarRolUsuario(uid, Rol) {
+    //   const userDocRef = doc(db, "users", uid);
+
+    //   try {
+    //     await updateDoc(userDocRef, { role: Rol });
+    //     console.log("Rol del usuario actualizado correctamente");
+    //   } catch (error) {
+    //     console.error("Error al actualizar el rol del usuario:", error);
+    //   }
+    // }
+
     return {
       prompt,
       agregar,
       expanded,
       userCredential,
+      //Rol,
       users,
+      //address,
+      options_Rol,
+      //cambiarRolUsuario, // Agrega la función al retorno del setup
     };
   },
-}
-
+};
 </script>
+
 
 <style scoped>
 .complete {
