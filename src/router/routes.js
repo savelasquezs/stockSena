@@ -15,7 +15,7 @@ const routes = [
       },
       {
         path: "/clientes/:id",
-        component: () => import("pages/ClientesOpciones.vue"),
+        component: () => import("pages/ClientesDatos.vue"),
       },
       {
         path: "/datosClientes",
@@ -47,7 +47,7 @@ const routes = [
         path: "/experimento",
         component: () => import("pages/experimentalPage.vue"),
       },
-       {
+      {
         path: "/register",
         component: () => import("pages/RegisterPage.vue"),
       },
@@ -66,7 +66,6 @@ const routes = [
         path: "/recover",
         component: () => import("pages/RecoverPage.vue"),
       },
-
     ],
   },
 

@@ -1,5 +1,13 @@
 import { defineStore } from "pinia";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  getDocsFromCache,
+  getDocsFromServer,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "src/firebaseInit";
 
 export const UsePrestamosStore = defineStore("prestamos", {
@@ -96,6 +104,8 @@ export const UsePrestamosStore = defineStore("prestamos", {
         format: (val) => new Date(val).toLocaleDateString(),
       },
     ],
+    allPersonDocs: [],
+    allborrowingsPerson: [],
   }),
   getters: {},
 
@@ -138,6 +148,34 @@ export const UsePrestamosStore = defineStore("prestamos", {
             : "server";
           console.log("Data came from " + source);
         });
+      });
+    },
+    async getPrestamosByPerson(cedula) {
+      const cedulita = cedula.toString();
+      let docs;
+      const q = query(
+        collection(db, "borrowings"),
+        where("customerDocumentNumber", "==", cedulita)
+      );
+      docs = await getDocsFromCache(q);
+      if (docs.empty) {
+        docs = await getDocsFromServer(q);
+      }
+      this.allborrowingsPerson = docs.docs.map((item) => {
+        return { docId: item.id, ...item.data() };
+      });
+      const allDocs = docs.docs.map((doc) => {
+        const docId = doc.id;
+
+        const productosList = doc
+          .data()
+          .productosList.map((producto, index) => {
+            return { prestamoId: docId, ...producto, indexPrestamo: index };
+          });
+        return productosList;
+      });
+      this.allPersonDocs = allDocs.flat().map((producto, index) => {
+        return { ...producto, index };
       });
     },
   },

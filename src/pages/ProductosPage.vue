@@ -2,6 +2,8 @@
   <div style="background-color: #f5f5f5">
     <q-input type="file" @change="handleFileSelect" v-model="fileInput" />
     <!-- Contenido aquí -->
+
+    {{ nombresColumnas }}
     <QDialogo
       v-model="openedForm"
       colorButton="secondary"
@@ -66,7 +68,7 @@ import SimpleTable from "components/utils/SimpleTable.vue";
 import TableReuse from "components/utils/TableReuse.vue";
 import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import ComsumiblesForm from "components/productos/ConsumiblesForm.vue";
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { QDialog } from "quasar";
 const openedForm = ref(false);
 const filtro = ref("");
@@ -79,6 +81,14 @@ const tabs = [
   { name: "consumibles", label: "Consumibles" },
   { name: "devolutivos", label: "Devolutivos" },
 ];
+
+const nombresColumnas = computed(() => {
+  if (productosStore.productosConsumibles.length > 0) {
+    return Object.keys(productosStore.productosConsumibles[0]);
+  } else {
+    return [];
+  }
+});
 
 const fileInput = ref(null);
 
