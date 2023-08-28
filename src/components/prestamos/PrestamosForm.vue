@@ -158,11 +158,11 @@ function setProduct(nombreProducto, index) {
   }
   productosList.value[index].producto = nombreProducto;
   const producto = productosStore.productosDatabase.find(
-    (producto) => producto.name == nombreProducto
+    (producto) => producto.nombre == nombreProducto
   );
 
   productosList.value[index].maxQuantity =
-    producto.totalStock - producto.borrowedQuantity;
+    producto.stockTotal - producto.borrowedQuantity;
   productosList.value[index].docId = producto.docId;
   productosList.value[index].cantidadPrestada = producto.borrowedQuantity;
 }

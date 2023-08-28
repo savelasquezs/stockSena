@@ -12,6 +12,7 @@
         @enviado="openedForm = false"
         :editando="editando"
         :item="itemToEdit"
+        :editandoConsumible="editandoConsumible"
       />
     </QDialogo>
 
@@ -42,7 +43,12 @@
         />
       </template>
       <template #devolutivos>
-        <TableReuse :rows="productosStore.productosDevolutivos" />
+        <TableReuse
+          :dataArray="productosStore.devolutivosRows"
+          :columns="productosStore.devolutivosCols"
+          :internalColumns="productosStore.devolutivosInternalCols"
+          @editando="editarRetornable"
+        />
       </template>
     </Tabs>
   </div>
@@ -65,6 +71,7 @@ import { QDialog } from "quasar";
 const openedForm = ref(false);
 const filtro = ref("");
 const editando = ref(false);
+const editandoConsumible = ref(false);
 const itemToEdit = ref(null);
 const openConsumableForm = ref(false);
 const openForm = ref(false);
@@ -76,10 +83,28 @@ const tabs = [
 const fileInput = ref(null);
 
 function editElement(object) {
+  let obj;
+  console.log(object);
+  if (object.productosList) {
+    obj = object.productosList.find((product = product.docId == object.docId));
+  }
+  editandoConsumible.value = true;
+  console.log(obj);
   editando.value = true;
   itemToEdit.value = object;
   openedForm.value = true;
 }
+
+function editarRetornable(id) {
+  editando.value = true;
+  const object = productosStore.productosDatabase.find(
+    (product) => product.docId == id
+  );
+  itemToEdit.value = object;
+  editando.value = true;
+  openedForm.value = true;
+}
+
 function resetForm() {
   editando.value = false;
   itemToEdit.value = null;

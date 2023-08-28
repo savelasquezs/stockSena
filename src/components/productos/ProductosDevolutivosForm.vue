@@ -14,7 +14,7 @@
         v-for="item in listaCampos"
         :key="item.nombreCampo"
         :label="item.nombreCampo"
-        v-model="valueCampos[item.nombreCampo]"
+        v-model="valueCampos.custom[item.nombreCampo]"
       />
       <div v-if="listaCampos.length > 0">
         <q-input v-model="valueCampos.codigoBarra" label="Codigo de Barras" />
@@ -31,7 +31,7 @@
     </div>
     <q-btn
       type="submit"
-      label="Guardar Producto"
+      :label="editando && !editandoConsumible ? 'Actualizar' : 'Guardar'"
       color="primary"
       icon="save"
       style="width: 100%"
@@ -40,12 +40,17 @@
 </template>
 
 <script setup>
+const props = defineProps({
+  editando: Boolean,
+  item: Object,
+  editandoConsumible: Boolean,
+});
 import { computed, ref, watch } from "vue";
 import { useConsumiblesStore } from "stores/consumiblesStore";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
 const consumiblesStore = useConsumiblesStore();
 const listaCampos = ref([]);
-const valueCampos = ref({});
+const valueCampos = ref({ custom: {} });
 const consumableSelected = ref("");
 const DatabaseStore = useDatabaseStore();
 const options = ref(["Excelente", "Funcional desgastado", "No funcional"]);
@@ -66,6 +71,13 @@ const datosCompletos = computed(() => {
     borrowedQuantity: 0,
   };
 });
+
+if (props.editando && !props.editandoConsumible) {
+  consumableSelected.value = props.item.nombre;
+  crearFormulario();
+  valueCampos.value = props.item;
+  console.log();
+}
 
 watch(consumableSelected, () => {
   crearFormulario();

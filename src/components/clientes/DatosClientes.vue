@@ -1,33 +1,83 @@
 <template>
   <div class="client-info-card">
     <q-card class="q-pa-md">
-      <q-card-section class="text-h6 q-flex justify-between items-center">
+      <q-card-section class="text-h6 q-flex q-items-center">
         Información del Cliente
-        <q-btn class="" color="primary" label="Editar" />
       </q-card-section>
-      <q-card-section> </q-card-section>
+
       <q-card-section>
-        <div class="q-gutter-md">
-          <div class="q-mb-md">
-            <strong>Nombre:</strong><span class="info-client">Joan</span>
-            <!-- {{ cliente.nombre }} -->
-          </div>
-          <div class="q-mb-md">
-            <strong>Apellido:</strong>
-            <span class="info-client">Zapata</span>
-            <!-- {{ cliente.apellido }} -->
-          </div>
-          <div class="q-mb-md">
-            <strong>Docuemnto:</strong
-            ><span class="info-client">1027800932</span>
-            <!-- {{ cliente.apellido }} -->
-          </div>
-          <div class="q-mb-md">
-            <strong>Estado:</strong><span class="info-client">Morosos</span>
-            <!-- {{ cliente.apellido }} -->
+        <div class="fit row wrap justify-start items-start content-start">
+          <div class="col-auto self-end q-gutter-xs q-gutter-sm">
+            <div class="q-mb-md">
+              <strong>Nombre:</strong><span class="info-client">Joan</span>
+              <!-- {{ cliente.nombre }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Apellido:</strong>
+              <span class="info-client">Zapata</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Docuemnto:</strong
+              ><span class="info-client">1027800932</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Estado:</strong><span class="info-client">Morosos</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
           </div>
 
-          <!-- Agrega más campos de información del cliente aquí -->
+          <div class="col-auto offset-2 q-gutter-sm">
+            <div class="q-mb-md">
+              <strong>Nombre:</strong><span class="info-client">Joan</span>
+              <!-- {{ cliente.nombre }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Apellido:</strong>
+              <span class="info-client">Zapata</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Docuemnto:</strong
+              ><span class="info-client">1027800932</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Estado:</strong><span class="info-client">Morosos</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+          </div>
+
+          <div class="col-auto offset-3 q-gutter-sm">
+            <div class="q-mb-md"></div>
+            <div class="q-mb-md">
+              <strong>Nombre:</strong><span class="info-client">Joan</span>
+              <!-- {{ cliente.nombre }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Apellido:</strong>
+              <span class="info-client">Zapata</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Docuemnto:</strong
+              ><span class="info-client">1027800932</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Estado:</strong><span class="info-client">Morosos</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+          </div>
+        </div>
+      </q-card-section>
+      <q-card-section class="row justify-end items-start">
+        <div class="q-pr-lg">
+          <q-btn class="" color="red" label="Voler" />
+        </div>
+        <div>
+          <q-btn class="" color="primary" label="Editar" />
         </div>
       </q-card-section>
     </q-card>

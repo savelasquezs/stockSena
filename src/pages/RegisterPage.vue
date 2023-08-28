@@ -3,19 +3,19 @@
     <div class="q-pa-md" style="max-width: 400px">
       <q-form @submit="onSubmit" class="q-gutter-md">
         <q-img
-        src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-        loading="lazy"
-        spinner-color="white"
-        width="150px"
-        class=""
+          src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
+          loading="lazy"
+          spinner-color="white"
+          width="150px"
+          class=""
         />
         <q-input
-        filled
-        type="text"
-        v-model="username"
-        label="Ingrese su nombre *"
-        lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+          filled
+          type="text"
+          v-model="username"
+          label="Ingrese su nombre *"
+          lazy-rules
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
 
         <q-input
@@ -46,12 +46,10 @@
           lazy-rules
           :rules="[
             (val) =>
-              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',(val) =>
-              (val == password1) || 'la contraseña no coincide',
+              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
+            (val) => val == password1 || 'la contraseña no coincide',
           ]"
         />
-
-
 
         <div>
           <q-btn label="Registrar" type="submit" color="primary" />
@@ -112,26 +110,24 @@ function onSubmit() {
 
   //Registrar un usuario
   createUserWithEmailAndPassword(auth, email.value, password1.value)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
       // Signed in
       const user = userCredential.user;
-      updateProfile(user, {displayName:username.value})
-      const almacen=localStorage.getItem("almacen") || ""
-      const userData={
-        email:user.email,
-        displayName:username.value,
-        role:"invitado",
-        almacen:usuarioBD.almacen
-
+      updateProfile(user, { displayName: username.value });
+      const userData = {
+        email: user.email,
+        displayName: username.value,
+        role: "invitado",
+        almacen: usuarioBD.almacen,
       };
-      const docRef=doc(db, 'users', user.uid)
-
-      setDoc(docRef,userData)
-      .then(()=>{
-      console.log("user acepted");
-      })
-      .catch ((error)=>{
-        console.error("error adding document: ", error);
+      const docRef = doc(db, "users", user.uid);
+      console.log(userData);
+      await setDoc(docRef, userData)
+        .then(() => {
+          console.log("user acepted");
+        })
+        .catch((error) => {
+          console.error("error adding document: ", error);
         });
 
       sendEmailVerification(userCredential.user);
@@ -142,18 +138,16 @@ function onSubmit() {
       showSuccessMessage("Usuario registrado exitosamente");
 
     })
-  .catch((error) => {
+    .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log(errorCode,errorMessage)
+      console.log(errorCode, errorMessage);
       // ..
     });
 
     showErrorMessage("No se pudo registrar el usuario");
 
   }
-
-
 
 // function isEmailValid() {
 //   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
