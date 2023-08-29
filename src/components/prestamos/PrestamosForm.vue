@@ -43,6 +43,14 @@
           <q-item-label>{{ cliente.nombre }}</q-item-label>
           <q-item-label caption>{{ cliente.numero_id }}</q-item-label>
         </q-item-section>
+        <q-item-section>
+          <q-item-label>Rol</q-item-label>
+          <q-item-label caption>{{ cliente.rol }}</q-item-label>
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>Area</q-item-label>
+          <q-item-label caption>{{ cliente.area }}</q-item-label>
+        </q-item-section>
       </q-item>
       <q-item class="flex flex-center" clickable @click="addproductList">
         <q-icon name="add_circle" size="30px" color="primary"></q-icon>
@@ -161,9 +169,16 @@ function setProduct(nombreProducto, index) {
     (producto) => producto.nombre == nombreProducto
   );
 
+  if (producto.isConsumable) {
+    productosList.value[index].unidadMedida = producto.unidadMedida;
+  } else {
+    productosList.value[index].estadoEntrega = producto.estadoFisico;
+    productosList.value[index].custom = producto.custom;
+  }
   productosList.value[index].maxQuantity =
     producto.stockTotal - producto.borrowedQuantity;
   productosList.value[index].docId = producto.docId;
+  productosList.value[index].isConsumable = producto.isConsumable;
   productosList.value[index].cantidadPrestada = producto.borrowedQuantity;
 }
 
@@ -226,15 +241,25 @@ function prestarProducto() {
   const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
   const dueDate = new Date(dateBorrowed + sevenDaysInMilliseconds).getTime();
   const listaProductos = productosList.value.map((registro) => {
-    return {
+    const data = {
       productId: registro.docId,
       product: registro.producto,
       quantity: registro.cantidad,
+      isConsumable: registro.isConsumable,
       dateBorrowed,
       dueDate,
+      returnedQuantity: 0,
     };
+    if (registro.isConsumable) {
+      data.unidadMedida = registro.unidadMedida;
+    } else {
+      data.estadoEntrega = registro.estadoEntrega;
+      data.custom = registro.custom;
+    }
+    return data;
   });
   const data = {
+    customerDocumentNumber: documentNumber.value,
     productosList: listaProductos,
     customer: {
       documentNumber: documentNumber.value,
@@ -253,9 +278,42 @@ function prestarProducto() {
         parseInt(product.cantidadPrestada) + parseInt(product.cantidad),
     });
   });
+  console.log(data);
 
   addDoc(collection(db, "borrowings"), data)
-    .then(() => {
+    .then((prestamo) => {
+      const clienteDocRef = doc(db, "customers", documentNumber.value);
+      listaProductos.forEach(async (producto, indexLista) => {
+        console.log(producto.productId);
+        const productoDocRef = doc(db, "products", producto.productId);
+        const dataToProductos = {
+          indexLista,
+          diaPrestamo: producto.dateBorrowed,
+          cantidadPrestada: producto.quantity,
+          customer: {
+            documentNumber: documentNumber.value,
+            name: cliente.value.nombre,
+            documentType: selectedDocumentType.value,
+          },
+        };
+        if (!producto.isConsumable) {
+          dataToProductos.estadoEntrega = producto.estadoEntrega;
+        }
+        console.log({ dataToProductos, productoDocRef, clienteDocRef });
+        const productoref = await addDoc(
+          collection(productoDocRef, "borrowings"),
+          dataToProductos
+        );
+        addDoc(collection(clienteDocRef, "borrowings"), {
+          productoBorrowId: productoref.id,
+          indexLista,
+          prestamoId: prestamo.id,
+          ...producto,
+        }).then((resultado) => {
+          console.log("borrow guardada exitosamente con id:", resultado.id);
+        });
+      });
+
       emit("prestamoGuardado");
       $q.notify({
         message: "Pedido Guardado exitosamente",

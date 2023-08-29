@@ -15,7 +15,7 @@ const routes = [
       },
       {
         path: "/clientes/:id",
-        component: () => import("pages/ClientesOpciones.vue"),
+        component: () => import("pages/ClientesDatos.vue"),
       },
       {
         path: "/datosClientes",
@@ -26,9 +26,18 @@ const routes = [
         component: () => import("src/pages/PrestamosPage.vue"),
       },
       {
+        path: "/detallesProductos",
+        component: () => import("src/pages/detallesPage.vue"),
+      },
+      {
         path: "/productos",
-        name: "productos",
+
         component: () => import("src/pages/ProductosPage.vue"),
+        props: true, // Permite pasar los parámetros como props
+      },
+      {
+        path: "/productos/:id",
+        component: () => import("src/pages/detallesPage.vue"),
         props: true, // Permite pasar los parámetros como props
       },
       {
@@ -47,7 +56,7 @@ const routes = [
         path: "/experimento",
         component: () => import("pages/experimentalPage.vue"),
       },
-       {
+      {
         path: "/register",
         component: () => import("pages/RegisterPage.vue"),
       },
@@ -66,7 +75,6 @@ const routes = [
         path: "/recover",
         component: () => import("pages/RecoverPage.vue"),
       },
-
     ],
   },
 

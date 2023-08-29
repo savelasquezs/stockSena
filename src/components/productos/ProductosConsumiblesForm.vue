@@ -77,7 +77,7 @@
       <q-btn
         type="submit"
         icon="save"
-        :label="editando ? 'Actualizar' : 'Guardar'"
+        :label="editando && editandoConsumible ? 'Actualizar' : 'Guardar'"
         color="primary"
         style="width: 100%"
       />
@@ -92,7 +92,11 @@ import { computed, ref } from "vue";
 
 import uploadData from "components/utils/ExcelToJasonBtn.vue";
 import QDialogo from "components/utils/QDialogo.vue";
-const props = defineProps({ editando: Boolean, item: Object });
+const props = defineProps({
+  editando: Boolean,
+  item: Object,
+  editandoConsumible: Boolean,
+});
 const formulario = ref({});
 const options = ref(["Unidad", "Libra", "Kilo", "Metro"]);
 const completedForm = computed(() => {
@@ -103,7 +107,7 @@ const completedForm = computed(() => {
   };
 });
 
-if (props.editando) {
+if (props.editando && props.editandoConsumible) {
   formulario.value = props.item;
 }
 </script>

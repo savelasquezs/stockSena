@@ -31,10 +31,14 @@
         @enviado="(data) => submitForm(data)"
         :editando="editando"
         :item="item"
+        :editandoConsumible="editandoConsumible"
       />
       <ProductosDevolutivosForm
         v-else-if="consumable == 'devolutivo'"
         @enviado="(data) => submitForm(data)"
+        :editando="editando"
+        :item="item"
+        :editandoConsumible="editandoConsumible"
       />
     </q-form>
   </div>
@@ -56,6 +60,7 @@ const consumable = ref(null);
 const props = defineProps({
   editando: Boolean,
   item: Object,
+  editandoConsumible: Boolean,
 });
 const consumableData = ref("");
 

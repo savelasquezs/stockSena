@@ -78,6 +78,7 @@ export const useProductosStore = defineStore("productos", {
           return str.slice(0, -2);
         },
       },
+      { name: "acciones", label: "Acciones", field: "acciones" },
     ],
     columns: [
       {
@@ -146,6 +147,60 @@ export const useProductosStore = defineStore("productos", {
         titulo: "Diandry",
         valor: "8569522",
         periodo: "Ultima semana",
+      },
+    ],
+
+    columnasDetalleProducto: [
+      {
+        name: "prestamo",
+        required: true,
+        label: "Día Prestamo",
+        align: "left",
+        field: (row) => row.diaPrestamo,
+        format: (val) => new Date(val).toLocaleDateString("es-CO"),
+        sortable: true,
+      },
+      {
+        name: "prestador",
+        label: "Nombre Prestador",
+        field: (row) => row.customer.name,
+        sortable: true,
+      },
+      {
+        name: "prestadorId",
+        label: "Id prestador",
+        field: (row) => row.customer.documentNumber,
+        sortable: true,
+      },
+      {
+        name: "cantidad",
+        label: "Cantidad Prestada",
+        field: "cantidadPrestada",
+      },
+      {
+        name: "diaEntrega",
+        align: "center",
+        label: "Día Entrega",
+        field: "fechaDevolucion",
+        format: (val) =>
+          val
+            ? new Date(val).toLocaleDateString("es-CO")
+            : "No se ha entregado",
+        sortable: true,
+      },
+      {
+        name: "estadoDevolucion",
+        align: "center",
+        label: "EstadoDevolucion",
+        field: "estadoDevuelto",
+        sortable: true,
+      },
+      {
+        name: "notas",
+        align: "center",
+        label: "Notas",
+        field: "notasDevolucion",
+        sortable: true,
       },
     ],
   }),

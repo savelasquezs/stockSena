@@ -39,49 +39,73 @@ export const UseClientesStore = defineStore("clientes", {
         label: "Rol",
         field: (row) => row.rol,
       },
+      { name: "acciones", label: "Acciones", field: "acciones" },
     ],
-    internalColumns: [
+    columnsPrestamosPersona: [
       {
-        name: "docId",
-        align: "center",
-        label: "Id",
-        field: (row) => row.docId,
-        sortable: true,
+        name: "producto",
+        label: "Producto",
+        field: (row) => row.product,
       },
-      {
-        name: "nombre",
-        align: "center",
-        label: "Nombre elemento",
-        field: (row) => row.nombre,
-        sortable: true,
-      },
+
       {
         name: "cantidad",
-        align: "center",
-        label: "Cantidad Ingresada",
-        field: (row) => row.cantidad,
-        sortable: true,
+        label: "Cantidad prestada",
+        field: (row) => row.quantity,
       },
       {
-        name: "stockAnterior",
-        align: "center",
-        label: "Stock Anterior",
-        field: (row) => row.stockAnterior,
-        sortable: true,
+        name: "cantidadDevuelta",
+        label: "Cantidad devuelta",
+        field: (row) => row.returnedQuantity,
       },
       {
-        name: "nuevoStock",
-        align: "center",
-        label: "Nuevo Stock",
-        field: (row) => row.nuevoStock,
-        sortable: true,
-      },
-      {
-        name: "notas",
-        align: "center",
+        name: "descripcion",
         label: "Descripción",
-        field: (row) => row.notas,
+        field: (row) => {
+          if (row.isConsumable) {
+            return "producto consumible";
+          }
+          let str = "";
+          for (const [key, value] of Object.entries(row.custom)) {
+            str += `${key}: ${value}, `;
+          }
+          return str.slice(0, -2);
+        },
+      },
+      {
+        name: "estadoPrestamo",
+        label: "Estado al prestar",
+        field: (row) => row.estadoEntrega,
+      },
+      {
+        name: "estadoEntregado",
+        label: "Estado Devuelto",
+        field: (row) => row.estadoDevuelto,
+      },
+
+      {
+        name: "fechaPrestamo",
+        label: "Fecha Prestamo",
+        field: (row) => row.dateBorrowed,
+        format: (val) => new Date(val).toLocaleDateString("es-CO"),
+      },
+      {
+        name: "fechaDevuelto",
+        label: "Fecha devuelto",
+        field: (row) => row.fechaDevolucion,
+        format: (val) => new Date(val).toLocaleDateString("es-CO"),
+      },
+      {
+        name: "prestamoId",
+        align: "center",
+        label: "Id prestamo",
+        field: (row) => row.prestamoId,
         sortable: true,
+      },
+      {
+        name: "productoId",
+        label: "ProductoId",
+        field: (row) => row.productId,
       },
     ],
     stadistics: [

@@ -7,7 +7,7 @@
     v-show="visibleButton"
   />
   <q-dialog v-model="openDialog">
-    <q-card style="width: 500px">
+    <q-card style="width: 1000px">
       <q-card-section class="row justify-end q-pb-none">
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>

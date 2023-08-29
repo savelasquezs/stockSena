@@ -31,7 +31,7 @@
     </div>
     <q-btn
       type="submit"
-      label="Guardar Producto"
+      :label="editando && !editandoConsumible ? 'Actualizar' : 'Guardar'"
       color="primary"
       icon="save"
       style="width: 100%"
@@ -40,6 +40,11 @@
 </template>
 
 <script setup>
+const props = defineProps({
+  editando: Boolean,
+  item: Object,
+  editandoConsumible: Boolean,
+});
 import { computed, ref, watch } from "vue";
 import { useConsumiblesStore } from "stores/consumiblesStore";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
@@ -66,6 +71,13 @@ const datosCompletos = computed(() => {
     borrowedQuantity: 0,
   };
 });
+
+if (props.editando && !props.editandoConsumible) {
+  consumableSelected.value = props.item.nombre;
+  crearFormulario();
+  valueCampos.value = props.item;
+  console.log();
+}
 
 watch(consumableSelected, () => {
   crearFormulario();

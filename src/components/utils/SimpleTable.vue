@@ -13,6 +13,7 @@
             color="primary"
             style="width: 210px"
             class="q-ml-sm"
+            v-if="agregarElementoLabel"
           />
           <q-btn
             @click="exportTable"
@@ -35,6 +36,8 @@
         :columns="columns"
         row-key="index"
         :rows-per-page-options="[0]"
+        :selection="seleccionar ? 'multiple' : 'none'"
+        v-model:selected="selected"
         virtual-scroll
         :filter="filtro"
         class="my-card flex shadow-5 shadow-up-3"
@@ -43,7 +46,7 @@
         <template v-slot:body-cell-acciones="props">
           <q-td :props="props">
             <q-btn
-              @click="$emit('viendo', props.rows.docId)"
+              @click="$emit('viendo', props.row.docId)"
               icon="visibility"
               rounded
               size="10px"
@@ -66,16 +69,23 @@
 </template>
 
 <script setup>
-const props = defineProps(["agregarElementoLabel", "rows", "columns"]);
+const props = defineProps([
+  "agregarElementoLabel",
+  "rows",
+  "columns",
+  "seleccionar",
+]);
 import { exportFile } from "quasar";
-import { ref } from "vue";
-const emit = defineEmits(["agregando", "viendo", "editando"]);
+import { ref, watch } from "vue";
+const emit = defineEmits(["agregando", "viendo", "editando", "cambioSelected"]);
 
 function searchData(id) {
   const item = props.rows.find((item) => item.docId == id);
   emit("editando", item);
   return item;
 }
+
+const selected = ref([]);
 
 const filtro = ref("");
 const exportTable = () => {
@@ -116,6 +126,14 @@ const wrapCsvValue = (val, formatFn, row) => {
 
   return formatted;
 };
+
+watch(
+  () => selected.value,
+  (newValue, oldValue) => {
+    // Aquí puedes agregar el código que se ejecutará cuando el valor de selected cambie
+    emit("cambioSelected", newValue);
+  }
+);
 </script>
 
 <style lang="scss" scoped></style>
