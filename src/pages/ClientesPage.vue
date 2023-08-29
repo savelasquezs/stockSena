@@ -15,6 +15,8 @@
   </q-dialog>
 
   <SimpleTable
+    agregarElementoLabel="Agregar Usuario"
+    @agregando="formOppened = true"
     :rows="clientesStore.clientesDatabase"
     :columns="clientesStore.columns"
     @viendo="verDetalles"

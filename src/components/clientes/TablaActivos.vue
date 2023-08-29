@@ -1,7 +1,4 @@
 <template>
-  <PersonalInfo />
-  {{ selectedPrestamos }}
-
   <Qdialogo v-model="modalDevolucionIsOpen">
     <div class="flex flex-center">
       <q-avatar
@@ -85,7 +82,11 @@
   <SimpleTable
     :agregarElementoLabel="selectedPrestamos.length > 0 ? 'Devolver' : null"
     @agregando="openDevolverModal"
-    :rows="prestamosStore.allPersonDocs"
+    :rows="
+      prestamosStore.allPersonDocs.filter(
+        (prestamo) => prestamo.returnedQuantity < prestamo.quantity
+      )
+    "
     seleccionar="true"
     :columns="clientesStore.columnsPrestamosPersona"
     @cambioSelected="(value) => (selectedPrestamos = value)"
@@ -93,7 +94,6 @@
 </template>
 
 <script setup>
-import PersonalInfo from "components/clientes/PersonalInfo.vue";
 import SimpleTable from "components/utils/SimpleTable.vue";
 import { UseClientesStore } from "src/stores/clientesStore";
 import Qdialogo from "components/utils/QDialogo.vue";
@@ -118,7 +118,7 @@ const route = useRoute();
 const userId = ref(route.params.id);
 const guardando = ref(false);
 
-databaseStore.escucharCambiosInternalCollection(
+const rows = databaseStore.escucharCambiosInternalCollection(
   prestamosStore,
   "customers",
   userId.value,
@@ -140,9 +140,9 @@ function devolver() {
 
     //update prestamos
     const prestamoProductos = prestamo.data().productosList;
-    prestamoProductos[element.indexLista].returnedQuantity += parseInt(
-      element.devolver
-    );
+    prestamoProductos[element.indexLista].returnedQuantity =
+      parseInt(prestamoProductos[element.indexLista].returnedQuantity) +
+      parseInt(element.devolver);
     prestamoProductos[element.indexLista].returnedState = estadoDevuelto;
 
     prestamoProductos[element.indexLista].notasDevolucion = notasDevolucion;
@@ -178,7 +178,9 @@ function devolver() {
     console.log(docCustomerBorrowingRef);
 
     await updateDoc(docCustomerBorrowingRef, {
-      returnedQuantity: (element.returnedQuantity += element.devolver),
+      returnedQuantity: (element.returnedQuantity += parseInt(
+        element.devolver
+      )),
       fechaDevolucion,
       notasDevolucion,
       estadoDevuelto,
