@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import {
   collection,
+  doc,
+  getDocs,
   getDocsFromCache,
   getDocsFromServer,
   onSnapshot,
@@ -153,30 +155,14 @@ export const UsePrestamosStore = defineStore("prestamos", {
     async getPrestamosByPerson(cedula) {
       const cedulita = cedula.toString();
       let docs;
-      const q = query(
-        collection(db, "borrowings"),
-        where("customerDocumentNumber", "==", cedulita)
-      );
-      docs = await getDocsFromCache(q);
-      if (docs.empty) {
-        docs = await getDocsFromServer(q);
-      }
-      this.allborrowingsPerson = docs.docs.map((item) => {
-        return { docId: item.id, ...item.data() };
+      const customerRef = doc(db, "customers", cedulita);
+      const q = query(collection(customerRef, "borrowings"));
+      docs = await getDocs(q);
+      docs = docs.docs.map((document, index) => {
+        return { index, docId: document.id, ...document.data() };
       });
-      const allDocs = docs.docs.map((doc) => {
-        const docId = doc.id;
-
-        const productosList = doc
-          .data()
-          .productosList.map((producto, index) => {
-            return { prestamoId: docId, ...producto, indexPrestamo: index };
-          });
-        return productosList;
-      });
-      this.allPersonDocs = allDocs.flat().map((producto, index) => {
-        return { ...producto, index };
-      });
+      this.allPersonDocs = docs;
+      return docs;
     },
   },
 });

@@ -85,7 +85,6 @@
     :agregarElementoLabel="selectedPrestamos.length > 0 ? 'Devolver' : null"
     @agregando="openDevolverModal"
     :rows="prestamosStore.allPersonDocs"
-    :columns="clientesStore.columnsPrestamosPersona"
     seleccionar="true"
     @cambioSelected="(value) => (selectedPrestamos = value)"
   />
@@ -101,12 +100,13 @@ import { useDatabaseStore } from "src/stores/DatabaseStore";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { doc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import { useProductosStore } from "src/stores/productosStore";
 
 const selectedPrestamos = ref([]);
 const copySelectedRows = ref([]);
+const notasGeneralesDevolucion = ref("");
 const modalDevolucionIsOpen = ref(false);
 const databaseStore = useDatabaseStore();
 const prestamosStore = UsePrestamosStore();
@@ -115,30 +115,80 @@ const productosStore = useProductosStore();
 
 function devolver() {
   copySelectedRows.value.forEach(async (element) => {
-    let prestamoElement = prestamosStore.allborrowingsPerson.find(
-      (prestamo) => prestamo.docId == element.prestamoId
+    console.log(element);
+    const docPrestamoRef = doc(db, "borrowings", element.prestamoId);
+    let prestamo = await getDoc(docPrestamoRef);
+    const estadoDevuelto =
+      element.estadoDevuelto || element.estadoEntrega || "excelente";
+    const notasDevolucion = element.notasDevolucion || "";
+    const fechaDevolucion = new Date().getTime();
+
+    //update prestamos
+    const prestamoProductos = prestamo.data().productosList;
+    prestamoProductos[element.indexLista].returnedQuantity += parseInt(
+      element.devolver
     );
-    prestamoElement.productosList[element.indexPrestamo].returnedQuantity =
-      prestamoElement.productosList[element.indexPrestamo].returnedQuantity +
-      element.devolver;
+    prestamoProductos[element.indexLista].returnedState = estadoDevuelto;
 
-    const docref = doc(db, "borrowings", element.prestamoId);
-    await updateDoc(docref, { productosList: prestamoElement.productosList });
+    prestamoProductos[element.indexLista].notasDevolucion = notasDevolucion;
+    prestamoProductos[element.indexLista].fechaDevolucion = fechaDevolucion;
+    console.log(prestamoProductos);
 
+    await updateDoc(docPrestamoRef, {
+      productosList: prestamoProductos,
+      notasGeneralesDEvolucion: notasGeneralesDevolucion.value,
+    });
+
+    //update productos cantidad disponible
+
+    const docProductoRef = doc(db, "products", element.productId);
     let productElement = productosStore.productosDatabase.find(
       (producto) => producto.docId == element.productId
     );
-    console.log(productElement);
+    const borrowedQuantity =
+      parseInt(productElement.borrowedQuantity) - element.devolver;
     const data = {
-      borrowedQuantity:
-        parseInt(productElement.borrowedQuantity) - element.devolver,
+      borrowedQuantity,
     };
+    await updateDoc(docProductoRef, data);
 
-    const docrefProduct = doc(db, "products", productElement.docId);
-    await updateDoc(docrefProduct, data);
+    //update customers borrowings
+    const docCustomerBorrowingRef = doc(
+      db,
+      "customers",
+      userId.value.toString(),
+      "borrowings",
+      element.docId
+    );
+    console.log(docCustomerBorrowingRef);
+
+    await updateDoc(docCustomerBorrowingRef, {
+      returnedQuantity: (element.returnedQuantity += element.devolver),
+      fechaDevolucion,
+      notasDevolucion,
+      estadoDevuelto,
+    });
+
+    //update product borrowings
+    const docProductBorrowingRef = doc(
+      db,
+      "products",
+      element.productId,
+      "borrowings",
+      element.productoBorrowId
+    );
+
+    await updateDoc(docProductBorrowingRef, {
+      returnedQuantity: (element.returnedQuantity += element.devolver),
+      fechaDevolucion,
+      notasDevolucion,
+      estadoDevuelto,
+    });
+
+    console.log(docProductBorrowingRef);
 
     modalDevolucionIsOpen.value = false;
-    console.log(prestamoElement);
+    // console.log(prestamoElement);
   });
 }
 
