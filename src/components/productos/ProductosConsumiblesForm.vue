@@ -77,7 +77,7 @@
       <q-btn
         type="submit"
         icon="save"
-        :label="editando ? 'Actualizar' : 'Guardar'"
+        :label="editando && editandoConsumible ? 'Actualizar' : 'Guardar'"
         color="primary"
         style="width: 100%"
       />
@@ -88,7 +88,11 @@
 <script setup>
 import { computed, ref } from "vue";
 
-const props = defineProps({ editando: Boolean, item: Object });
+const props = defineProps({
+  editando: Boolean,
+  item: Object,
+  editandoConsumible: Boolean,
+});
 const formulario = ref({});
 const options = ref(["Unidad", "Libra", "Kilo", "Metro"]);
 const completedForm = computed(() => {
@@ -99,11 +103,8 @@ const completedForm = computed(() => {
   };
 });
 
-if (props.editando) {
-  console.log(props.item);
-  formulario.value.nombre = props.item.nombre;
-  formulario.value.stockTotal = props.item.stockTotal;
-  formulario.value.codigoBarra = props.item.codigoBarra;
+if (props.editando && props.editandoConsumible) {
+  formulario.value = props.item;
 }
 </script>
 

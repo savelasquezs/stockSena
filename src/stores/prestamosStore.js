@@ -1,5 +1,15 @@
 import { defineStore } from "pinia";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  getDocsFromCache,
+  getDocsFromServer,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "src/firebaseInit";
 
 export const UsePrestamosStore = defineStore("prestamos", {
@@ -96,6 +106,8 @@ export const UsePrestamosStore = defineStore("prestamos", {
         format: (val) => new Date(val).toLocaleDateString(),
       },
     ],
+    allPersonDocs: [],
+    allborrowingsPerson: [],
   }),
   getters: {},
 
@@ -139,6 +151,18 @@ export const UsePrestamosStore = defineStore("prestamos", {
           console.log("Data came from " + source);
         });
       });
+    },
+    async getPrestamosByPerson(cedula) {
+      const cedulita = cedula.toString();
+      let docs;
+      const customerRef = doc(db, "customers", cedulita);
+      const q = query(collection(customerRef, "borrowings"));
+      docs = await getDocs(q);
+      docs = docs.docs.map((document, index) => {
+        return { index, docId: document.id, ...document.data() };
+      });
+      this.allPersonDocs = docs;
+      return docs;
     },
   },
 });

@@ -6,6 +6,7 @@ import {
   orderBy,
   query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
 import { auth, db } from "src/firebaseInit";

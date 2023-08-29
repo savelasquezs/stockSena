@@ -1,4 +1,5 @@
 <template>
+  {{ expandedRows }}
   <q-table
     flat
     bordered
@@ -54,7 +55,6 @@
         </q-th>
       </q-tr>
     </template>
-
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td auto-width>
@@ -78,6 +78,26 @@
               :columns="internalColumns"
               dark
             >
+              <template v-slot:body-cell-acciones="props">
+                <q-td :props="props">
+                  <q-btn
+                    @click="$emit('viendo', props.rows.docId)"
+                    icon="visibility"
+                    rounded
+                    size="10px"
+                    style="width: 20px; margin-right: 8px"
+                    text-color="green-7"
+                  />
+                  <q-btn
+                    @click="$emit('editando', props.row.docId)"
+                    icon="edit"
+                    rounded
+                    size="10px"
+                    style="width: 20px; margin-right: 8px"
+                    text-color="secondary"
+                  />
+                </q-td>
+              </template>
             </q-table>
           </div>
         </q-td>
@@ -87,11 +107,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import DatePicker from "../utils/DatePicker.vue";
 const search = ref("");
 const rangoFechas = ref(null);
 const rows = ref([]);
+const emit = defineEmits(["editando"]);
 const props = defineProps({
   dataArray: Array,
   columns: Array,
@@ -101,12 +122,21 @@ const props = defineProps({
 });
 rows.value = props.dataArray;
 
+const expandedRows = computed(() => {
+  console.log(props.dataArray);
+  const expanded = props.dataArray.map((elemento) => {
+    const id = elemento.docId;
+    return { [id]: false };
+  });
+  return expanded;
+});
 function configureFecha(fecha) {
   const fechaNormal = fecha.split("-");
   const nuevaFecha =
     fechaNormal[1] + "-" + fechaNormal[0] + "-" + fechaNormal[2];
   return nuevaFecha;
 }
+
 function filterByDate(valorFechas) {
   rangoFechas.value = valorFechas;
   if (rangoFechas.value != null) {

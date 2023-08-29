@@ -40,6 +40,52 @@ export const UseClientesStore = defineStore("clientes", {
         field: (row) => row.rol,
       },
     ],
+    columnsPrestamosPersona: [
+      {
+        name: "prestamoId",
+        align: "center",
+        label: "Id prestamo",
+        field: (row) => row.prestamoId,
+        sortable: true,
+      },
+
+      {
+        name: "productoId",
+        label: "ProductoId",
+        field: (row) => row.productId,
+      },
+      {
+        name: "producto",
+        label: "Producto",
+        field: (row) => row.product,
+      },
+      {
+        name: "descripcion",
+        label: "Descripción",
+        field: (row) => {
+          if (row.isConsumable) {
+            return "producto consumible";
+          }
+          let str = "";
+          for (const [key, value] of Object.entries(row.custom)) {
+            str += `${key}: ${value}, `;
+          }
+          return str.slice(0, -2);
+        },
+      },
+
+      {
+        name: "cantidad",
+        label: "Cantidad",
+        field: (row) => row.quantity,
+      },
+      {
+        name: "fechaPrestamo",
+        label: "Fecha Prestamo",
+        field: (row) => row.dateBorrowed,
+        format: (val) => new Date(val).toLocaleDateString("es-CO"),
+      },
+    ],
     internalColumns: [
       {
         name: "docId",
