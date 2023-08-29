@@ -45,8 +45,8 @@
         </q-item-section>
       </q-item>
       <q-item class="flex flex-center" clickable @click="addproductList">
-        <q-icon name="add_circle" size="30px" color="primary"></q-icon>
-      </q-item>
+        <q-icon name="add_circle" size="30px" color="primary"></q-icon> </q-item
+      >nombre
       <q-scroll-area
         style="height: 200px; max-width: 700px; width: 500px"
         visible
@@ -273,7 +273,32 @@ function prestarProducto() {
   console.log(data);
 
   addDoc(collection(db, "borrowings"), data)
-    .then(() => {
+    .then((prestamo) => {
+      const clienteDocRef = doc(db, "customers", documentNumber.value);
+      listaProductos.forEach((producto) => {
+        console.log(producto.productId);
+        const productoDocRef = doc(db, "products", producto.productId);
+        const dataToProductos = {
+          diaPrestamo: producto.dateBorrowed,
+          customer: {
+            documentNumber: documentNumber.value,
+            name: cliente.value.nombre,
+            documentType: selectedDocumentType.value,
+          },
+        };
+        if (!producto.isConsumable) {
+          dataToProductos.estadoEntrega = producto.estadoEntrega;
+        }
+        console.log({ dataToProductos, productoDocRef, clienteDocRef });
+        addDoc(collection(productoDocRef, "borrowings"), dataToProductos);
+        addDoc(collection(clienteDocRef, "borrowings"), {
+          prestamoId: prestamo.id,
+          ...producto,
+        }).then((resultado) => {
+          console.log("borrow guardada exitosamente con id:", resultado.id);
+        });
+      });
+
       emit("prestamoGuardado");
       $q.notify({
         message: "Pedido Guardado exitosamente",
