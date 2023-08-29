@@ -1,65 +1,61 @@
 <template>
-  <div class="flex column flex-center">
-    <div>
-      <q-img
-        src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-        loading="lazy"
-        style="width: 90px"
-      />
-    </div>
-
-    <q-form @submit="guardarCliente">
-      <div class="flex content-center">
-        <div class="q-gutter-md q-mx-lg">
-          <q-select
-            outlined
-            label="Tipo documento"
-            v-model="Tipo_documento"
-            :options="options_Tipo_documento"
-            transition-show="flip-up"
-            transition-hide="flip-up"
-            style="width: 250px"
-          />
-          <q-input
-            outlined
-            label="Numero documento"
-            :rules="[(val) => val > 0 || 'Por favor ingrese documento valido']"
-            v-model="Numero_documento"
-          />
-          <q-input
-            outlined
-            label="Nombre"
-            v-model="Nombre"
-            :rules="[
-              (val) => val.length > 2 || 'Por favor ingrese nombre valido',
-              [],
-            ]"
-          />
-        </div>
-        <div class="q-gutter-md">
-          <q-input
-            outlined
-            label="Apellido"
-            v-model="Apellido"
-            :rules="[
-              (val) => val.length > 2 || 'Por favor ingrese nombre valido',
-            ]"
-          />
-
-          <q-select outlined label="Rol" v-model="Rol" :options="options_Rol" />
-
-          <q-select
-            outlined
-            label="Area"
-            v-model="Area"
-            :options="options_Area"
-          />
-
-          <q-btn type="submit" label="Guardar cliente" color="green-14" />
-        </div>
-      </div>
-    </q-form>
+  <div class="flex column flex-center q-pb-xl">
+    <q-img
+      src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
+      loading="lazy"
+      style="width: 90px"
+    />
   </div>
+
+  <q-form @submit="guardarCliente">
+    <div class="row justify-evenly items-start content-start">
+      <div class="col-4 self-start q-gutter-md">
+        <q-select
+          outlined
+          label="Tipo documento"
+          v-model="Tipo_documento"
+          :options="options_Tipo_documento"
+          transition-show="flip-up"
+          transition-hide="flip-up"
+        />
+        <q-input
+          outlined
+          label="Numero documento"
+          :rules="[(val) => val > 0 || 'Por favor ingrese documento valido']"
+          v-model="Numero_documento"
+        />
+        <q-input
+          outlined
+          label="Nombre"
+          v-model="Nombre"
+          :rules="[
+            (val) => val.length > 2 || 'Por favor ingrese nombre valido',
+            [],
+          ]"
+        />
+      </div>
+      <div class="col-4 self-start q-gutter-md">
+        <q-input
+          outlined
+          label="Apellido"
+          v-model="Apellido"
+          :rules="[
+            (val) => val.length > 2 || 'Por favor ingrese nombre valido',
+          ]"
+        />
+
+        <q-select outlined label="Rol" v-model="Rol" :options="options_Rol" />
+
+        <q-select
+          outlined
+          label="Area"
+          v-model="Area"
+          :options="options_Area"
+        />
+        <q-btn type="submit" label="Guardar cliente" color="green-14" />
+      </div>
+    </div>
+  </q-form>
 </template>
 
 <script setup>

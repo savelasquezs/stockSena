@@ -43,10 +43,18 @@
           <q-item-label>{{ cliente.nombre }}</q-item-label>
           <q-item-label caption>{{ cliente.numero_id }}</q-item-label>
         </q-item-section>
+        <q-item-section>
+          <q-item-label>Rol</q-item-label>
+          <q-item-label caption>{{ cliente.rol }}</q-item-label>
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>Area</q-item-label>
+          <q-item-label caption>{{ cliente.area }}</q-item-label>
+        </q-item-section>
       </q-item>
       <q-item class="flex flex-center" clickable @click="addproductList">
-        <q-icon name="add_circle" size="30px" color="primary"></q-icon> </q-item
-      >nombre
+        <q-icon name="add_circle" size="30px" color="primary"></q-icon>
+      </q-item>
       <q-scroll-area
         style="height: 200px; max-width: 700px; width: 500px"
         visible
