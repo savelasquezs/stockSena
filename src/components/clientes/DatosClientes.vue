@@ -78,6 +78,7 @@
       style="width: 100%"
       label="Devolver Elementos"
       @click="devolver"
+      :loading="guardando"
     />
   </Qdialogo>
 
@@ -86,6 +87,7 @@
     @agregando="openDevolverModal"
     :rows="prestamosStore.allPersonDocs"
     seleccionar="true"
+    :columns="clientesStore.columnsPrestamosPersona"
     @cambioSelected="(value) => (selectedPrestamos = value)"
   />
 </template>
@@ -112,8 +114,21 @@ const databaseStore = useDatabaseStore();
 const prestamosStore = UsePrestamosStore();
 const clientesStore = UseClientesStore();
 const productosStore = useProductosStore();
+const route = useRoute();
+const userId = ref(route.params.id);
+const guardando = ref(false);
+
+databaseStore.escucharCambiosInternalCollection(
+  prestamosStore,
+  "customers",
+  userId.value,
+  "borrowings",
+  "dateBorrowed",
+  "allPersonDocs"
+);
 
 function devolver() {
+  guardando.value = true;
   copySelectedRows.value.forEach(async (element) => {
     console.log(element);
     const docPrestamoRef = doc(db, "borrowings", element.prestamoId);
@@ -189,6 +204,7 @@ function devolver() {
 
     modalDevolucionIsOpen.value = false;
     // console.log(prestamoElement);
+    guardando.value = false;
   });
 }
 
@@ -202,13 +218,15 @@ function deselectRow(row) {
 
 function openDevolverModal() {
   copySelectedRows.value = selectedPrestamos.value.map((prestamo) => {
-    return { ...prestamo, devolver: prestamo.quantity };
+    return {
+      ...prestamo,
+      devolver: prestamo.returnedQuantity
+        ? prestamo.quantity - prestamo.returnedQuantity
+        : prestamo.quantity,
+    };
   });
   modalDevolucionIsOpen.value = true;
 }
-
-const route = useRoute();
-const userId = ref(route.params.id);
 
 onMounted(async () => {
   await prestamosStore.getPrestamosByPerson(userId.value);
@@ -216,8 +234,9 @@ onMounted(async () => {
 
 watch(
   () => route.params.id,
-  (toId, fromId) => {
+  async (toId, fromId) => {
     userId.value = toId;
+    await prestamosStore.getPrestamosByPerson(toId);
   }
 );
 </script>

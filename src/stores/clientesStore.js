@@ -39,25 +39,24 @@ export const UseClientesStore = defineStore("clientes", {
         label: "Rol",
         field: (row) => row.rol,
       },
+      { name: "acciones", label: "Acciones", field: "acciones" },
     ],
     columnsPrestamosPersona: [
-      {
-        name: "prestamoId",
-        align: "center",
-        label: "Id prestamo",
-        field: (row) => row.prestamoId,
-        sortable: true,
-      },
-
-      {
-        name: "productoId",
-        label: "ProductoId",
-        field: (row) => row.productId,
-      },
       {
         name: "producto",
         label: "Producto",
         field: (row) => row.product,
+      },
+
+      {
+        name: "cantidad",
+        label: "Cantidad prestada",
+        field: (row) => row.quantity,
+      },
+      {
+        name: "cantidadDevuelta",
+        label: "Cantidad devuelta",
+        field: (row) => row.returnedQuantity,
       },
       {
         name: "descripcion",
@@ -73,17 +72,40 @@ export const UseClientesStore = defineStore("clientes", {
           return str.slice(0, -2);
         },
       },
-
       {
-        name: "cantidad",
-        label: "Cantidad",
-        field: (row) => row.quantity,
+        name: "estadoPrestamo",
+        label: "Estado al prestar",
+        field: (row) => row.estadoEntrega,
       },
+      {
+        name: "estadoEntregado",
+        label: "Estado Devuelto",
+        field: (row) => row.estadoDevuelto,
+      },
+
       {
         name: "fechaPrestamo",
         label: "Fecha Prestamo",
         field: (row) => row.dateBorrowed,
         format: (val) => new Date(val).toLocaleDateString("es-CO"),
+      },
+      {
+        name: "fechaDevuelto",
+        label: "Fecha devuelto",
+        field: (row) => row.fechaDevolucion,
+        format: (val) => new Date(val).toLocaleDateString("es-CO"),
+      },
+      {
+        name: "prestamoId",
+        align: "center",
+        label: "Id prestamo",
+        field: (row) => row.prestamoId,
+        sortable: true,
+      },
+      {
+        name: "productoId",
+        label: "ProductoId",
+        field: (row) => row.productId,
       },
     ],
     internalColumns: [
