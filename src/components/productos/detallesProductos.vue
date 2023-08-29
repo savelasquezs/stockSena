@@ -1,4 +1,5 @@
 <template>
+  {{ productoId }}
   <div style="background-color: #f5f5f5"></div>
   <!-- Informacion de productos -->
   <div
@@ -12,9 +13,11 @@
       >
         <div class="text-h5"><strong>Información del Producto</strong></div>
         <div class="flex">
-          <div class="text-subtitle" style="flex: 1; margin: 8px">Ram: 8GB</div>
+          <div class="text-subtitle" style="flex: 1; margin: 8px">
+            Nombre: {{ product.nombre }}
+          </div>
           <div class="text-subtitle3" style="text-align: right; margin: 8px">
-            Disco Duro: 500 GB
+            Consumible: {{ product.isConsumable ? "Si" : "No" }}
           </div>
         </div>
         <div class="flex">
@@ -35,14 +38,16 @@
     <q-card class="my-card">
       <q-card-section class="bg-white text-orange">
         <div class="text-h5">Veces Prestadas</div>
-        <div class="text-subtitle text-black">12</div>
+        <div class="text-subtitle text-black">
+          {{ prestamosStore.allBorrowingsProducts.length }}
+        </div>
       </q-card-section>
     </q-card>
 
     <q-card class="my-card">
       <q-card-section class="bg-white text-black">
         <div class="text-h5">Einer Pino Cabrera</div>
-        <div class="text-subtitle2 text-black">6</div>
+        <div class="text-subtitle2 text-black">{{ vecesPrestada }}</div>
       </q-card-section>
     </q-card>
 
@@ -53,34 +58,45 @@
       </q-card-section>
     </q-card>
   </div>
-  <SimpleTable :columns="columnas" />
+  {{ product }}
+  <SimpleTable
+    :rows="prestamosStore.allBorrowingsProducts"
+    :columns="productosStore.columnasDetalleProducto"
+  />
 </template>
 <script setup>
+import { UsePrestamosStore } from "src/stores/prestamosStore";
+import { useProductosStore } from "src/stores/productosStore";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import SimpleTable from "../utils/SimpleTable.vue";
+const props = defineProps(["id"]);
+const route = useRoute();
+const productoId = ref(route.params.id);
 
-const columnas = [
-  {
-    name: "prestamo",
-    required: true,
-    label: "Día Prestamo",
-    align: "left",
-    field: (row) => row.prestamo,
-    format: (val) => `${val}`,
-    sortable: true,
-  },
-  {
-    name: "entrega",
-    align: "center",
-    label: "Día Entrega",
-    field: "entrega",
-    sortable: true,
-  },
-  {
-    name: "prestador",
-    label: "Nombre Prestador",
-    field: "prestador",
-    sortable: true,
-  },
-  { name: "cp", label: "Cantidad Prestada", field: "cp" },
-];
+const prestamosStore = UsePrestamosStore();
+const productosStore = useProductosStore();
+
+const product = productosStore.productosDatabase.find(
+  (producto) => producto.docId == productoId.value
+);
+
+const vecesPrestada = computed(() => {
+  return prestamosStore.allBorrowingsProducts.reduce(
+    (a, b) => a + parseInt(b.cantidadPrestada),
+    0
+  );
+});
+
+onMounted(async () => {
+  await prestamosStore.getPrestamosByProduct(productoId.value);
+});
+
+watch(
+  () => route.params.id,
+  async (toId, fromId) => {
+    productoId.value = toId;
+    await prestamosStore.getPrestamosByProduct(productoId.value);
+  }
+);
 </script>

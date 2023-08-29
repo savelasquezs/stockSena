@@ -108,6 +108,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
     ],
     allPersonDocs: [],
     allborrowingsPerson: [],
+    allBorrowingsProducts: [],
   }),
   getters: {},
 
@@ -162,6 +163,18 @@ export const UsePrestamosStore = defineStore("prestamos", {
         return { index, docId: document.id, ...document.data() };
       });
       this.allPersonDocs = docs;
+      return docs;
+    },
+    async getPrestamosByProduct(id) {
+      const idString = id.toString();
+      let docs;
+      const productRef = doc(db, "products", idString);
+      const q = query(collection(productRef, "borrowings"));
+      docs = await getDocs(q);
+      docs = docs.docs.map((document, index) => {
+        return { index, docId: document.id, ...document.data() };
+      });
+      this.allBorrowingsProducts = docs;
       return docs;
     },
   },

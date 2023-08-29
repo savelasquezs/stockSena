@@ -42,6 +42,7 @@
           agregarElementoLabel="Agregar producto"
           @agregando="resetForm"
           @editando="editElement"
+          @viendo="verDetalles"
         />
       </template>
       <template #devolutivos>
@@ -70,6 +71,7 @@ import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import ComsumiblesForm from "components/productos/ConsumiblesForm.vue";
 import { computed, onMounted, ref } from "vue";
 import { QDialog } from "quasar";
+import { useRouter } from "vue-router";
 const openedForm = ref(false);
 const filtro = ref("");
 const editando = ref(false);
@@ -77,6 +79,12 @@ const editandoConsumible = ref(false);
 const itemToEdit = ref(null);
 const openConsumableForm = ref(false);
 const openForm = ref(false);
+
+const router = useRouter();
+
+function verDetalles(id) {
+  router.push(`productos/${id}`);
+}
 const tabs = [
   { name: "consumibles", label: "Consumibles" },
   { name: "devolutivos", label: "Devolutivos" },

@@ -108,50 +108,6 @@ export const UseClientesStore = defineStore("clientes", {
         field: (row) => row.productId,
       },
     ],
-    internalColumns: [
-      {
-        name: "docId",
-        align: "center",
-        label: "Id",
-        field: (row) => row.docId,
-        sortable: true,
-      },
-      {
-        name: "nombre",
-        align: "center",
-        label: "Nombre elemento",
-        field: (row) => row.nombre,
-        sortable: true,
-      },
-      {
-        name: "cantidad",
-        align: "center",
-        label: "Cantidad Ingresada",
-        field: (row) => row.cantidad,
-        sortable: true,
-      },
-      {
-        name: "stockAnterior",
-        align: "center",
-        label: "Stock Anterior",
-        field: (row) => row.stockAnterior,
-        sortable: true,
-      },
-      {
-        name: "nuevoStock",
-        align: "center",
-        label: "Nuevo Stock",
-        field: (row) => row.nuevoStock,
-        sortable: true,
-      },
-      {
-        name: "notas",
-        align: "center",
-        label: "Descripción",
-        field: (row) => row.notas,
-        sortable: true,
-      },
-    ],
     stadistics: [
       {
         text_color: "text-light-green-14",

@@ -31,8 +31,13 @@ const routes = [
       },
       {
         path: "/productos",
-        name: "productos",
+
         component: () => import("src/pages/ProductosPage.vue"),
+        props: true, // Permite pasar los parámetros como props
+      },
+      {
+        path: "/productos/:id",
+        component: () => import("src/pages/detallesPage.vue"),
         props: true, // Permite pasar los parámetros como props
       },
       {
