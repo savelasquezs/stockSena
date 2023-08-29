@@ -53,6 +53,7 @@
           @editando="editarRetornable"
         />
       </template>
+      <uploadData nomTabla="products" />
     </Tabs>
   </div>
 </template>
@@ -69,8 +70,9 @@ import SimpleTable from "components/utils/SimpleTable.vue";
 import TableReuse from "components/utils/TableReuse.vue";
 import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import ComsumiblesForm from "components/productos/ConsumiblesForm.vue";
+
 import { computed, onMounted, ref } from "vue";
-import { QDialog } from "quasar";
+
 import { useRouter } from "vue-router";
 const openedForm = ref(false);
 const filtro = ref("");
