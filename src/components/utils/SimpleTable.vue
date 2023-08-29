@@ -2,7 +2,11 @@
   <div class="q-tables">
     <div class="q-mr-lg">
       <div>
-        <q-input class="q-ml-sm" v-model="filtro" style="width: 410px" />
+        <q-input class="q-ml-sm" v-model="filtro" style="width: 410px">
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
       </div>
       <div class="flex justify-end">
         <div>
@@ -29,7 +33,7 @@
     </div>
     <div class="q-tables">
       <q-table
-        style="height: 500px"
+        style="max-height: 500px"
         flat
         bordered
         :rows="rows"
@@ -42,6 +46,7 @@
         :filter="filtro"
         class="my-card flex shadow-5 shadow-up-3"
         table-header-style="background-color:#00af00; color:#ffff; shadow-n"
+        :loading="loading"
       >
         <template v-slot:body-cell-acciones="props">
           <q-td :props="props">
@@ -63,21 +68,50 @@
             />
           </q-td>
         </template>
+        <template v-slot:body-cell-caritas="props">
+          <q-td :props="props">
+            <q-icon
+              :name="
+                props.row.quantity > props.row.returnedQuantity
+                  ? 'sentiment_dissatisfied'
+                  : 'sentiment_very_satisfied'
+              "
+              size="30px"
+              :color="
+                props.row.quantity > props.row.returnedQuantity
+                  ? 'red-5'
+                  : 'accent'
+              "
+            />
+          </q-td>
+        </template>
+
+        <template v-slot:no-data>
+          <div class="full-width row flex-center text-accent q-gutter-sm">
+            <q-icon size="2em" name="sentiment_dissatisfied" />
+            <span> No Tenemos registros </span>
+
+            <q-icon size="2em" />
+          </div>
+        </template>
       </q-table>
     </div>
   </div>
 </template>
 
 <script setup>
+import Vue3Lottie from "vue3-lottie";
+
+import { exportFile } from "quasar";
+import { ref, watch } from "vue";
+const emit = defineEmits(["agregando", "viendo", "editando", "cambioSelected"]);
 const props = defineProps([
   "agregarElementoLabel",
   "rows",
   "columns",
   "seleccionar",
+  "loading",
 ]);
-import { exportFile } from "quasar";
-import { ref, watch } from "vue";
-const emit = defineEmits(["agregando", "viendo", "editando", "cambioSelected"]);
 
 function searchData(id) {
   const item = props.rows.find((item) => item.docId == id);

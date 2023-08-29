@@ -1,5 +1,4 @@
 <template>
-  {{ productoId }}
   <div style="background-color: #f5f5f5"></div>
   <!-- Informacion de productos -->
   <div
@@ -58,7 +57,7 @@
       </q-card-section>
     </q-card>
   </div>
-  {{ product }}
+
   <SimpleTable
     :rows="prestamosStore.allBorrowingsProducts"
     :columns="productosStore.columnasDetalleProducto"
@@ -69,7 +68,7 @@ import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { useProductosStore } from "src/stores/productosStore";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import SimpleTable from "../utils/SimpleTable.vue";
+import SimpleTable from "components/utils/SimpleTable.vue";
 const props = defineProps(["id"]);
 const route = useRoute();
 const productoId = ref(route.params.id);

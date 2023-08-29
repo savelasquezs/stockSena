@@ -43,6 +43,11 @@ export const UseClientesStore = defineStore("clientes", {
     ],
     columnsPrestamosPersona: [
       {
+        name: "caritas",
+        label: "Estado",
+        field: "caritas",
+      },
+      {
         name: "producto",
         label: "Producto",
         field: (row) => row.product,

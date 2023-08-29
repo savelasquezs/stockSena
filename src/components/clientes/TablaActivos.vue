@@ -80,6 +80,7 @@
   </Qdialogo>
 
   <SimpleTable
+    :loading="loading"
     :agregarElementoLabel="selectedPrestamos.length > 0 ? 'Devolver' : null"
     @agregando="openDevolverModal"
     :rows="
@@ -117,6 +118,7 @@ const productosStore = useProductosStore();
 const route = useRoute();
 const userId = ref(route.params.id);
 const guardando = ref(false);
+const loading = ref(false);
 
 const rows = databaseStore.escucharCambiosInternalCollection(
   prestamosStore,
@@ -231,7 +233,10 @@ function openDevolverModal() {
 }
 
 onMounted(async () => {
-  await prestamosStore.getPrestamosByPerson(userId.value);
+  loading.value = true;
+  await prestamosStore.getPrestamosByPerson(userId.value).then(() => {
+    loading.value = false;
+  });
 });
 
 watch(
