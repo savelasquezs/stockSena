@@ -283,11 +283,13 @@ function prestarProducto() {
   addDoc(collection(db, "borrowings"), data)
     .then((prestamo) => {
       const clienteDocRef = doc(db, "customers", documentNumber.value);
-      listaProductos.forEach((producto) => {
+      listaProductos.forEach(async (producto, indexLista) => {
         console.log(producto.productId);
         const productoDocRef = doc(db, "products", producto.productId);
         const dataToProductos = {
+          indexLista,
           diaPrestamo: producto.dateBorrowed,
+          cantidadPrestada: producto.quantity,
           customer: {
             documentNumber: documentNumber.value,
             name: cliente.value.nombre,
@@ -298,8 +300,13 @@ function prestarProducto() {
           dataToProductos.estadoEntrega = producto.estadoEntrega;
         }
         console.log({ dataToProductos, productoDocRef, clienteDocRef });
-        addDoc(collection(productoDocRef, "borrowings"), dataToProductos);
+        const productoref = await addDoc(
+          collection(productoDocRef, "borrowings"),
+          dataToProductos
+        );
         addDoc(collection(clienteDocRef, "borrowings"), {
+          productoBorrowId: productoref.id,
+          indexLista,
           prestamoId: prestamo.id,
           ...producto,
         }).then((resultado) => {
