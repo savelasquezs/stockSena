@@ -82,12 +82,16 @@
         style="width: 100%"
       />
     </div>
+    <div class="flex justify-end"></div>
+    <uploadData nomTabla="products" tipo="cons" />
   </q-form>
 </template>
 
 <script setup>
 import { computed, ref } from "vue";
 
+import uploadData from "components/utils/ExcelToJasonBtn.vue";
+import QDialogo from "components/utils/QDialogo.vue";
 const props = defineProps({ editando: Boolean, item: Object });
 const formulario = ref({});
 const options = ref(["Unidad", "Libra", "Kilo", "Metro"]);

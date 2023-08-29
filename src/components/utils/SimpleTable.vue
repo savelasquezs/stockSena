@@ -79,9 +79,9 @@ function searchData(id) {
 
 const filtro = ref("");
 const exportTable = () => {
-  const columnLabels = columns.map((col) => col.label);
-  const dataRows = rows.map((row) =>
-    columns.map((col) =>
+  const columnLabels = props.columns.map((col) => col.label);
+  const dataRows = props.rows.map((row) =>
+    props.columns.map((col) =>
       wrapCsvValue(
         typeof col.field === "function"
           ? col.field(row)

@@ -48,6 +48,7 @@
           :internalColumns="productosStore.devolutivosInternalCols"
         />
       </template>
+      <uploadData nomTabla="products" />
     </Tabs>
   </div>
 </template>
@@ -64,8 +65,9 @@ import SimpleTable from "components/utils/SimpleTable.vue";
 import TableReuse from "components/utils/TableReuse.vue";
 import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import ComsumiblesForm from "components/productos/ConsumiblesForm.vue";
+
 import { ref } from "vue";
-import { QDialog } from "quasar";
+
 const openedForm = ref(false);
 const filtro = ref("");
 const editando = ref(false);
