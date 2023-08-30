@@ -6,6 +6,7 @@ import {
   orderBy,
   query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
 import { auth, db } from "src/firebaseInit";
@@ -52,8 +53,51 @@ export const useDatabaseStore = defineStore("database", {
         });
       });
     },
+    async escucharCambiosInternalCollection(
+      store,
+      tablaGeneral,
+      idDocGeneral,
+      tabla,
+      ordenarPor,
+      arrayName
+    ) {
+      const refTablaGeneral = doc(db, tablaGeneral, idDocGeneral);
+      const coleccion = collection(refTablaGeneral, tabla);
+      const q = ordenarPor ? query(coleccion, orderBy(ordenarPor)) : coleccion;
+      onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type == "added") {
+            if (!store[arrayName].some((item) => item.docId == change.doc.id)) {
+              const data = {
+                docId: change.doc.id,
+                ...change.doc.data(),
+              };
+              store[arrayName].unshift(data);
+            }
+          } else if (change.type == "modified") {
+            let cambio = store[arrayName].find(
+              (item) => item.docId == change.doc.id
+            );
+            let index = store[arrayName].findIndex(
+              (item) => item.docId == change.doc.id
+            );
+            store[arrayName][index] = { ...cambio, ...change.doc.data() };
+          } else if (change.type == "removed") {
+            store[arrayName] = store[arrayName].filter(
+              (item) => item.docId != change.doc.id
+            );
+          }
+        });
+      });
+    },
+
     async saveElement(data, tabla) {
-      const completedData = { createdBy: auth.currentUser.email, ...data };
+      const almacen = JSON.parse(localStorage.getItem("user")).almacen;
+      const completedData = {
+        almacen,
+        createdBy: auth.currentUser.email,
+        ...data,
+      };
       const docRef = await addDoc(collection(db, tabla), completedData);
       notificar("Guardado exitosamente");
       return docRef;

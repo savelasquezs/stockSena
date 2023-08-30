@@ -2,6 +2,7 @@
 
 // Importación de la autentificación
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 // Inicializador de firebase
 import { initializeApp } from "firebase/app";
@@ -37,4 +38,7 @@ const db = initializeFirestore(app, {
   ),
 });
 
-export { db, auth };
+const storage = getStorage(app);
+
+
+export { db, auth, storage  };

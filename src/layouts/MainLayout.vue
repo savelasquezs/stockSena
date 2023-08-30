@@ -10,7 +10,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title> Sena Stock Management App </q-toolbar-title>
         <div>
           <p class="text-subtitle1 q-ma-sm">{{ user.email }}</p>
         </div>

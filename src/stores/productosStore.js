@@ -5,6 +5,81 @@ import { db } from "src/firebaseInit";
 export const useProductosStore = defineStore("productos", {
   state: () => ({
     productosDatabase: [],
+    devolutivosCols: [
+      {
+        name: "name",
+        required: true,
+        label: "Nombre",
+        align: "left",
+        field: "nombre",
+      },
+      {
+        name: "Total",
+        required: true,
+        label: "Total",
+        align: "left",
+        field: "Total",
+      },
+      {
+        name: "Disponibles",
+        required: true,
+        label: "Disponibles",
+        align: "left",
+        field: "Disponibles",
+      },
+      {
+        name: "Prestados",
+        required: true,
+        label: "Prestados",
+        align: "left",
+        field: "Prestados",
+      },
+      {
+        name: "Averiados",
+        required: true,
+        label: "Averiados",
+        align: "left",
+        field: "Averiados",
+      },
+    ],
+    devolutivosInternalCols: [
+      {
+        name: "name",
+        required: true,
+        label: "Nombre",
+        align: "left",
+        field: "nombre",
+      },
+      {
+        name: "name",
+        required: true,
+        label: "Estado Fisico",
+        align: "left",
+        field: "estadoFisico",
+      },
+
+      {
+        name: "name",
+        required: true,
+        label: "Prestado?",
+        align: "left",
+        field: (row) => row.borrowedQuantity > 0,
+      },
+      {
+        name: "name",
+        required: true,
+        label: "Descripción",
+        align: "left",
+        field: (row) => {
+          let str = "";
+          for (const [key, value] of Object.entries(row.custom)) {
+            str += `${key}: ${value}, `;
+          }
+          return str.slice(0, -2);
+        },
+      },
+      { name: "acciones", label: "Acciones", field: "acciones" },
+    ],
     columns: [
       {
         name: "name",
@@ -15,12 +90,10 @@ export const useProductosStore = defineStore("productos", {
         format: (val) => `${val}`,
         sortable: true,
       },
-
       {
-        name: "Consumible",
-        align: "center",
-        label: "Consumible",
-        field: (row) => row.isConsumable,
+        name: "unidadMedida",
+        label: "Unidad de Medida",
+        field: (row) => row.unidadMedida,
         sortable: true,
       },
       {
@@ -31,16 +104,25 @@ export const useProductosStore = defineStore("productos", {
       },
 
       {
-        name: "Código de barra",
-        label: "Código de barra",
-        field: "barCode",
+        name: "Stock-Prestamo",
+        label: "Stock-Prestamo",
+        field: (row) => row.borrowedQuantity,
+      },
+      {
+        name: "stockDisponible",
+        label: "Stock disponible",
+        field: (row) => row.stockTotal - row.borrowedQuantity,
       },
 
-      { name: "Stock-Prestamo", label: "Stock-Prestamo", field: "totalStock" },
+      {
+        name: "Código de barra",
+        label: "Código de barra",
+        field: (row) => row.codigoBarra,
+      },
 
-      { name: "Almacen", label: "Almacen", field: "almacen" },
       { name: "acciones", label: "Acciones", field: "acciones" },
     ],
+
     stadisticTableBarInfo: [
       {
         text_color: "light-green-14",
@@ -67,28 +149,137 @@ export const useProductosStore = defineStore("productos", {
         periodo: "Ultima semana",
       },
     ],
+
+    columnasDetalleProducto: [
+      {
+        name: "prestamo",
+        required: true,
+        label: "Día Prestamo",
+        align: "left",
+        field: (row) => row.diaPrestamo,
+        format: (val) => new Date(val).toLocaleDateString("es-CO"),
+        sortable: true,
+      },
+      {
+        name: "prestador",
+        label: "Nombre Prestador",
+        field: (row) => row.customer.name,
+        sortable: true,
+      },
+      {
+        name: "prestadorId",
+        label: "Id prestador",
+        field: (row) => row.customer.documentNumber,
+        sortable: true,
+      },
+      {
+        name: "cantidad",
+        label: "Cantidad Prestada",
+        field: "cantidadPrestada",
+      },
+      {
+        name: "diaEntrega",
+        align: "center",
+        label: "Día Entrega",
+        field: "fechaDevolucion",
+        format: (val) =>
+          val
+            ? new Date(val).toLocaleDateString("es-CO")
+            : "No se ha entregado",
+        sortable: true,
+      },
+      {
+        name: "estadoDevolucion",
+        align: "center",
+        label: "EstadoDevolucion",
+        field: "estadoDevuelto",
+        sortable: true,
+      },
+      {
+        name: "notas",
+        align: "center",
+        label: "Notas",
+        field: "notasDevolucion",
+        sortable: true,
+      },
+    ],
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,
     productosNombres: (state) => {
       const productosNombreArray = state.productosDatabase.map(
-        (producto) => producto.name
+        (producto) => producto.nombre
       );
-      console.log(productosNombreArray);
+
       return productosNombreArray;
     },
-  },
-  getQuantity() {
-    return (nombreProducto) => {
-      const producto = this.productosDatabase.find(
-        (producto) => producto.name == nombreProducto
+    productosConsumibles: (state) => {
+      let consumibles = state.productosDatabase.filter(
+        (producto) => producto.isConsumable
       );
-      console.log(producto);
-      return producto;
-    };
+
+      return consumibles;
+    },
+    productosDevolutivos: (state) => {
+      return state.productosDatabase.filter(
+        (producto) => !producto.isConsumable
+      );
+    },
+    nameColumnsDevolutivos() {
+      return this.productosConsumibles.map((producto) => producto.nombre);
+    },
+    columnsDevolutivos: (state) => {
+      const consumables = state.productosDatabase.filter(
+        (producto) => !producto.isConsumable
+      );
+      let nameConsumables = consumables.map((producto) => producto.nombre);
+      nameConsumables = [...new Set(nameConsumables)];
+      return nameConsumables;
+    },
+
+    valoresDevolutivos: (state) => {
+      return (nombre) => {
+        const productos = state.productosDatabase.filter(
+          (producto) => producto.nombre == nombre
+        );
+        const Total = productos.length;
+        const Averiados = productos.filter(
+          (producto) => producto.estadoFisico == "No funcional"
+        ).length;
+
+        const Prestados = productos.filter(
+          (producto) => producto.borrowedQuantity > 0
+        ).length;
+
+        return {
+          docId: productos[0].docId,
+          nombre,
+          Total,
+          Disponibles: Total - Averiados - Prestados,
+          Prestados,
+          Averiados,
+          productosList: [...productos],
+        };
+      };
+    },
+
+    devolutivosRows() {
+      return this.columnsDevolutivos.map((nombre) => {
+        const valores = this.valoresDevolutivos(nombre);
+        console.log(valores.productosList);
+        return valores;
+      });
+    },
   },
 
   actions: {
+    objToString(obj) {
+      let str = "";
+      for (const [key, value] of Object.entries(obj)) {
+        str += `${key}: ${value}, `;
+      }
+      return str.slice(0, -2);
+    },
     async listenChanges() {
       const q = query(collection(db, "products"), orderBy("name"));
 
