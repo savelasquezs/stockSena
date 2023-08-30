@@ -2,6 +2,8 @@
   <div style="background-color: #f5f5f5">
     <q-input type="file" @change="handleFileSelect" v-model="fileInput" />
     <!-- Contenido aquí -->
+
+    {{ nombresColumnas }}
     <QDialogo
       v-model="openedForm"
       colorButton="secondary"
@@ -40,6 +42,7 @@
           agregarElementoLabel="Agregar producto"
           @agregando="resetForm"
           @editando="editElement"
+          @viendo="verDetalles"
         />
       </template>
       <template #devolutivos>
@@ -50,6 +53,7 @@
           @editando="editarRetornable"
         />
       </template>
+      <uploadData nomTabla="products" />
     </Tabs>
   </div>
 </template>
@@ -66,8 +70,10 @@ import SimpleTable from "components/utils/SimpleTable.vue";
 import TableReuse from "components/utils/TableReuse.vue";
 import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import ComsumiblesForm from "components/productos/ConsumiblesForm.vue";
-import { ref } from "vue";
-import { QDialog } from "quasar";
+
+import { computed, onMounted, ref } from "vue";
+
+import { useRouter } from "vue-router";
 const openedForm = ref(false);
 const filtro = ref("");
 const editando = ref(false);
@@ -75,10 +81,24 @@ const editandoConsumible = ref(false);
 const itemToEdit = ref(null);
 const openConsumableForm = ref(false);
 const openForm = ref(false);
+
+const router = useRouter();
+
+function verDetalles(id) {
+  router.push(`productos/${id}`);
+}
 const tabs = [
   { name: "consumibles", label: "Consumibles" },
   { name: "devolutivos", label: "Devolutivos" },
 ];
+
+const nombresColumnas = computed(() => {
+  if (productosStore.productosConsumibles.length > 0) {
+    return Object.keys(productosStore.productosConsumibles[0]);
+  } else {
+    return [];
+  }
+});
 
 const fileInput = ref(null);
 

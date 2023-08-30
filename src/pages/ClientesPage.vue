@@ -14,13 +14,12 @@
     </q-card>
   </q-dialog>
 
-  <TableReuse
-    :dataArray="clientesStore.clientesDatabase"
+  <SimpleTable
+    agregarElementoLabel="Agregar Usuario"
+    @agregando="formOppened = true"
+    :rows="clientesStore.clientesDatabase"
     :columns="clientesStore.columns"
-    title="Tabla de clientes"
-    :internalColumns="clientesStore.internalColumns"
-    addText="Agregar Cliente"
-    @add="formOppened = true"
+    @viendo="verDetalles"
   />
 </template>
 
@@ -31,10 +30,18 @@ import { ref } from "vue";
 import { UseClientesStore } from "stores/clientesStore";
 import ClientesForm from "src/components/clientes/ClientesForm.vue";
 import { data } from "autoprefixer";
+import SimpleTable from "components/utils/SimpleTable.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const formOppened = ref(false);
 const dataTableArray = ref([]);
 const clientesStore = UseClientesStore();
+
+function verDetalles(id) {
+  router.push(`clientes/${id}`);
+}
 
 clientesStore.listenChanges().then(() => {
   dataTableArray.value = clientesStore.clientesDatabase;
