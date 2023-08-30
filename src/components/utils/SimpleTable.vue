@@ -51,7 +51,7 @@
         <template v-slot:body-cell-acciones="props">
           <q-td :props="props">
             <q-btn
-              @click="$emit('viendo', props.row.docId)"
+              @click="$emit('viendo', props.row.docId || props.row.productId)"
               icon="visibility"
               rounded
               size="10px"
