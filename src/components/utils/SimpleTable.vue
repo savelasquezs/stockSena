@@ -100,8 +100,6 @@
 </template>
 
 <script setup>
-import Vue3Lottie from "vue3-lottie";
-
 import { exportFile } from "quasar";
 import { ref, watch } from "vue";
 const emit = defineEmits(["agregando", "viendo", "editando", "cambioSelected"]);
