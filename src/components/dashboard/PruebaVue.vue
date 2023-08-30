@@ -6,9 +6,10 @@
 
 <script setup>
 import Chart from "chart.js/auto";
-import { onMounted } from "vue";
+import { onMounted, defineProps } from "vue";
 
 const props = defineProps(["idCanvas"]);
+
 const planetChartData = {
   type: "bar",
   data: {
@@ -23,7 +24,7 @@ const planetChartData = {
       "Agosto",
       "Septiembre",
       "Octubre",
-      "Noviembre ",
+      "Noviembre",
       "Diciembre",
     ],
     datasets: [
@@ -34,7 +35,6 @@ const planetChartData = {
         backgroundColor: "rgba(54,73,93,.5)",
         borderColor: "#36495d",
         borderWidth: 3,
-        filled: true,
       },
       {
         type: "line",
@@ -43,7 +43,6 @@ const planetChartData = {
         backgroundColor: "rgba(54,73,93,.5)",
         borderColor: "#36495d",
         borderWidth: 3,
-        filled: true,
       },
       {
         type: "bar",
@@ -57,7 +56,6 @@ const planetChartData = {
   },
   options: {
     responsive: true,
-    lineTension: 1,
     plugins: {
       title: {
         display: true,
@@ -68,22 +66,11 @@ const planetChartData = {
         position: "bottom",
       },
     },
-    // scales: {
-    //   yAxes: [
-    //     {
-    //       ticks: {
-    //         beginAtZero: true,
-    //         padding: 25,
-    //       },
-    //     },
-    //   ],
-    // },
   },
 };
 
 onMounted(() => {
   const ctx = document.getElementById(props.idCanvas);
-
   new Chart(ctx, planetChartData);
 });
 </script>

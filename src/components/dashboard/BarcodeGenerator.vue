@@ -39,6 +39,7 @@ import JsBarcode from "jsbarcode";
 const dialogVisible = ref(false);
 const barcodeData = ref("");
 const barcodeCanvas = ref(null);
+const barcodeImage = ref(null);
 
 const generateBarcode = () => {
   if (barcodeData.value) {
