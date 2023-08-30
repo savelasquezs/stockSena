@@ -1,5 +1,4 @@
 <template>
-  {{ expandedRows }}
   <q-table
     flat
     bordered
@@ -25,6 +24,7 @@
         </q-input>
 
         <DatePicker
+          v-if="buscarPorFecha"
           range
           @guardarFecha="filterByDate"
           @cleanedDates="resetTable"
@@ -44,6 +44,7 @@
         icon="add_circle"
         @click="$emit('add')"
         style="width: 300px"
+        v-if="addText"
       />
     </template>
 
@@ -81,7 +82,7 @@
               <template v-slot:body-cell-acciones="props">
                 <q-td :props="props">
                   <q-btn
-                    @click="$emit('viendo', props.rows.docId)"
+                    @click="verDetalles(props.row.docId || props.row.productId)"
                     icon="visibility"
                     rounded
                     size="10px"
@@ -89,7 +90,7 @@
                     text-color="green-7"
                   />
                   <q-btn
-                    @click="$emit('editando', props.row.docId)"
+                    v-if="editable"
                     icon="edit"
                     rounded
                     size="10px"
@@ -108,18 +109,37 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 import DatePicker from "../utils/DatePicker.vue";
 const search = ref("");
 const rangoFechas = ref(null);
 const rows = ref([]);
-const emit = defineEmits(["editando"]);
+const emit = defineEmits(["editando", "viendo"]);
 const props = defineProps({
   dataArray: Array,
   columns: Array,
   title: String,
   internalColumns: Array,
   addText: String,
+  editable: String,
+  agregarElementoLabel: String,
+  buscarPorFecha: Boolean,
+  id: Boolean,
+  tablaUrl: String,
 });
+const router = useRouter();
+
+function verDetalles(docId) {
+  console.log(props.id);
+  console.log(docId);
+  if (props.id) {
+    emit("viendo", docId);
+    return;
+  } else {
+    router.push(`/${props.tablaUrl}/${docId}`);
+  }
+}
+
 rows.value = props.dataArray;
 
 const expandedRows = computed(() => {

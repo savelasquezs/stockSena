@@ -1,9 +1,5 @@
 <template>
   <div style="background-color: #f5f5f5">
-    <q-input type="file" @change="handleFileSelect" v-model="fileInput" />
-    <!-- Contenido aquí -->
-
-    {{ nombresColumnas }}
     <QDialogo
       v-model="openedForm"
       colorButton="secondary"
@@ -42,7 +38,8 @@
           agregarElementoLabel="Agregar producto"
           @agregando="resetForm"
           @editando="editElement"
-          @viendo="verDetalles"
+          editable="true"
+          tablaUrl="productos"
         />
       </template>
       <template #devolutivos>
@@ -51,6 +48,9 @@
           :columns="productosStore.devolutivosCols"
           :internalColumns="productosStore.devolutivosInternalCols"
           @editando="editarRetornable"
+          editable="true"
+          addText="Agregar Producto"
+          @add="resetForm"
         />
       </template>
       <uploadData nomTabla="products" />
@@ -84,9 +84,6 @@ const openForm = ref(false);
 
 const router = useRouter();
 
-function verDetalles(id) {
-  router.push(`productos/${id}`);
-}
 const tabs = [
   { name: "consumibles", label: "Consumibles" },
   { name: "devolutivos", label: "Devolutivos" },

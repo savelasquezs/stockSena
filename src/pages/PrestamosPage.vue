@@ -23,6 +23,7 @@
       :internalColumns="prestamosStore.internalColumns"
       addText="Agregar Prestamo"
       @add="openedForm = true"
+      tablaUrl="productos"
     />
   </div>
 </template>

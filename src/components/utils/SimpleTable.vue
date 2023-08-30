@@ -51,7 +51,7 @@
         <template v-slot:body-cell-acciones="props">
           <q-td :props="props">
             <q-btn
-              @click="$emit('viendo', props.row.docId || props.row.productId)"
+              @click="verDetalles(props.row.docId || props.row.productId)"
               icon="visibility"
               rounded
               size="10px"
@@ -59,6 +59,7 @@
               text-color="green-7"
             />
             <q-btn
+              v-if="editable"
               @click="searchData(props.row.docId)"
               icon="edit"
               rounded
@@ -102,6 +103,7 @@
 <script setup>
 import { exportFile } from "quasar";
 import { ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 const emit = defineEmits(["agregando", "viendo", "editando", "cambioSelected"]);
 const props = defineProps([
   "agregarElementoLabel",
@@ -109,7 +111,22 @@ const props = defineProps([
   "columns",
   "seleccionar",
   "loading",
+  "editable",
+  "tablaUrl",
+  "id",
 ]);
+
+const router = useRouter();
+
+function verDetalles(docId) {
+  console.log(props.id);
+  if (props.id) {
+    emit("viendo", docId);
+    return;
+  } else {
+    router.push(`/${props.tablaUrl}/${docId}`);
+  }
+}
 
 function searchData(id) {
   const item = props.rows.find((item) => item.docId == id);
