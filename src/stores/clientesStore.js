@@ -112,6 +112,7 @@ export const UseClientesStore = defineStore("clientes", {
         label: "ProductoId",
         field: (row) => row.productId,
       },
+      { name: "acciones", label: "Acciones", field: "acciones" },
     ],
     stadistics: [
       {
