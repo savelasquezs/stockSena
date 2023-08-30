@@ -1,4 +1,6 @@
 <template>
+  {{ product }}
+  {{ id }}
   <div style="background-color: #f5f5f5"></div>
   <!-- Informacion de productos -->
   <div
@@ -7,13 +9,15 @@
   >
     <q-card class="my-card">
       <q-card-section
-        class="bg- text-black"
+        class="bg-accent text-white"
         style="display: flex; flex-direction: column"
       >
-        <div class="text-h5"><strong>Información del Producto</strong></div>
+        <div class="text-h5">
+          <strong>{{ product.nombre }}</strong>
+        </div>
         <div class="flex">
           <div class="text-subtitle" style="flex: 1; margin: 8px">
-            Nombre: {{ product.nombre }}
+            Nombre: {{}}
           </div>
           <div class="text-subtitle3" style="text-align: right; margin: 8px">
             Consumible: {{ product.isConsumable ? "Si" : "No" }}
@@ -35,24 +39,24 @@
     style="display: flex; justify-content: center"
   >
     <q-card class="my-card">
-      <q-card-section class="bg-white text-orange">
+      <q-card-section class="bg-white text-black">
         <div class="text-h5">Veces Prestadas</div>
-        <div class="text-subtitle text-black">
+        <div class="text-subtitle text-green">
           {{ prestamosStore.allBorrowingsProducts.length }}
         </div>
       </q-card-section>
     </q-card>
 
     <q-card class="my-card">
-      <q-card-section class="bg-white text-black">
-        <div class="text-h5">Einer Pino Cabrera</div>
+      <q-card-section class="bg-brown-5 text-black">
+        <div class="text-h5">Cantidad En Prestamo</div>
         <div class="text-subtitle2 text-black">{{ vecesPrestada }}</div>
       </q-card-section>
     </q-card>
 
     <q-card class="my-card">
-      <q-card-section class="bg-white text-black">
-        <div class="text-h5">Joan y Jose Zap</div>
+      <q-card-section class="bg-light-green text-black">
+        <div class="text-h5">Cantidad en Almacén</div>
         <div class="text-subtitle text-black">6</div>
       </q-card-section>
     </q-card>
@@ -72,23 +76,23 @@ import SimpleTable from "components/utils/SimpleTable.vue";
 const props = defineProps(["id"]);
 const route = useRoute();
 const productoId = ref(route.params.id);
+const product = ref({});
 
 const prestamosStore = UsePrestamosStore();
 const productosStore = useProductosStore();
-
-const product = productosStore.productosDatabase.find(
-  (producto) => producto.docId == productoId.value
-);
+async function ejecutarInicio() {
+  await prestamosStore.getPrestamosByProduct(productoId.value);
+  product.value = productosStore.productosDatabase.find(
+    (producto) => producto.docId == productoId.value
+  );
+}
+ejecutarInicio();
 
 const vecesPrestada = computed(() => {
   return prestamosStore.allBorrowingsProducts.reduce(
     (a, b) => a + parseInt(b.cantidadPrestada),
     0
   );
-});
-
-onMounted(async () => {
-  await prestamosStore.getPrestamosByProduct(productoId.value);
 });
 
 watch(
