@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-evenly content-center complete items-center">
     <q-page class="flex content-center window-height">
-      <div class="q-gutter-lg row justify-center items-center">
+      <div class="q-gutter-lg row justify-center items-center"   v-if="userCredential.role == 'administrador'">
         <router-link to="/register">
           <q-btn
             label="Registrar"
@@ -11,32 +11,51 @@
             style="width: 110px"
           />
         </router-link>
-        <q-btn label="Permisos" color="green-14" @click="prompt = true" />
+        <q-btn
+          label="Permisos"
+          color="green-14"
+          @click="openPermissionDialog"
+        />
       </div>
     </q-page>
   </div>
 
   <div class="q-pa-md q-gutter-sm">
-    <q-dialog v-model="prompt" persistent>
+    <q-dialog v-model="permissionDialog" persistent>
       <q-card style="min-width: 350px">
         <q-card-section>
           <div class="text-h6"></div>
         </q-card-section>
 
-        <q-card-section class="q-pt-none">Ingresa el correo
-          <q-input
+        <q-card-section class="q-pt-none"
+          >Ingresa el correo
+          <!-- <q-input
             dense
             v-model="address"
             autofocus
             @keyup.enter="prompt = false"
+          /> -->
+          <q-input
+            dense
+            v-model="userEmail"
+            aria-placeholder="Correo Electronico del usuario"
           />
-          <q-input dense v-model="agregar" />
-          <q-select outlined label="Rol" v-model="Rol" :options="options_Rol" />
+          <q-select
+            outlined
+            label="Rol"
+            v-model="selectedRole"
+            :options="options_Rol"
+          />
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancelar" color="negative" v-close-popup />
-          <q-btn flat label="Aceptar" color="positive" v-close-popup />
+          <q-btn label="Cancelar" color="negative" v-close-popup />
+          <q-btn
+            label="Aceptar"
+            color="positive"
+            v-close-popup
+            @click="grantPermission"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -60,94 +79,77 @@
         <q-card>
           <q-card-section>
             <div v-if="userCredential">
-                <h4>Usuario Activo</h4>
-                <p>Nombre: {{ userCredential.displayName }}</p>
-                <p>Correo electrónico: {{ userCredential.email }}</p>
-                <p>Rol: {{ userCredential.role }}</p>
-              </div>
-              <div v-else>
-                <h2>Usuario Activo</h2>
-                <p>Ningún usuario autenticado</p>
+              <h4>Usuario Activo</h4>
+              <p>Nombre: {{ userCredential.displayName }}</p>
+              <p>Correo electrónico: {{ userCredential.email }}</p>
+              <p>Rol: {{ userCredential.role }}</p>
             </div>
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
-      </q-list>
-    </div>
-
-
-
+            <div v-else>
+              <h2>Usuario Activo</h2>
+              <p>Ningún usuario autenticado</p>
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-expansion-item>
+    </q-list>
+  </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from "vue";
 import { getAuth } from "firebase/auth";
-import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 
-export default {
-  setup() {
-    const Rol = ref(null);
-    const address = ref("");
-    const options_Rol= ref(["administrador","invitado"]);
-    const prompt = ref(false);
-    const agregar = ref("");
-    const expanded = ref(false);
-    const userCredential = ref(null);
-    const users = ref([]);
-    const auth = getAuth();
-    const db = getFirestore();
+import { Notify } from "quasar";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { useDatabaseStore } from "src/stores/DatabaseStore";
 
+const options_Rol = ref(["administrador", "invitado"]);
+const prompt = ref(false);
+const agregar = ref("");
+const expanded = ref(false);
+const userCredential = ref(null);
+const users = ref([]);
+const auth = getAuth();
+const db = getFirestore();
+const permissionDialog = ref(false);
+const userEmail = ref("");
+const selectedRole = ref("");
+const databaseStore = useDatabaseStore();
 
-    onMounted(async () => {
-      await imprimirUsuarioActivo();
+function openPermissionDialog() {
+  permissionDialog.value = true;
+}
+
+async function grantPermission() {
+  const q = query(
+    collection(db, "users"),
+    where("email", "==", userEmail.value)
+  );
+  const docs = await getDocs(q);
+  if (docs.empty) {
+    userEmail.value = "";
+    selectedRole.value = "";
+    Notify.create({
+      position: "center",
+      message: "El email ingresado no existe",
+      color: "red-5",
+      timeout: 500,
     });
+    return;
+  }
+  const idPerson = docs.docs[0].id;
+  databaseStore.updateElement({ role: selectedRole.value }, "users", idPerson);
+}
 
-    async function imprimirUsuarioActivo() {
-      const user = auth.currentUser;
-      if (user) {
-        const uid = user.uid;
-
-        try {
-          const userDoc = await getDoc(doc(db, "users", uid));
-
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            userCredential.value = userData;
-          } else {
-            console.log("Documento de usuario no encontrado en Firestore");
-          }
-        } catch (error) {
-          console.error("Error al obtener los datos del usuario:", error);
-        }
-      } else {
-        console.log("Ningún usuario autenticado");
-      }
-    }
-
-    // async function cambiarRolUsuario(uid, Rol) {
-    //   const userDocRef = doc(db, "users", uid);
-
-    //   try {
-    //     await updateDoc(userDocRef, { role: Rol });
-    //     console.log("Rol del usuario actualizado correctamente");
-    //   } catch (error) {
-    //     console.error("Error al actualizar el rol del usuario:", error);
-    //   }
-    // }
-
-    return {
-      prompt,
-      agregar,
-      expanded,
-      userCredential,
-      //Rol,
-      users,
-      //address,
-      options_Rol,
-      //cambiarRolUsuario, // Agrega la función al retorno del setup
-    };
-  },
-};
+userCredential.value = JSON.parse(localStorage.getItem("user"));
 </script>
 
 
