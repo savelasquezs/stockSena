@@ -1,5 +1,9 @@
 <template>
+  <!--Se imprime el valor de expandedRows en el template usando {{ expandedRows }}. 
+    Esto parece ser una variable reactiva que contiene información sobre las filas expandidas
+    en la tabla. Esta línea es posiblemente solo para propósitos de depuración y puede eliminarse en la implementación final.-->
   {{ expandedRows }}
+  <!-- Se define un <q-table> que se encargará de mostrar los datos tabulados en una interfaz de tabla.  -->
   <q-table
     flat
     bordered
@@ -13,6 +17,7 @@
     style="height: 600px"
     class="q-mx-sm"
   >
+    <!-- Se define un slot de encabezado utilizando <template v-slot:top>. -->
     <template v-slot:top>
       <div class="col-2 q-table__title">{{ title }}</div>
 
@@ -46,7 +51,7 @@
         style="width: 300px"
       />
     </template>
-
+    <!-- Se define un slot de encabezado de columna utilizando <template v-slot:header="props">. En este espacio, se generan las columnas de encabezado de la tabla utilizando v-for. Se itera sobre las columnas proporcionadas en props.cols y se muestra su etiqueta. -->
     <template v-slot:header="props">
       <q-tr :props="props">
         <q-th auto-width />
@@ -107,9 +112,12 @@
 </template>
 
 <script setup>
+// Se importa computed y ref de "vue" para crear variables reactivas y calculadas.
 import { computed, ref } from "vue";
+// Se importa el componente personalizado DatePicker desde "../utils/DatePicker.vue".
 import DatePicker from "../utils/DatePicker.vue";
 const search = ref("");
+// Se definen las variables reactivas search, rangoFechas y rows.
 const rangoFechas = ref(null);
 const rows = ref([]);
 const emit = defineEmits(["editando"]);
@@ -130,13 +138,14 @@ const expandedRows = computed(() => {
   });
   return expanded;
 });
+// Se define una función configureFecha para ajustar el formato de la fecha.
 function configureFecha(fecha) {
   const fechaNormal = fecha.split("-");
   const nuevaFecha =
     fechaNormal[1] + "-" + fechaNormal[0] + "-" + fechaNormal[2];
   return nuevaFecha;
 }
-
+// Se definen las funciones filterByDate y resetTable para filtrar la tabla por fechas y reiniciar la tabla, respectivamente.
 function filterByDate(valorFechas) {
   rangoFechas.value = valorFechas;
   if (rangoFechas.value != null) {
@@ -146,6 +155,7 @@ function filterByDate(valorFechas) {
       59,
       59
     );
+    // La propiedad rows se inicializa con el valor de props.dataArray, que se espera que sea una matriz de datos para la tabla.
     const filtro = props.dataArray.filter((item) => {
       if (props.table == "borrowings")
         return item.dateBorrowed > fromDate && item.dateBorrowed < toDate;
