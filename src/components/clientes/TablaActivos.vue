@@ -80,6 +80,8 @@
   </Qdialogo>
 
   <SimpleTable
+    @viendo="verDetalles"
+    id="id"
     :loading="loading"
     :agregarElementoLabel="selectedPrestamos.length > 0 ? 'Devolver' : null"
     @agregando="openDevolverModal"
@@ -102,7 +104,7 @@ import Qdialogo from "components/utils/QDialogo.vue";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import { useProductosStore } from "src/stores/productosStore";
@@ -119,6 +121,7 @@ const route = useRoute();
 const userId = ref(route.params.id);
 const guardando = ref(false);
 const loading = ref(false);
+const router = useRouter();
 
 const rows = databaseStore.escucharCambiosInternalCollection(
   prestamosStore,
@@ -128,6 +131,14 @@ const rows = databaseStore.escucharCambiosInternalCollection(
   "dateBorrowed",
   "allPersonDocs"
 );
+const verDetalles = (id) => {
+  const producto = prestamosStore.allPersonDocs.find(
+    (prestamo) => prestamo.docId == id
+  );
+  const productoId = producto.productId;
+  console.log(producto);
+  router.push(`/productos/${productoId}`);
+};
 
 function devolver() {
   guardando.value = true;

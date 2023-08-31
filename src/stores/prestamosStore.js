@@ -105,6 +105,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
         field: (row) => row.dueDate,
         format: (val) => new Date(val).toLocaleDateString(),
       },
+      { name: "acciones", label: "Acciones", field: "acciones" },
     ],
     allPersonDocs: [],
     allborrowingsPerson: [],

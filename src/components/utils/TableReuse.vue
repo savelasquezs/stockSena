@@ -1,5 +1,8 @@
 <template>
-  {{ expandedRows }}
+  <!--Se imprime el valor de expandedRows en el template usando {{ expandedRows }}.
+    Esto parece ser una variable reactiva que contiene información sobre las filas expandidas
+    en la tabla. Esta línea es posiblemente solo para propósitos de depuración y puede eliminarse en la implementación final.-->
+  <!-- Se define un <q-table> que se encargará de mostrar los datos tabulados en una interfaz de tabla.  -->
   <q-table
     flat
     bordered
@@ -10,9 +13,10 @@
     :filter="search"
     virtual-scroll
     :rows-per-page-options="[0]"
-    style="height: 600px"
+    style="max-height: 600px"
     class="q-mx-sm"
   >
+    <!-- Se define un slot de encabezado utilizando <template v-slot:top>. -->
     <template v-slot:top>
       <div class="col-2 q-table__title">{{ title }}</div>
 
@@ -25,6 +29,7 @@
         </q-input>
 
         <DatePicker
+          v-if="buscarPorFecha"
           range
           @guardarFecha="filterByDate"
           @cleanedDates="resetTable"
@@ -44,9 +49,10 @@
         icon="add_circle"
         @click="$emit('add')"
         style="width: 300px"
+        v-if="addText"
       />
     </template>
-
+    <!-- Se define un slot de encabezado de columna utilizando <template v-slot:header="props">. En este espacio, se generan las columnas de encabezado de la tabla utilizando v-for. Se itera sobre las columnas proporcionadas en props.cols y se muestra su etiqueta. -->
     <template v-slot:header="props">
       <q-tr :props="props">
         <q-th auto-width />
@@ -81,7 +87,7 @@
               <template v-slot:body-cell-acciones="props">
                 <q-td :props="props">
                   <q-btn
-                    @click="$emit('viendo', props.rows.docId)"
+                    @click="verDetalles(props.row.docId || props.row.productId)"
                     icon="visibility"
                     rounded
                     size="10px"
@@ -89,7 +95,7 @@
                     text-color="green-7"
                   />
                   <q-btn
-                    @click="$emit('editando', props.row.docId)"
+                    v-if="editable"
                     icon="edit"
                     rounded
                     size="10px"
@@ -107,19 +113,41 @@
 </template>
 
 <script setup>
+// Se importa computed y ref de "vue" para crear variables reactivas y calculadas.
 import { computed, ref } from "vue";
+// Se importa el componente personalizado DatePicker desde "../utils/DatePicker.vue".
+import { useRouter } from "vue-router";
 import DatePicker from "../utils/DatePicker.vue";
 const search = ref("");
+// Se definen las variables reactivas search, rangoFechas y rows.
 const rangoFechas = ref(null);
 const rows = ref([]);
-const emit = defineEmits(["editando"]);
+const emit = defineEmits(["editando", "viendo"]);
 const props = defineProps({
   dataArray: Array,
   columns: Array,
   title: String,
   internalColumns: Array,
   addText: String,
+  editable: String,
+  agregarElementoLabel: String,
+  buscarPorFecha: Boolean,
+  id: Boolean,
+  tablaUrl: String,
 });
+const router = useRouter();
+
+function verDetalles(docId) {
+  console.log(props.id);
+  console.log(docId);
+  if (props.id) {
+    emit("viendo", docId);
+    return;
+  } else {
+    router.push(`/${props.tablaUrl}/${docId}`);
+  }
+}
+
 rows.value = props.dataArray;
 
 const expandedRows = computed(() => {
@@ -130,13 +158,14 @@ const expandedRows = computed(() => {
   });
   return expanded;
 });
+// Se define una función configureFecha para ajustar el formato de la fecha.
 function configureFecha(fecha) {
   const fechaNormal = fecha.split("-");
   const nuevaFecha =
     fechaNormal[1] + "-" + fechaNormal[0] + "-" + fechaNormal[2];
   return nuevaFecha;
 }
-
+// Se definen las funciones filterByDate y resetTable para filtrar la tabla por fechas y reiniciar la tabla, respectivamente.
 function filterByDate(valorFechas) {
   rangoFechas.value = valorFechas;
   if (rangoFechas.value != null) {
@@ -146,6 +175,7 @@ function filterByDate(valorFechas) {
       59,
       59
     );
+    // La propiedad rows se inicializa con el valor de props.dataArray, que se espera que sea una matriz de datos para la tabla.
     const filtro = props.dataArray.filter((item) => {
       if (props.table == "borrowings")
         return item.dateBorrowed > fromDate && item.dateBorrowed < toDate;
