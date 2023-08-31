@@ -126,7 +126,6 @@ function cerrarSesion() {
   signOut(auth)
     .then(() => {
       // Sign-out successful.
-      console.log("sesión cerrada exitosamente c:");
       router.push("/login");
     })
     .catch((error) => {});

@@ -35,7 +35,6 @@ const verDetalles = (id) => {
     (prestamo) => prestamo.docId == id
   );
   const productoId = producto.productId;
-  console.log(producto);
   router.push(`/productos/${productoId}`);
 };
 </script>
