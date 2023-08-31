@@ -70,8 +70,7 @@
 </template>
 
 <script setup>
-
-import { inject, ref } from 'vue';
+import { inject, ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 //importación cierre de sesión
 import { signOut } from "firebase/auth";
@@ -79,31 +78,30 @@ import { auth } from "src/firebaseInit";
 //redireccion
 import { useRouter } from "vue-router";
 
-
 const user = inject("user") || "raro";
 
 const linksList = ref([
   {
     title: "Productos",
-    caption: "Productos de almacen tics",
+    caption: "Productos de almacén TICs",
     icon: "inventory",
     to: "/productos",
   },
   {
     title: "Usuarios",
-    caption: "Profesores y aprendices Sena registrados",
+    caption: "Profesores y aprendices del SENA registrados",
     icon: "people_alt",
     to: "/clientes",
   },
   {
     title: "Dashboard",
-    caption: "Estadisticas y ultimos movimientos",
+    caption: "Estadísticas y últimos movimientos",
     icon: "dashboard",
     to: "/dashboard",
   },
   {
-    title: "Prestamos",
-    caption: "productos de Almacen tics",
+    title: "Préstamos",
+    caption: "Productos de almacén TICs",
     icon: "shopping_cart",
     to: "/prestamos",
   },
