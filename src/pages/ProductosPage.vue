@@ -4,7 +4,7 @@
       v-model="openedForm"
       colorButton="secondary"
       iconButton="add_circle"
-      labelButton="Agregar producto consumible"
+      labelButton="Agregar formato producto devolutivo"
     >
       <ProductosForm
         @enviado="openedForm = false"
