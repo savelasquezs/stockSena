@@ -1,4 +1,5 @@
 <template>
+  {{ product }}
   <div style="background-color: #f5f5f5"></div>
   <!-- Informacion de productos -->
   <div
@@ -7,15 +8,15 @@
   >
     <q-card class="my-card">
       <q-card-section
-        class="bg-accent text-white"
+        class="bg-primary text-white"
         style="display: flex; flex-direction: column"
       >
-        <div class="text-h5">
+        <div class="text-h5" style="">
           <strong>{{ product.nombre }}</strong>
         </div>
         <div class="flex">
           <div class="text-subtitle" style="flex: 1; margin: 8px">
-            Nombre: {{}}
+            Id Producto: {{ product.docId }}
           </div>
           <div class="text-subtitle3" style="text-align: right; margin: 8px">
             Consumible: {{ product.isConsumable ? "Si" : "No" }}
@@ -23,10 +24,10 @@
         </div>
         <div class="flex">
           <div class="text-subtitle4" style="flex: 1; margin: 8px">
-            Procesador: Core ¡5
+            Unidad: {{ product.unidadMedida }}
           </div>
           <div class="text-subtitle5" style="text-align: right; margin: 8px">
-            Estado: Prestado
+            Estado: {{}}
           </div>
         </div>
       </q-card-section>
