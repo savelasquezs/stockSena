@@ -1,61 +1,82 @@
 <template>
   {{ product }}
-  <div style="background-color: #f5f5f5"></div>
+
   <!-- Informacion de productos -->
+  <div class="flex justify-center">
+    <q-item style="width: 30%" class="q-pa-lg">
+      <q-item-section avatar>
+        <q-avatar color="accent" text-color="white"
+          >{{ product.nombre[0] }}
+        </q-avatar>
+      </q-item-section>
+
+      <q-item-section>
+        <q-item-label class="flex flex-center"
+          ><span class="text-h5 text-weight-bold">{{
+            product.nombre
+          }}</span></q-item-label
+        >
+        <q-item-label caption class="flex flex-center"
+          >codigo de barra : {{ product.codigoBarra }}</q-item-label
+        >
+      </q-item-section>
+    </q-item>
+  </div>
+  <q-separator />
   <div
     class="q-pa-md row items-start q-gutter-md"
     style="display: flex; justify-content: center"
   >
-    <q-card class="my-card">
-      <q-card-section
-        class="bg-primary text-white"
-        style="display: flex; flex-direction: column"
-      >
-        <div class="text-h5" style="">
-          <strong>{{ product.nombre }}</strong>
+    <div class="shadow-3 q-pa-lg">
+      <div class="izquierda"></div>
+      <div class="flex justify-between">
+        <div v-if="product.isConsumable" class="text-subtitle3">
+          Unidad de medida:
         </div>
-        <div class="flex">
-          <div class="text-subtitle" style="flex: 1; margin: 8px">
-            Id Producto: {{ product.docId }}
-          </div>
-          <div class="text-subtitle3" style="text-align: right; margin: 8px">
-            Consumible: {{ product.isConsumable ? "Si" : "No" }}
-          </div>
+        <div>{{ product.unidadMedida }}</div>
+      </div>
+      <div class="flex">
+        <div class="text-subtitle4" style="flex: 1; margin: 8px">
+          Stock Total: {{ product.stockTotal }}
         </div>
-        <div class="flex">
-          <div class="text-subtitle4" style="flex: 1; margin: 8px">
-            Unidad: {{ product.unidadMedida }}
-          </div>
-          <div class="text-subtitle5" style="text-align: right; margin: 8px">
-            Estado: {{}}
-          </div>
+        <div class="text-subtitle5" style="text-align: left; margin: 8px">
+          Consumible: {{ product.isConsumable ? "Si" : "No" }}
         </div>
-      </q-card-section>
-    </q-card>
+      </div>
+      <div class="flex">
+        <div class="text-subtitle5" style="text-align: right; margin: 8px">
+          Stock Disponible :
+          {{ product.stockTotal - product.borrowedQuantity }}
+        </div>
+        <div class="text-subtitle5" style="text-align: left; margin: 8px">
+          Stock Prestamo: {{ product.borrowedQuantity }}
+        </div>
+      </div>
+    </div>
   </div>
+
   <div
     class="q-pa-md row items-center q-gutter-md"
     style="display: flex; justify-content: center"
   >
-    <q-card class="my-card">
-      <q-card-section class="bg-white text-black">
-        <div class="text-h5">Veces Prestadas</div>
-        <div class="text-subtitle text-green">
-          {{ prestamosStore.allBorrowingsProducts.length }}
-        </div>
-      </q-card-section>
-    </q-card>
+    <div>
+      <div class="text-h5"><strong>Veces Prestadas</strong></div>
+
+      <div class="text-subtitle text-black">
+        {{ prestamosStore.allBorrowingsProducts.length }}
+      </div>
+    </div>
 
     <q-card class="my-card">
-      <q-card-section class="bg-brown-5 text-black">
-        <div class="text-h5">Cantidad En Prestamo</div>
+      <q-card-section class="bg-white text-accent">
+        <div class="text-h5"><strong> Cantidad En Prestamo</strong></div>
         <div class="text-subtitle2 text-black">{{ vecesPrestada }}</div>
       </q-card-section>
     </q-card>
 
     <q-card class="my-card">
-      <q-card-section class="bg-light-green text-black">
-        <div class="text-h5">Cantidad en Almacén</div>
+      <q-card-section class="bg-white text-orange-5">
+        <div class="text-h5"><strong>Cantidad en Almacén</strong></div>
         <div class="text-subtitle text-black">6</div>
       </q-card-section>
     </q-card>
