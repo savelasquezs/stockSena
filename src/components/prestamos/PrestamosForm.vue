@@ -7,7 +7,7 @@
         text-color="white"
         class="text-center"
       />
-      <h3 class="text-h6 text-center">Registro de prestamos</h3>
+      <h3 class="text-h6 text-center">Registro de préstamos</h3>
     </div>
     <div class="" v-if="!cliente">
       <q-select
@@ -15,6 +15,7 @@
         v-model="selectedDocumentType"
         :options="documentTypes"
         label="Tipo de documento"
+        required
       />
       <q-input
         outlined
@@ -210,8 +211,22 @@ async function buscarCliente() {
   });
   console.log(documents[0]);
   cliente.value = documents[0];
-  if (cliente) {
-    $q.loading.hide();
+
+  $q.loading.hide();
+  if (!cliente.value) {
+    $q.dialog({
+      title: "Alerta",
+      message: "El usuario no existe, ¿Desea registrarlo?",
+
+      cancel: {
+        label: "cancelar",
+        push: true,
+      },
+      ok: {
+        label: "Registrar",
+        push: true,
+      },
+    });
   }
 }
 
