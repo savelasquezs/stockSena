@@ -81,7 +81,7 @@
 
   <SimpleTable
     @viendo="verDetalles"
-    id="id"
+    customDetail
     :loading="loading"
     :agregarElementoLabel="selectedPrestamos.length > 0 ? 'Devolver' : null"
     @agregando="openDevolverModal"
@@ -90,7 +90,7 @@
         (prestamo) => prestamo.returnedQuantity < prestamo.quantity
       )
     "
-    seleccionar="true"
+    seleccionar
     :columns="clientesStore.columnsPrestamosPersona"
     @cambioSelected="(value) => (selectedPrestamos = value)"
   />

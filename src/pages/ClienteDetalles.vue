@@ -9,7 +9,7 @@
         :rows="prestamosStore.allPersonDocs"
         :columns="clientesStore.columnsPrestamosPersona"
         @viendo="verDetalles"
-        id="id"
+        customDetail
       />
     </template>
   </Tabs>

@@ -38,7 +38,7 @@
           agregarElementoLabel="Agregar producto"
           @agregando="resetForm"
           @editando="editElement"
-          editable="true"
+          editable
           tablaUrl="productos"
         />
       </template>
@@ -53,7 +53,6 @@
           @add="resetForm"
         />
       </template>
-      <uploadData nomTabla="products" />
     </Tabs>
   </div>
 </template>

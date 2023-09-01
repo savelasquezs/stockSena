@@ -167,7 +167,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
       return docs;
     },
     async getPrestamosByProduct(id) {
-      const idString = id.toString();
+      const idString = id;
       let docs;
       const productRef = doc(db, "products", idString);
       const q = query(collection(productRef, "borrowings"));
