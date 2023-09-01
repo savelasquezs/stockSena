@@ -56,14 +56,11 @@ function recoverPasword() {
     .then(() => {
       // Password reset email sent!
       // ..
-      console.log("recuperando contraseña");
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       // ..
-      console.log(errorCode, errorMessage);
-      console.log();
     });
 }
 

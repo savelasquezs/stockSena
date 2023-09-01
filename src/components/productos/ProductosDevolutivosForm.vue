@@ -76,7 +76,6 @@ if (props.editando && !props.editandoConsumible) {
   consumableSelected.value = props.item.nombre;
   crearFormulario();
   valueCampos.value = props.item;
-  console.log();
 }
 
 watch(consumableSelected, () => {
