@@ -19,7 +19,7 @@
     @agregando="formOppened = true"
     :rows="clientesStore.clientesDatabase"
     :columns="clientesStore.columns"
-    editable="true"
+    editable
     tablaUrl="clientes"
   />
 </template>

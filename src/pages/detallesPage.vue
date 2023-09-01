@@ -65,7 +65,7 @@
     :rows="prestamosStore.allBorrowingsProducts"
     :columns="productosStore.columnasDetalleProducto"
     @viendo="verDetalles"
-    id="asd"
+    customDetail
   />
 </template>
 <script setup>
