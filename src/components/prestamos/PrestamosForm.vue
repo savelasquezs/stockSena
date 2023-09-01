@@ -190,7 +190,6 @@ const description = ref("");
 
 async function buscarCliente() {
   $q.loading.show();
-  console.log(documentNumber.value);
   const q = query(
     collection(db, "customers"),
     where("numero_id", "==", documentNumber.value)
@@ -203,13 +202,11 @@ async function buscarCliente() {
     const docsFromServer = await getDocs(q);
     docs = docsFromServer;
   }
-  console.log(docs);
   const documents = [];
 
   docs.forEach((doc) => {
     documents.push(doc.data());
   });
-  console.log(documents[0]);
   cliente.value = documents[0];
 
   $q.loading.hide();
@@ -286,56 +283,47 @@ function prestarProducto() {
   };
 
   productosList.value.forEach(async (product) => {
-    console.log(product);
     const docref = doc(db, "products", product.docId);
     await updateDoc(docref, {
       borrowedQuantity:
         parseInt(product.cantidadPrestada) + parseInt(product.cantidad),
     });
   });
-  console.log(data);
 
-  addDoc(collection(db, "borrowings"), data)
-    .then((prestamo) => {
-      const clienteDocRef = doc(db, "customers", documentNumber.value);
-      listaProductos.forEach(async (producto, indexLista) => {
-        console.log(producto.productId);
-        const productoDocRef = doc(db, "products", producto.productId);
-        const dataToProductos = {
-          indexLista,
-          diaPrestamo: producto.dateBorrowed,
-          cantidadPrestada: producto.quantity,
-          customer: {
-            documentNumber: documentNumber.value,
-            name: cliente.value.nombre,
-            documentType: selectedDocumentType.value,
-          },
-        };
-        if (!producto.isConsumable) {
-          dataToProductos.estadoEntrega = producto.estadoEntrega;
-        }
-        console.log({ dataToProductos, productoDocRef, clienteDocRef });
-        const productoref = await addDoc(
-          collection(productoDocRef, "borrowings"),
-          dataToProductos
-        );
-        addDoc(collection(clienteDocRef, "borrowings"), {
-          productoBorrowId: productoref.id,
-          indexLista,
-          prestamoId: prestamo.id,
-          ...producto,
-        }).then((resultado) => {
-          console.log("borrow guardada exitosamente con id:", resultado.id);
-        });
-      });
+  addDoc(collection(db, "borrowings"), data).then((prestamo) => {
+    const clienteDocRef = doc(db, "customers", documentNumber.value);
+    listaProductos.forEach(async (producto, indexLista) => {
+      const productoDocRef = doc(db, "products", producto.productId);
+      const dataToProductos = {
+        indexLista,
+        diaPrestamo: producto.dateBorrowed,
+        cantidadPrestada: producto.quantity,
+        customer: {
+          documentNumber: documentNumber.value,
+          name: cliente.value.nombre,
+          documentType: selectedDocumentType.value,
+        },
+      };
+      if (!producto.isConsumable) {
+        dataToProductos.estadoEntrega = producto.estadoEntrega;
+      }
+      const productoref = await addDoc(
+        collection(productoDocRef, "borrowings"),
+        dataToProductos
+      );
+      addDoc(collection(clienteDocRef, "borrowings"), {
+        productoBorrowId: productoref.id,
+        indexLista,
+        prestamoId: prestamo.id,
+        ...producto,
+      }).then((resultado) => {});
+    });
 
-      emit("prestamoGuardado");
-      $q.notify({
-        message: "Pedido Guardado exitosamente",
-        color: "accent",
-      });
-    })
-    .catch((err) => console.log(err));
-  console.log(data);
+    emit("prestamoGuardado");
+    $q.notify({
+      message: "Pedido Guardado exitosamente",
+      color: "accent",
+    });
+  });
 }
 </script>

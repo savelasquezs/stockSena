@@ -1,14 +1,10 @@
 <template>
   <div style="background-color: #f5f5f5">
-    <q-input type="file" @change="handleFileSelect" v-model="fileInput" />
-    <!-- Contenido aquí -->
-
-    {{ nombresColumnas }}
     <QDialogo
       v-model="openedForm"
       colorButton="secondary"
       iconButton="add_circle"
-      labelButton="Agregar producto consumible"
+      labelButton="Agregar formato producto devolutivo"
     >
       <ProductosForm
         @enviado="openedForm = false"
@@ -42,7 +38,8 @@
           agregarElementoLabel="Agregar producto"
           @agregando="resetForm"
           @editando="editElement"
-          @viendo="verDetalles"
+          editable
+          tablaUrl="productos"
         />
       </template>
       <template #devolutivos>
@@ -51,6 +48,9 @@
           :columns="productosStore.devolutivosCols"
           :internalColumns="productosStore.devolutivosInternalCols"
           @editando="editarRetornable"
+          editable="true"
+          addText="Agregar Producto"
+          @add="resetForm"
         />
       </template>
     </Tabs>
@@ -69,8 +69,9 @@ import SimpleTable from "components/utils/SimpleTable.vue";
 import TableReuse from "components/utils/TableReuse.vue";
 import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import ComsumiblesForm from "components/productos/ConsumiblesForm.vue";
+
 import { computed, onMounted, ref } from "vue";
-import { QDialog } from "quasar";
+
 import { useRouter } from "vue-router";
 const openedForm = ref(false);
 const filtro = ref("");
@@ -82,9 +83,6 @@ const openForm = ref(false);
 
 const router = useRouter();
 
-function verDetalles(id) {
-  router.push(`productos/${id}`);
-}
 const tabs = [
   { name: "consumibles", label: "Consumibles" },
   { name: "devolutivos", label: "Devolutivos" },
@@ -102,12 +100,10 @@ const fileInput = ref(null);
 
 function editElement(object) {
   let obj;
-  console.log(object);
   if (object.productosList) {
     obj = object.productosList.find((product = product.docId == object.docId));
   }
   editandoConsumible.value = true;
-  console.log(obj);
   editando.value = true;
   itemToEdit.value = object;
   openedForm.value = true;
@@ -141,13 +137,9 @@ function handleFileSelect() {
       workbook.Sheets[worksheet]
     );
 
-    console.log(XL_row_object);
-
     databaseStore.saveElement();
   };
-  reader.onerror = (ex) => {
-    console.log(ex);
-  };
+  reader.onerror = (ex) => {};
   reader.readAsBinaryString(file);
 }
 

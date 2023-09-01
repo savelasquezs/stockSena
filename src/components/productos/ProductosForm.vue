@@ -72,7 +72,6 @@ async function submitForm(data) {
   if (props.editando) {
     DatabaseStore.updateElement(data, "products", props.item.docId);
   } else {
-    console.log(data);
     DatabaseStore.saveElement(data, "products");
   }
 

@@ -105,6 +105,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
         field: (row) => row.dueDate,
         format: (val) => new Date(val).toLocaleDateString(),
       },
+      { name: "acciones", label: "Acciones", field: "acciones" },
     ],
     allPersonDocs: [],
     allborrowingsPerson: [],
@@ -166,7 +167,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
       return docs;
     },
     async getPrestamosByProduct(id) {
-      const idString = id.toString();
+      const idString = id;
       let docs;
       const productRef = doc(db, "products", idString);
       const q = query(collection(productRef, "borrowings"));

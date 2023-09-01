@@ -202,6 +202,7 @@ export const useProductosStore = defineStore("productos", {
         field: "notasDevolucion",
         sortable: true,
       },
+      { name: "acciones", label: "Acciones", field: "acciones" },
     ],
   }),
   getters: {

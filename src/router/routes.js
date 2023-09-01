@@ -15,11 +15,11 @@ const routes = [
       },
       {
         path: "/clientes/:id",
-        component: () => import("pages/ClientesDatos.vue"),
+        component: () => import("pages/ClienteDetalles.vue"),
       },
       {
         path: "/datosClientes",
-        component: () => import("pages/ClientesDatos.vue"),
+        component: () => import("src/components/clientes/TablaActivos.vue"),
       },
       {
         path: "/prestamos",

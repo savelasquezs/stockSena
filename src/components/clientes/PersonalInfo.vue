@@ -72,14 +72,6 @@
           </div>
         </div>
       </q-card-section>
-      <q-card-section class="row justify-end items-start">
-        <div class="q-pr-lg">
-          <q-btn class="" color="red" label="Voler" />
-        </div>
-        <div>
-          <q-btn class="" color="primary" label="Editar" />
-        </div>
-      </q-card-section>
     </q-card>
   </div>
 </template>
@@ -91,8 +83,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: 50px;
+  margin: 20px;
 }
 
 .q-card {

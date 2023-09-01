@@ -1,7 +1,4 @@
 <template>
-  <PersonalInfo />
-  {{ selectedPrestamos }}
-
   <Qdialogo v-model="modalDevolucionIsOpen">
     <div class="flex flex-center">
       <q-avatar
@@ -83,17 +80,23 @@
   </Qdialogo>
 
   <SimpleTable
+    @viendo="verDetalles"
+    customDetail
+    :loading="loading"
     :agregarElementoLabel="selectedPrestamos.length > 0 ? 'Devolver' : null"
     @agregando="openDevolverModal"
-    :rows="prestamosStore.allPersonDocs"
-    seleccionar="true"
+    :rows="
+      prestamosStore.allPersonDocs.filter(
+        (prestamo) => prestamo.returnedQuantity < prestamo.quantity
+      )
+    "
+    seleccionar
     :columns="clientesStore.columnsPrestamosPersona"
     @cambioSelected="(value) => (selectedPrestamos = value)"
   />
 </template>
 
 <script setup>
-import PersonalInfo from "components/clientes/PersonalInfo.vue";
 import SimpleTable from "components/utils/SimpleTable.vue";
 import { UseClientesStore } from "src/stores/clientesStore";
 import Qdialogo from "components/utils/QDialogo.vue";
@@ -101,7 +104,7 @@ import Qdialogo from "components/utils/QDialogo.vue";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import { useProductosStore } from "src/stores/productosStore";
@@ -117,8 +120,10 @@ const productosStore = useProductosStore();
 const route = useRoute();
 const userId = ref(route.params.id);
 const guardando = ref(false);
+const loading = ref(false);
+const router = useRouter();
 
-databaseStore.escucharCambiosInternalCollection(
+const rows = databaseStore.escucharCambiosInternalCollection(
   prestamosStore,
   "customers",
   userId.value,
@@ -126,11 +131,17 @@ databaseStore.escucharCambiosInternalCollection(
   "dateBorrowed",
   "allPersonDocs"
 );
+const verDetalles = (id) => {
+  const producto = prestamosStore.allPersonDocs.find(
+    (prestamo) => prestamo.docId == id
+  );
+  const productoId = producto.productId;
+  router.push(`/productos/${productoId}`);
+};
 
 function devolver() {
   guardando.value = true;
   copySelectedRows.value.forEach(async (element) => {
-    console.log(element);
     const docPrestamoRef = doc(db, "borrowings", element.prestamoId);
     let prestamo = await getDoc(docPrestamoRef);
     const estadoDevuelto =
@@ -140,14 +151,13 @@ function devolver() {
 
     //update prestamos
     const prestamoProductos = prestamo.data().productosList;
-    prestamoProductos[element.indexLista].returnedQuantity += parseInt(
-      element.devolver
-    );
+    prestamoProductos[element.indexLista].returnedQuantity =
+      parseInt(prestamoProductos[element.indexLista].returnedQuantity) +
+      parseInt(element.devolver);
     prestamoProductos[element.indexLista].returnedState = estadoDevuelto;
 
     prestamoProductos[element.indexLista].notasDevolucion = notasDevolucion;
     prestamoProductos[element.indexLista].fechaDevolucion = fechaDevolucion;
-    console.log(prestamoProductos);
 
     await updateDoc(docPrestamoRef, {
       productosList: prestamoProductos,
@@ -175,10 +185,11 @@ function devolver() {
       "borrowings",
       element.docId
     );
-    console.log(docCustomerBorrowingRef);
 
     await updateDoc(docCustomerBorrowingRef, {
-      returnedQuantity: (element.returnedQuantity += element.devolver),
+      returnedQuantity: (element.returnedQuantity += parseInt(
+        element.devolver
+      )),
       fechaDevolucion,
       notasDevolucion,
       estadoDevuelto,
@@ -200,10 +211,7 @@ function devolver() {
       estadoDevuelto,
     });
 
-    console.log(docProductBorrowingRef);
-
     modalDevolucionIsOpen.value = false;
-    // console.log(prestamoElement);
     guardando.value = false;
   });
 }
@@ -229,7 +237,10 @@ function openDevolverModal() {
 }
 
 onMounted(async () => {
-  await prestamosStore.getPrestamosByPerson(userId.value);
+  loading.value = true;
+  await prestamosStore.getPrestamosByPerson(userId.value).then(() => {
+    loading.value = false;
+  });
 });
 
 watch(

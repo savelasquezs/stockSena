@@ -170,9 +170,7 @@ function guardarCambios() {
         updateDoc(docRef, {
           totalStock:
             parseInt(registro.totalStock) + parseInt(registro.cantidad),
-        }).then(() => {
-          console.log("actualizado correctamente");
-        });
+        }).then(() => {});
       });
       const productos = productosList.value.map((producto) => {
         return {
@@ -185,7 +183,6 @@ function guardarCambios() {
             parseInt(producto.totalStock) + parseInt(producto.cantidad),
         };
       });
-      console.log(productos);
       const data = {
         productosList: productos,
         fecha: new Date().getTime(),
@@ -195,12 +192,10 @@ function guardarCambios() {
       };
 
       addDoc(collection(db, "stockMovements"), data).then(() => {
-        console.log("Guardado exitosamente");
         emit("movimientoGuardado");
       });
     }
   }
-  console.log(productosList.value);
 }
 
 function addproductList() {

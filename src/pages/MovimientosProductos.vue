@@ -21,6 +21,7 @@
     :internalColumns="movimientosStore.internalColumns"
     addText="Agregar Movimiento"
     @add="formOppened = true"
+    buscarPorFecha
   />
 </template>
 

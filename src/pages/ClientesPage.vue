@@ -15,9 +15,12 @@
   </q-dialog>
 
   <SimpleTable
+    agregarElementoLabel="Agregar Usuario"
+    @agregando="formOppened = true"
     :rows="clientesStore.clientesDatabase"
     :columns="clientesStore.columns"
-    @viendo="verDetalles"
+    editable
+    tablaUrl="clientes"
   />
 </template>
 
@@ -37,13 +40,8 @@ const formOppened = ref(false);
 const dataTableArray = ref([]);
 const clientesStore = UseClientesStore();
 
-function verDetalles(id) {
-  router.push(`clientes/${id}`);
-}
-
 clientesStore.listenChanges().then(() => {
   dataTableArray.value = clientesStore.clientesDatabase;
-  console.log(clientesStore.clientesDatabase);
 });
 </script>
 
