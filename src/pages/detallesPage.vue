@@ -27,29 +27,40 @@
     class="q-pa-md row items-start q-gutter-md"
     style="display: flex; justify-content: center"
   >
-    <div class="shadow-3 q-pa-lg">
-      <div class="izquierda"></div>
-      <div class="flex justify-between">
-        <div v-if="product.isConsumable" class="text-subtitle3">
-          Unidad de medida:
+    <div class="shadow-3 q-pa-lg flex">
+      <div class="izquierda q-mr-lg">
+        <div class="flex justify-between">
+          <div v-if="product.isConsumable" class="text-subtitle3">
+            Unidad de medida:
+          </div>
+          <div>{{ product.unidadMedida }}</div>
         </div>
-        <div>{{ product.unidadMedida }}</div>
+        <div class="flex justify-between">
+          <div v-if="product.isConsumable" class="text-subtitle3">
+            Stock Total:
+          </div>
+          <div>{{ product.stockTotal }}</div>
+        </div>
+        <div class="flex justify-between">
+          <div v-if="product.isConsumable" class="text-subtitle3">
+            Consumible:
+          </div>
+          <div>{{ product.isConsumable ? "Si" : "No" }}</div>
+        </div>
       </div>
-      <div class="flex">
-        <div class="text-subtitle4" style="flex: 1; margin: 8px">
-          Stock Total: {{ product.stockTotal }}
+
+      <div class="derecha">
+        <div class="flex justify-between">
+          <div v-if="product.isConsumable" class="text-subtitle3">
+            Stock Disponible :
+          </div>
+          <div>{{ product.stockTotal - product.borrowedQuantity }}</div>
         </div>
-        <div class="text-subtitle5" style="text-align: left; margin: 8px">
-          Consumible: {{ product.isConsumable ? "Si" : "No" }}
-        </div>
-      </div>
-      <div class="flex">
-        <div class="text-subtitle5" style="text-align: right; margin: 8px">
-          Stock Disponible :
-          {{ product.stockTotal - product.borrowedQuantity }}
-        </div>
-        <div class="text-subtitle5" style="text-align: left; margin: 8px">
-          Stock Prestamo: {{ product.borrowedQuantity }}
+        <div class="flex justify-between">
+          <div v-if="product.isConsumable" class="text-subtitle3">
+            Stock Prestamo:
+          </div>
+          <div>{{ product.borrowedQuantity }}</div>
         </div>
       </div>
     </div>
