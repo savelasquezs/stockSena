@@ -87,23 +87,29 @@
     style="display: flex; justify-content: center"
   >
     <div>
-      <div class="text-h5"><strong>Veces Prestadas</strong></div>
+      <div class="shadow-2 q-pa-lg text-h6 text-accent text-weight-bold">
+        Veces Prestadas
 
-      <div class="text-subtitle text-black">
-        {{ prestamosStore.allBorrowingsProducts.length }}
+        <div class="text-subtitle text-black">
+          {{ prestamosStore.allBorrowingsProducts.length }}
+        </div>
       </div>
     </div>
 
     <div>
-      <div class="shadow-3 q-pa-lg">
-        <div class="text-h5"><strong> Cantidad En Prestamo</strong></div>
+      <div class="shadow-2 q-pa-lg">
+        <div class="text-h6 text-primary text-weight-bold">
+          Cantidad En Prestamo
+        </div>
         <div class="text-subtitle2 text-black">{{ vecesPrestada }}</div>
       </div>
     </div>
 
-    <q-card-section class="bg-white text-orange-5">
-      <div class="text-h5"><strong>Cantidad en Almacén</strong></div>
-      <div class="text-subtitle text-black">6</div>
+    <q-card-section class="bg-white text-orange">
+      <div class="shadow-2 q-pa-lg text-h6 text-weight-bold">
+        Cantidad en Almacén
+        <div class="text-subtitle text-black">6</div>
+      </div>
     </q-card-section>
   </div>
 
