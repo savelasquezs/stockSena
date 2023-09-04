@@ -11,6 +11,15 @@
       <div class="flex justify-end">
         <div>
           <q-btn
+            @click="$emit('segundoBotonClicked')"
+            :label="segundoBotonLabel"
+            icon="add_circle_outline"
+            color="primary"
+            style="width: 210px"
+            class="q-ml-sm"
+            v-if="segundoBotonActivo"
+          />
+          <q-btn
             @click="$emit('agregando')"
             :label="agregarElementoLabel"
             icon="add_circle_outline"
@@ -104,23 +113,31 @@
 import { exportFile } from "quasar";
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-const emit = defineEmits(["agregando", "viendo", "editando", "cambioSelected"]);
-const props = defineProps([
-  "agregarElementoLabel",
-  "rows",
-  "columns",
-  "seleccionar",
-  "loading",
-  "editable",
-  "tablaUrl",
-  "id",
+const emit = defineEmits([
+  "agregando",
+  "viendo",
+  "editando",
+  "cambioSelected",
+  "segundoBotonClicked",
 ]);
+const props = defineProps({
+  agregarElementoLabel: String,
+  rows: Array,
+  columns: Array,
+  seleccionar: Boolean,
+  loading: Boolean,
+  editable: Boolean,
+  tablaUrl: String,
+  customDetail: Boolean,
+  segundoBotonActivo: Boolean,
+  segundoBotonLabel: String,
+});
 
 const router = useRouter();
 
 function verDetalles(docId) {
-  console.log(props.id);
-  if (props.id) {
+  console.log(props.customDetail);
+  if (props.customDetail) {
     emit("viendo", docId);
     return;
   } else {

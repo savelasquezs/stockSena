@@ -143,7 +143,6 @@ function guardarDevolutivo() {
     nombre: nombre.value,
     listaCampos: listaCampos.value,
   };
-  console.log(data);
 
   databaseStore.saveElement(data, "consumables");
   emit("productoGuardado");

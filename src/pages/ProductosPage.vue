@@ -4,7 +4,7 @@
       v-model="openedForm"
       colorButton="secondary"
       iconButton="add_circle"
-      labelButton="Agregar producto consumible"
+      labelButton="Agregar formato producto devolutivo"
     >
       <ProductosForm
         @enviado="openedForm = false"
@@ -38,7 +38,7 @@
           agregarElementoLabel="Agregar producto"
           @agregando="resetForm"
           @editando="editElement"
-          editable="true"
+          editable
           tablaUrl="productos"
         />
       </template>
@@ -53,7 +53,6 @@
           @add="resetForm"
         />
       </template>
-      <uploadData nomTabla="products" />
     </Tabs>
   </div>
 </template>
@@ -101,12 +100,10 @@ const fileInput = ref(null);
 
 function editElement(object) {
   let obj;
-  console.log(object);
   if (object.productosList) {
     obj = object.productosList.find((product = product.docId == object.docId));
   }
   editandoConsumible.value = true;
-  console.log(obj);
   editando.value = true;
   itemToEdit.value = object;
   openedForm.value = true;
@@ -140,13 +137,9 @@ function handleFileSelect() {
       workbook.Sheets[worksheet]
     );
 
-    console.log(XL_row_object);
-
     databaseStore.saveElement();
   };
-  reader.onerror = (ex) => {
-    console.log(ex);
-  };
+  reader.onerror = (ex) => {};
   reader.readAsBinaryString(file);
 }
 

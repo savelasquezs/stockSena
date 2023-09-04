@@ -4,22 +4,6 @@ Descripción del archivo "DataPicker.vue":
 
 Este archivo contiene un componente Vue.js y Quasar que implementa un selector de fechas (Date Picker) con filtrado de tabla.
 
-===========================================================================
-Props recibidos:
-  range: {
-    type: Boolean,
-    default: false,
-  }:define si el calendario acepta rangos de fechas
-  options: {
-    type: Boolean,
-    default: false,
-  }: define si el calendario deshabilitará fechas pasadas al dia actual
-Eventos emitidos:
--guardarFecha: El evento se activa al darle al botón "OK"
-y envia los datos de la fecha seleccionada
--cleanedDates:
-===========================================================================
-
 Características clave:
 - Utiliza elementos Quasar como "q-date" y "q-btn" para la selección de fechas.
 - Emite el evento "guardarFecha" cuando se elige una fecha, lo que permite la interacción con otros componentes.

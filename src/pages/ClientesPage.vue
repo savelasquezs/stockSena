@@ -19,7 +19,7 @@
     @agregando="formOppened = true"
     :rows="clientesStore.clientesDatabase"
     :columns="clientesStore.columns"
-    editable="true"
+    editable
     tablaUrl="clientes"
   />
 </template>
@@ -42,7 +42,6 @@ const clientesStore = UseClientesStore();
 
 clientesStore.listenChanges().then(() => {
   dataTableArray.value = clientesStore.clientesDatabase;
-  console.log(clientesStore.clientesDatabase);
 });
 </script>
 

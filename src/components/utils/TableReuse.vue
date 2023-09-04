@@ -13,7 +13,7 @@
     :filter="search"
     virtual-scroll
     :rows-per-page-options="[0]"
-    style="height: 600px"
+    style="max-height: 600px"
     class="q-mx-sm"
   >
     <!-- Se define un slot de encabezado utilizando <template v-slot:top>. -->

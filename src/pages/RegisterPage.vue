@@ -60,47 +60,44 @@
   </div>
 
   <div class="message-container">
-    <div class="success-message" v-if="successMessage">{{ successMessage }}</div>
+    <div class="success-message" v-if="successMessage">
+      {{ successMessage }}
+    </div>
     <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
   </div>
-
 </template>
 
 <script setup>
 import { ref } from "vue";
-import {sendEmailVerification,signOut,updateProfile,} from "firebase/auth";
+import { sendEmailVerification, signOut, updateProfile } from "firebase/auth";
 import { auth, db } from "src/firebaseInit";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 //redireccion de rutas
 import { useRouter } from "vue-router";
 import { doc, setDoc } from "firebase/firestore";
 
-
 const router = useRouter();
 const email = ref("");
 const password1 = ref("");
-const password2=ref("")
-const username=ref("")
+const password2 = ref("");
+const username = ref("");
 //const usuarioBD=JSON.parse(localStorage.getItem("user"));
-const successMessage=ref("");
-const errorMessage= ref("");
+const successMessage = ref("");
+const errorMessage = ref("");
 
-
-function showSuccessMessage(message){
-  successMessage.value=message;
-  setTimeout(()=>{
-    successMessage.value="" ;
-
-  },3000);
+function showSuccessMessage(message) {
+  successMessage.value = message;
+  setTimeout(() => {
+    successMessage.value = "";
+  }, 3000);
 }
 
-function showErrorMessage(message){
-  errorMessage.value= message;
-  setTimeout (()=>  {
-    errorMessage.value="";
-  },3000)
+function showErrorMessage(message) {
+  errorMessage.value = message;
+  setTimeout(() => {
+    errorMessage.value = "";
+  }, 3000);
 }
-
 
 function onSubmit() {
   // if (!isEmailValid()) {
@@ -121,11 +118,8 @@ function onSubmit() {
         almacen: usuarioBD.almacen,
       };
       const docRef = doc(db, "users", user.uid);
-      console.log(userData);
       await setDoc(docRef, userData)
-        .then(() => {
-          console.log("user acepted");
-        })
+        .then(() => {})
         .catch((error) => {
           console.error("error adding document: ", error);
         });
@@ -136,18 +130,15 @@ function onSubmit() {
       returnLogin();
 
       showSuccessMessage("Usuario registrado exitosamente");
-
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
       // ..
     });
 
-    showErrorMessage("No se pudo registrar el usuario");
-
-  }
+  showErrorMessage("No se pudo registrar el usuario");
+}
 
 // function isEmailValid() {
 //   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
@@ -174,7 +165,8 @@ function returnLogin() {
   z-index: 9999;
 }
 
-.success-message, .error-message {
+.success-message,
+.error-message {
   padding: 10px 20px;
   border-radius: 5px;
   margin: 5px;

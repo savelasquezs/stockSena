@@ -7,7 +7,7 @@
         <TarjetaEstad
           icono="event_available"
           titulo="202"
-          subtitulo="Total de prestamos"
+          subtitulo="Total de préstamos"
           iconColor="light-blue-13"
         />
         <TarjetaEstad

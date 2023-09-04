@@ -101,15 +101,13 @@ function guardarCliente() {
     area: Area.value,
   };
   const docRef = doc(db, "customers", data.numero_id);
-  setDoc(docRef, data)
-    .then(() => {
-      emit("clienteGuardado");
-      $q.notify({
-        message: "Cliente guardado exitosamente",
-        color: "accent",
-      });
-    })
-    .catch((err) => console.log(err));
+  setDoc(docRef, data).then(() => {
+    emit("clienteGuardado");
+    $q.notify({
+      message: "Cliente guardado exitosamente",
+      color: "accent",
+    });
+  });
 }
 </script>
 

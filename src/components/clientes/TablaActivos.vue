@@ -81,7 +81,7 @@
 
   <SimpleTable
     @viendo="verDetalles"
-    id="id"
+    customDetail
     :loading="loading"
     :agregarElementoLabel="selectedPrestamos.length > 0 ? 'Devolver' : null"
     @agregando="openDevolverModal"
@@ -90,7 +90,7 @@
         (prestamo) => prestamo.returnedQuantity < prestamo.quantity
       )
     "
-    seleccionar="true"
+    seleccionar
     :columns="clientesStore.columnsPrestamosPersona"
     @cambioSelected="(value) => (selectedPrestamos = value)"
   />
@@ -136,14 +136,12 @@ const verDetalles = (id) => {
     (prestamo) => prestamo.docId == id
   );
   const productoId = producto.productId;
-  console.log(producto);
   router.push(`/productos/${productoId}`);
 };
 
 function devolver() {
   guardando.value = true;
   copySelectedRows.value.forEach(async (element) => {
-    console.log(element);
     const docPrestamoRef = doc(db, "borrowings", element.prestamoId);
     let prestamo = await getDoc(docPrestamoRef);
     const estadoDevuelto =
@@ -160,7 +158,6 @@ function devolver() {
 
     prestamoProductos[element.indexLista].notasDevolucion = notasDevolucion;
     prestamoProductos[element.indexLista].fechaDevolucion = fechaDevolucion;
-    console.log(prestamoProductos);
 
     await updateDoc(docPrestamoRef, {
       productosList: prestamoProductos,
@@ -188,7 +185,6 @@ function devolver() {
       "borrowings",
       element.docId
     );
-    console.log(docCustomerBorrowingRef);
 
     await updateDoc(docCustomerBorrowingRef, {
       returnedQuantity: (element.returnedQuantity += parseInt(
@@ -215,10 +211,7 @@ function devolver() {
       estadoDevuelto,
     });
 
-    console.log(docProductBorrowingRef);
-
     modalDevolucionIsOpen.value = false;
-    // console.log(prestamoElement);
     guardando.value = false;
   });
 }
