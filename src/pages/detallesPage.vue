@@ -1,6 +1,4 @@
 <template>
-  {{ product }}
-
   <!-- Informacion de productos -->
   <div class="flex justify-center">
     <q-item style="width: 30%" class="q-pa-lg">
@@ -36,32 +34,34 @@
           <div>{{ product.unidadMedida }}</div>
         </div>
         <div class="flex justify-between">
-          <div v-if="product.isConsumable" class="text-subtitle3">
-            Stock Total:
-          </div>
+          <div class="text-subtitle3">Stock Total:</div>
           <div>{{ product.stockTotal }}</div>
         </div>
         <div class="flex justify-between">
-          <div v-if="product.isConsumable" class="text-subtitle3">
-            Consumible:
-          </div>
+          <div class="text-subtitle3">Consumible:</div>
           <div>{{ product.isConsumable ? "Si" : "No" }}</div>
         </div>
       </div>
 
       <div class="derecha">
         <div class="flex justify-between">
-          <div v-if="product.isConsumable" class="text-subtitle3">
-            Stock Disponible :
-          </div>
+          <div class="text-subtitle3">Stock Disponible :</div>
           <div>{{ product.stockTotal - product.borrowedQuantity }}</div>
         </div>
         <div class="flex justify-between">
-          <div v-if="product.isConsumable" class="text-subtitle3">
-            Stock Prestamo:
-          </div>
+          <div class="text-subtitle3">Stock Prestamo:</div>
           <div>{{ product.borrowedQuantity }}</div>
         </div>
+      </div>
+    </div>
+    <div class="shadow-3 q-pa-lg customProperties" v-if="!product.isConsumable">
+      <div
+        class="flex justify-between"
+        v-for="(property, index) in customProperties"
+        :key="index"
+      >
+        <div class="text-subtitle3">{{ property[0] }}:</div>
+        <div>{{ property[1] }}</div>
       </div>
     </div>
   </div>
@@ -111,6 +111,7 @@ const route = useRoute();
 const router = useRouter();
 const productoId = ref(route.params.id);
 const product = ref({});
+const customProperties = ref([]);
 
 function verDetalles(id) {
   const prestamo = prestamosStore.allBorrowingsProducts.find(
@@ -127,6 +128,9 @@ async function ejecutarInicio() {
   product.value = productosStore.productosDatabase.find(
     (producto) => producto.docId == productoId.value
   );
+  if (!product.value.isConsumable) {
+    customProperties.value = Object.entries(product.value.custom);
+  }
 }
 ejecutarInicio();
 
@@ -145,3 +149,12 @@ watch(
   }
 );
 </script>
+
+<style scoped>
+.customProperties {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 20px;
+}
+</style>

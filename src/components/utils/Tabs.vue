@@ -5,7 +5,7 @@
 
       <!-- Se utiliza <q-tabs> para mostrar las pestañas. Se le enlaza con v-model="tab" para que la pestaña seleccionada se controle mediante la variable tab. -->
       <q-tabs
-        v-model="tab"
+        v-model="selectedTab"
         dense
         class="text-grey"
         active-color="primary"
@@ -26,7 +26,7 @@
       <q-separator />
 
       <!-- Los paneles de contenido se gestionan con <q-tab-panels>. Se enlazan con v-model="tab" para que el panel correspondiente al valor de tab se muestre. -->
-      <q-tab-panels v-model="tab" animated>
+      <q-tab-panels v-model="selectedTab" animated>
         <!-- Cada <q-tab-panel> alberga el contenido específico de cada pestaña y se asocia al modelo tab. -->
         <q-tab-panel v-for="tab in tabs" :key="tab.name" :name="tab.name">
           <div class="text-h6">{{ tab.label }}</div>
@@ -39,11 +39,16 @@
 
 <script setup>
 // Se importa ref desde "vue" para manejar una variable reactiva llamada tab.
+import { useVModel } from "@vueuse/core";
 import { ref } from "vue";
 // Se define la variable reactiva tab con el valor inicial de la primera pestaña.
 const tab = ref(props.tabs[0].name);
 // Se definen las propiedades del componente, en este caso, tabs, como un arreglo.
-const props = defineProps({ tabs: Array });
+const props = defineProps({
+  tabs: Array,
+  modelValue: String,
+});
+const selectedTab = useVModel(props, "modelValue");
 </script>
 
 <style>

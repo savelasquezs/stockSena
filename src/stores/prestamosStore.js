@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   getDocsFromCache,
   getDocsFromServer,
@@ -110,6 +111,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
     allPersonDocs: [],
     allborrowingsPerson: [],
     allBorrowingsProducts: [],
+    currentCustomer: {},
   }),
   getters: {},
 
@@ -158,6 +160,8 @@ export const UsePrestamosStore = defineStore("prestamos", {
       const cedulita = cedula.toString();
       let docs;
       const customerRef = doc(db, "customers", cedulita);
+      this.currentCustomer = (await getDoc(customerRef)).data();
+      console.log(this.currentCustomer);
       const q = query(collection(customerRef, "borrowings"));
       docs = await getDocs(q);
       docs = docs.docs.map((document, index) => {

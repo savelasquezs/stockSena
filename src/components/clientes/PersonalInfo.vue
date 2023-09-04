@@ -1,4 +1,6 @@
 <template>
+  {{ prestamosStore.currentCustomer }}
+  {{ cliente }}
   <div class="client-info-card">
     <q-card class="q-pa-md">
       <q-card-section class="text-h6 q-flex q-items-center">
@@ -9,65 +11,39 @@
         <div class="fit row wrap justify-start items-start content-start">
           <div class="col-auto self-end q-gutter-xs q-gutter-sm">
             <div class="q-mb-md">
-              <strong>Nombre:</strong><span class="info-client">Joan</span>
+              <strong>Nombre: </strong
+              ><span class="info-client"
+                >{{ prestamosStore.currentCustomer.nombre }}
+              </span>
               <!-- {{ cliente.nombre }} -->
             </div>
             <div class="q-mb-md">
-              <strong>Apellido:</strong>
-              <span class="info-client">Zapata</span>
+              <strong>Apellido: </strong>
+              <span class="info-client">{{
+                prestamosStore.currentCustomer.apellido
+              }}</span>
               <!-- {{ cliente.apellido }} -->
             </div>
             <div class="q-mb-md">
-              <strong>Docuemnto:</strong
-              ><span class="info-client">1027800932</span>
+              <strong>Documento: </strong
+              ><span class="info-client">{{
+                prestamosStore.currentCustomer.numero_id
+              }}</span>
               <!-- {{ cliente.apellido }} -->
             </div>
             <div class="q-mb-md">
-              <strong>Estado:</strong><span class="info-client">Morosos</span>
+              <strong>Area: </strong
+              ><span class="info-client">{{
+                prestamosStore.currentCustomer.area
+              }}</span>
               <!-- {{ cliente.apellido }} -->
             </div>
-          </div>
-
-          <div class="col-auto offset-2 q-gutter-sm">
             <div class="q-mb-md">
-              <strong>Nombre:</strong><span class="info-client">Joan</span>
+              <strong>Rol: </strong
+              ><span class="info-client"
+                >{{ prestamosStore.currentCustomer.rol }}
+              </span>
               <!-- {{ cliente.nombre }} -->
-            </div>
-            <div class="q-mb-md">
-              <strong>Apellido:</strong>
-              <span class="info-client">Zapata</span>
-              <!-- {{ cliente.apellido }} -->
-            </div>
-            <div class="q-mb-md">
-              <strong>Docuemnto:</strong
-              ><span class="info-client">1027800932</span>
-              <!-- {{ cliente.apellido }} -->
-            </div>
-            <div class="q-mb-md">
-              <strong>Estado:</strong><span class="info-client">Morosos</span>
-              <!-- {{ cliente.apellido }} -->
-            </div>
-          </div>
-
-          <div class="col-auto offset-3 q-gutter-sm">
-            <div class="q-mb-md"></div>
-            <div class="q-mb-md">
-              <strong>Nombre:</strong><span class="info-client">Joan</span>
-              <!-- {{ cliente.nombre }} -->
-            </div>
-            <div class="q-mb-md">
-              <strong>Apellido:</strong>
-              <span class="info-client">Zapata</span>
-              <!-- {{ cliente.apellido }} -->
-            </div>
-            <div class="q-mb-md">
-              <strong>Docuemnto:</strong
-              ><span class="info-client">1027800932</span>
-              <!-- {{ cliente.apellido }} -->
-            </div>
-            <div class="q-mb-md">
-              <strong>Estado:</strong><span class="info-client">Morosos</span>
-              <!-- {{ cliente.apellido }} -->
             </div>
           </div>
         </div>
@@ -76,7 +52,19 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { UseClientesStore } from "src/stores/clientesStore";
+import { UsePrestamosStore } from "src/stores/prestamosStore";
+import { ref } from "vue";
+import { useRoute } from "vue-router";
+const id = ref(null);
+const cliente = ref("");
+const route = useRoute();
+id.value = parseInt(route.params?.id); // default value if no params provided in the url (e
+const prestamosStore = UsePrestamosStore();
+const clientesStore = UseClientesStore();
+cliente.value = prestamosStore.currentCustomer;
+</script>
 
 <style scoped>
 .client-info-card {

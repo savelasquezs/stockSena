@@ -132,13 +132,13 @@ const props = defineProps({
   editable: String,
   agregarElementoLabel: String,
   buscarPorFecha: Boolean,
-  id: Boolean,
+  customDetailRouting: Boolean,
   tablaUrl: String,
 });
 const router = useRouter();
 
 function verDetalles(docId) {
-  console.log(props.id);
+  console.log(props.customDetailRouting);
   console.log(docId);
   if (props.id) {
     emit("viendo", docId);

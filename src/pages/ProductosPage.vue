@@ -30,7 +30,7 @@
         </QDialogo>
       </div>
     </div>
-    <Tabs :tabs="tabs"
+    <Tabs :tabs="tabs" v-model="selectedTab"
       ><template #consumibles
         ><SimpleTable
           :rows="productosStore.productosConsumibles"
@@ -51,6 +51,7 @@
           editable="true"
           addText="Agregar Producto"
           @add="resetForm"
+          tablaUrl="productos"
         />
       </template>
     </Tabs>
@@ -71,6 +72,7 @@ import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import ComsumiblesForm from "components/productos/ConsumiblesForm.vue";
 
 import { computed, onMounted, ref } from "vue";
+const selectedTab = ref("consumibles");
 
 import { useRouter } from "vue-router";
 const openedForm = ref(false);

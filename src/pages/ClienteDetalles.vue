@@ -1,8 +1,8 @@
 <template>
   <PersonalInfo />
-  <Tabs :tabs="tabs"
+  <Tabs :tabs="tabs" v-model="selectedTab"
     ><template #activos>
-      <TablaActivos />
+      <TablaActivos @devuelto="selectedTab = 'historial'" />
     </template>
     <template #historial>
       <SimpleTable
@@ -23,6 +23,7 @@ import SimpleTable from "components/utils/SimpleTable.vue";
 import { UseClientesStore } from "src/stores/clientesStore";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { useRouter } from "vue-router";
+import { ref } from "vue";
 const clientesStore = UseClientesStore();
 const prestamosStore = UsePrestamosStore();
 const router = useRouter();
@@ -30,6 +31,7 @@ const tabs = [
   { name: "activos", label: "Prestamos Activos" },
   { name: "historial", label: "Historial de prestamos" },
 ];
+const selectedTab = ref("activos");
 const verDetalles = (id) => {
   const producto = prestamosStore.allPersonDocs.find(
     (prestamo) => prestamo.docId == id

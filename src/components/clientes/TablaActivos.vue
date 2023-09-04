@@ -12,11 +12,7 @@
     <div class="text-h5 q-mb-xl text-center">
       ¿Seguro que quiere devolver los siguientes items?
     </div>
-    <q-scroll-area
-      :thumb-style="thumbStyle"
-      :bar-style="barStyle"
-      style="height: 300px"
-    >
+    <q-scroll-area style="height: 300px">
       <q-item
         v-for="elemento in copySelectedRows"
         :key="elemento.index"
@@ -55,7 +51,10 @@
               round
               color="primary"
               @click="elemento.devolver++"
-              :disable="elemento.devolver == elemento.quantity"
+              :disable="
+                elemento.devolver ==
+                elemento.quantity - elemento.returnedQuantity
+              "
             />
           </div>
         </q-item-section>
@@ -122,6 +121,7 @@ const userId = ref(route.params.id);
 const guardando = ref(false);
 const loading = ref(false);
 const router = useRouter();
+const emit = defineEmits(["devuelto"]);
 
 const rows = databaseStore.escucharCambiosInternalCollection(
   prestamosStore,
@@ -139,7 +139,7 @@ const verDetalles = (id) => {
   router.push(`/productos/${productoId}`);
 };
 
-function devolver() {
+async function devolver() {
   guardando.value = true;
   copySelectedRows.value.forEach(async (element) => {
     const docPrestamoRef = doc(db, "borrowings", element.prestamoId);
@@ -213,6 +213,7 @@ function devolver() {
 
     modalDevolucionIsOpen.value = false;
     guardando.value = false;
+    emit("devuelto");
   });
 }
 
