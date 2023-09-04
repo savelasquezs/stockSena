@@ -4,6 +4,10 @@ Descripción del archivo "searchbar.vue":
 Este archivo corresponde a un componente Vue.js y Quasar que implementa
 una barra de búsqueda interactiva para filtrar una tabla de datos.
 
+========================================
+Eventos: defineEmits(["cambioEstado"]);
+========================================
+
 Características clave:
 - Utiliza un componente Quasar llamado `<q-input>` para crear una barra de búsqueda
 con funcionalidad de entrada de texto.
