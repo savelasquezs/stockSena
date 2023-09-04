@@ -4,16 +4,15 @@ Descripción del archivo "DataPicker.vue":
 
 Este archivo contiene un componente Vue.js y Quasar que implementa un selector de fechas (Date Picker) con filtrado de tabla.
 
-
-
 Características clave:
 - Utiliza elementos Quasar como "q-date" y "q-btn" para la selección de fechas.
 - Emite el evento "guardarFecha" cuando se elige una fecha, lo que permite la interacción con otros componentes.
 - Permite cancelar la selección de fecha con el botón "Cancelar".
 - Incluye un botón para restablecer la fecha a la actual.
-- Muestra las fechas "Desde" y "Hasta" cuando se selecciona una fecha.
-- Utiliza configuración regional para mostrar nombres de días y meses.
+- Muestra las fechas "Desde" y "Hasta" cuando se selecciona un rango de fechas.
+- Utiliza configuración regional para mostrar nombres de días y meses en español.
 - Ofrece opciones de filtrado para deshabilitar fechas pasadas. -->
+
 <template>
   <div class="q-mx-xl">
     <div>
@@ -42,7 +41,8 @@ Características clave:
                 @click="resetModel"
               />
               <!-- Botón "OK" para confirmar la selección de fecha,
-              al darle click al botón se activa el evento "guardarFecha"  -->
+              al darle click al botón se activa el evento "guardarFecha" y
+            se envia la variable dueDate  -->
               <q-btn
                 label="OK"
                 color="primary"
@@ -151,7 +151,7 @@ function todayDate() {
   return newFecha;
 }
 
-// Función que define las opciones de fecha para el selector de fecha
+// Función que define las deshabilita las fechas, anteriores al dia actual
 function dateOptionsFn(date) {
   const fechaAlRevez = new Date().toLocaleDateString().split("/");
   function completeValue(value) {
@@ -173,7 +173,8 @@ function dateOptionsFn(date) {
   return date >= newFecha;
 }
 
-// Función que siempre devuelve "true" para opciones de fecha vacías
+// Función que siempre devuelve "true" para opciones de fecha vacías y
+// habilitar todas las fechas
 function emptyDate(date) {
   return true;
 }

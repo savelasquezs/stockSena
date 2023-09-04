@@ -21,6 +21,7 @@
     </q-item>
   </div>
   <q-separator />
+
   <div
     class="q-pa-md row items-start q-gutter-md"
     style="display: flex; justify-content: center"
@@ -29,27 +30,42 @@
       <div class="izquierda q-mr-lg">
         <div class="flex justify-between">
           <div v-if="product.isConsumable" class="text-subtitle3">
+            <q-icon name="poll" color="primary" size="20px" />
             Unidad de medida:
           </div>
           <div>{{ product.unidadMedida }}</div>
         </div>
         <div class="flex justify-between">
-          <div class="text-subtitle3">Stock Total:</div>
-          <div>{{ product.stockTotal }}</div>
+          <div class="text-subtitle3">
+            <q-icon name="inventory_2" color="primary" size="20px" />
+            Stock Total:
+          </div>
+          <div>
+            {{ product.stockTotal }}
+          </div>
         </div>
         <div class="flex justify-between">
-          <div class="text-subtitle3">Consumible:</div>
+          <div class="text-subtitle3">
+            <q-icon name="lunch_dining" color="primary" size="20px" />
+            Consumible:
+          </div>
           <div>{{ product.isConsumable ? "Si" : "No" }}</div>
         </div>
       </div>
 
       <div class="derecha">
         <div class="flex justify-between">
-          <div class="text-subtitle3">Stock Disponible :</div>
+          <div class="text-subtitle3">
+            <q-icon name="event_available" color="primary" size="20px" />
+            Stock Disponible :
+          </div>
           <div>{{ product.stockTotal - product.borrowedQuantity }}</div>
         </div>
         <div class="flex justify-between">
-          <div class="text-subtitle3">Stock Prestamo:</div>
+          <div class="text-subtitle3">
+            <q-icon name="event_busy" color="primary" size="20px" />
+            Stock Prestamo:
+          </div>
           <div>{{ product.borrowedQuantity }}</div>
         </div>
       </div>
@@ -78,19 +94,17 @@
       </div>
     </div>
 
-    <q-card class="my-card">
-      <q-card-section class="bg-white text-accent">
+    <div>
+      <div class="shadow-3 q-pa-lg">
         <div class="text-h5"><strong> Cantidad En Prestamo</strong></div>
         <div class="text-subtitle2 text-black">{{ vecesPrestada }}</div>
-      </q-card-section>
-    </q-card>
+      </div>
+    </div>
 
-    <q-card class="my-card">
-      <q-card-section class="bg-white text-orange-5">
-        <div class="text-h5"><strong>Cantidad en Almacén</strong></div>
-        <div class="text-subtitle text-black">6</div>
-      </q-card-section>
-    </q-card>
+    <q-card-section class="bg-white text-orange-5">
+      <div class="text-h5"><strong>Cantidad en Almacén</strong></div>
+      <div class="text-subtitle text-black">6</div>
+    </q-card-section>
   </div>
 
   <SimpleTable

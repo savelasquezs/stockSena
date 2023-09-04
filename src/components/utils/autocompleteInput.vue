@@ -2,18 +2,31 @@
 Descripción del archivo "autocompleteinput.vue":
 
 Este archivo corresponde a un componente Vue.js y Quasar
-que implementa una barra de búsqueda autocompletada.
-La barra de búsqueda permite a los usuarios buscar elementos
-en una tabla y afecta dinámicamente la visualización de la tabla
-según la búsqueda realizada.
+que implementa un campo input  y un select, a medida que se escribe en
+un input las opciones del select se van filtrando y
+ cuando se elije una de estas opciones se emite un evento "cambioModel".
+
+el campo input permite a los usuarios buscar elementos
+en un array (props.stringOptions), afectando los atributos recibidos:
+
+========================================================================
+Props recibidos:
+-stringOptions: Array (es un array de string que corresponden a las
+opciones que se van a filtrar).
+-modelValue: String
+
+Eventos emitidos:
+-defineEmits(["cambioModel"]); (este evento se emite al momento de
+selecionar una opción).
+========================================================================
 
 Características clave:
-- El componente utiliza el elemento Quasar "q-select" para crear
-una barra de búsqueda con opciones autocompletadas.
-- Los usuarios pueden escribir texto en la barra de búsqueda y las
+- El componente utila el elemento Quasar "q-select" para crear
+un campo input con opciones autocompletadas.
+- Los usuarios pueden escribir texto en el campo input y las
 opciones se filtran en tiempo real para mostrar coincidencias.
 - El componente emite un evento personalizado llamado "cambioModel"
-cuando el valor de búsqueda cambia, lo que afecta a la tabla subyacente.
+cuando se seleciona una opción.
 - Incluye una regla de validación para asegurarse de que el valor de búsqueda
 no esté vacío.
 - Cuando no hay resultados coincidentes con la búsqueda,
@@ -21,8 +34,8 @@ se muestra un mensaje indicando "No hay resultados".
 -->
 
 <template>
-  <!-- cuadro de selección (barra de busqueda), el cual contiene la variable v-model="model",
-  la cual activa la función @filter="filterFn" que filtra la tabla
+  <!-- cuadro de selección (campo input), el cual contiene la variable v-model="model",
+  la cual activa la función @filter="filterFn" que filtra las opciones
   ademas contiene el evento @update:model-value="$emit('cambioModel', model)" -->
   <q-select
     filled
@@ -58,25 +71,23 @@ defineEmits(["cambioModel"]);
 const props = defineProps({ stringOptions: Array, modelValue: String });
 
 // declaración de la variable "options " la cual es un array vacio, al cual
-// luego se le dara un valor
+// luego se le dara el valor de las opciones filtradas, las cuales se mostraran
 const options = ref([]);
 
-// declaración de la variable "model " la cual es un array vacio, al cual
+// declaración de la variable "model " la cual es un string vacio, al cual
 // luego se le dara un valor
 const model = ref("");
 
 // Función de filtrado, la cual usa la función update
-// para actualizar la tabla
+// para actualizar las opciones mostradas
 function filterFn(val, update) {
   if (val === "") {
     update(() => {
       options.value = props.stringOptions;
-      // here you have access to "ref" which
-      // is the Vue reference of the QSelect
     });
     return;
   }
-  // Función update para actualizar la tabla
+  // Función update para actualizar las oopciones mostradas
   update(() => {
     const needle = val.toLowerCase();
     options.value = props.stringOptions.filter(

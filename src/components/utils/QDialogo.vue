@@ -4,6 +4,18 @@ Descripción del archivo "Qdialogo.vue":
 Este archivo contiene un componente Vue.js y Quasar que implementa un
 diálogo modal personalizable.
 
+=============================================================================
+Props recibidos:
+-modelValue: Boolean:
+-colorButton: String
+-iconButton: String
+-labelButton: String
+-visibleButton: Boolean:  Esta opcion decide si el botón se muestra o no
+-width: String
+
+(Estos props definen las caracteristicas visuales del componente)
+==============================================================================
+
 Características clave:
 - Utiliza elementos Quasar como "q-dialog", "q-card", y "q-btn" para crear un
 diálogo modal.
@@ -17,6 +29,7 @@ un slot.
 - Las propiedades del botón de apertura del diálogo, como etiqueta ("label"),
 ícono ("icon"), color ("color"), y visibilidad ("v-show"), son configurables mediante props.
 - El ancho del diálogo se puede personalizar mediante la propiedad "width". -->
+
 <template>
   <!-- se crea un botón dinamico el cual usa props
   para definir sus propiedades. -->
@@ -46,6 +59,10 @@ un slot.
 import { useVModel } from "@vueuse/core";
 import { defineProps } from "vue";
 // Definición de props para el componente
+
+// NOTA: modelValue pertenece a una de las caracteristica unicas de
+// useVModel, por ende al usar el componente y declarar un v-model="xvariable"
+// este automaticamente tiene valor True
 const props = defineProps({
   modelValue: Boolean,
   colorButton: String,
@@ -54,7 +71,11 @@ const props = defineProps({
   visibleButton: Boolean,
   width: String,
 });
-
+// se envian los props y modelValue, si model value == True
+// openDialog heredara el valor del v-model declarado al
+// utilizar este componente.
+// ejemplo <QDialogo v-model=="rocio"/>
+// en este caso openDialog tendra reactivamente el valor de rocio.
 const openDialog = useVModel(props, "modelValue");
 </script>
 

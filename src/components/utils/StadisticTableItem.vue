@@ -4,6 +4,14 @@ Descripción del archivo "StadisticTableItem.vue":
 Este archivo representa un componente reutilizable en Vue.js y Quasar diseñado para mostrar
 estadísticas con título, valor y período en una aplicación.
 
+=====================
+Props:
+-textColor: String,
+-titulo: String,
+-valor: String,
+-periodo: String,
+======================
+
 Características clave:
 - Utiliza el componente Quasar `<q-card-section>`
   para presentar las estadísticas en un formato limpio y atractivo.
