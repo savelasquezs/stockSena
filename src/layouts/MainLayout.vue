@@ -48,11 +48,16 @@
         style="height: 150px"
       >
         <div class="absolute-bottom bg-transparent">
-          <q-avatar size="56px" class="q-mb-sm">
+          <q-avatar size="50px" class="q-mb-sm" style="margin-bottom: -1px">
             <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
           </q-avatar>
-          <div class="text-weight-bold">Razvan Stoenescu</div>
-          <div>@rstoenescu</div>
+          <div v-if="userCredential">
+            <div class="text-weight-bold" style="margin-bottom: -15px">
+              <p>{{ userCredential.email }}</p>
+              <p>{{ userCredential.almacen }}</p>
+              {{ userCredential.displayName }}
+            </div>
+          </div>
         </div>
       </q-img>
     </q-drawer>
@@ -70,10 +75,12 @@ import { signOut } from "firebase/auth";
 import { auth } from "src/firebaseInit";
 //redireccion
 import { useRouter } from "vue-router";
+import { getAuth } from "firebase/auth";
 import PrestamosFormVue from "components/prestamos/PrestamosFormVue.vue";
 
 import QDialogo from "components/utils/QDialogo.vue";
 
+const userCredential = ref(null);
 const user = inject("user") || "raro";
 const modalPrestamoOpened = ref(false);
 
@@ -133,4 +140,5 @@ const leftDrawerOpen = ref(false);
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+userCredential.value = JSON.parse(localStorage.getItem("user"));
 </script>
