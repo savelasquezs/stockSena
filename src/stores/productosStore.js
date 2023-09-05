@@ -1,9 +1,34 @@
+/**
+ * Día de la documentación: 05/09/2023
+ *
+ * Descripción del archivo "productosStore.js":
+ * Este archivo define un store de Pinia llamado "useProductosStore" que se encarga de administrar el estado de los productos.
+ * El store maneja las listas de productos y proporciona getters y acciones para interactuar con la base de datos Firestore.
+ *
+ * Características clave:
+ * - Manejo del estado de los productos.
+ * - Definición de columnas para tablas relacionadas con productos.
+ * - Acciones para escuchar cambios en la base de datos Firestore.
+ *
+ * @store
+ */
+
+//Importaciónes
 import { defineStore } from "pinia";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 
+//Definición del store de productos.
 export const useProductosStore = defineStore("productos", {
   state: () => ({
+
+    // productosDatabase: [], // Almacena la lista de productos obtenida de Firestore.
+    // devolutivosCols: [ /* ... */ ], // Columnas para la tabla de productos devolutivos.
+    // devolutivosInternalCols: [ /* ... */ ], // Columnas internas para detalles de productos devolutivos.
+    // columns: [ /* ... */ ], // Columnas para la tabla de productos.
+    // stadisticTableBarInfo: [ /* ... */ ], // Estadísticas relacionadas con los productos.
+    // columnasDetalleProducto: [ /* ... */ ], // Columnas para la tabla de detalles de producto.
+
     productosDatabase: [],
     devolutivosCols: [
       {
@@ -205,6 +230,7 @@ export const useProductosStore = defineStore("productos", {
       { name: "acciones", label: "Acciones", field: "acciones" },
     ],
   }),
+// Getters personalizados para obtener información específica de los productos.
   getters: {
     doubleCount: (state) => state.counter * 2,
     productosNombres: (state) => {
@@ -272,7 +298,7 @@ export const useProductosStore = defineStore("productos", {
       });
     },
   },
-
+  // * Acción para escuchar cambios en la colección de productos en Firestore.
   actions: {
     objToString(obj) {
       let str = "";
@@ -281,11 +307,14 @@ export const useProductosStore = defineStore("productos", {
       }
       return str.slice(0, -2);
     },
+    // Crear una consulta para la colección "products" ordenada por "name".
     async listenChanges() {
       const q = query(collection(db, "products"), orderBy("name"));
 
+    // Establecer un observador en la consulta.
       onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
+          //en caso de añadir un registro
           if (change.type == "added") {
             if (
               !this.productosDatabase.some(
@@ -296,20 +325,22 @@ export const useProductosStore = defineStore("productos", {
                 docId: change.doc.id,
                 ...change.doc.data(),
               };
+              // Agregar el producto al principio de la lista.
               this.productosDatabase.unshift(data);
-            }
+            }//en caso de añadir un modificar
           } else if (change.type == "modified") {
             let cambio = this.productosDatabase.find(
               (item) => item.docId == change.doc.id
             );
             let index = this.productosDatabase.findIndex(
               (item) => item.docId == change.doc.id
-            );
+            ); // Actualizar los datos del producto en la lista.
             this.productosDatabase[index] = {
               ...cambio,
               ...change.doc.data(),
-            };
+            };//en caso de añadir un eliminar algun registro
           } else if (change.type == "removed") {
+             // Si se elimina un producto, filtrar y actualizar la lista eliminando el producto correspondiente.
             this.productosDatabase = this.productosDatabase.filter(
               (item) => item.docId != change.doc.id
             );
