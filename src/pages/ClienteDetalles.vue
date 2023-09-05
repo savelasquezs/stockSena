@@ -22,8 +22,8 @@ import TablaActivos from "components/clientes/TablaActivos.vue";
 import SimpleTable from "components/utils/SimpleTable.vue";
 import { UseClientesStore } from "src/stores/clientesStore";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
-import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { onBeforeUnmount, ref } from "vue";
 const clientesStore = UseClientesStore();
 const prestamosStore = UsePrestamosStore();
 const router = useRouter();
@@ -39,6 +39,10 @@ const verDetalles = (id) => {
   const productoId = producto.productId;
   router.push(`/productos/${productoId}`);
 };
+const route = useRoute();
+onBeforeUnmount(() => {
+  prestamosStore.resetCurrentCustomer();
+});
 </script>
 
 <style lang="scss" scoped></style>

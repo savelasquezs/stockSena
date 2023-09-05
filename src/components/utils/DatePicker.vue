@@ -14,7 +14,7 @@ Características clave:
 - Ofrece opciones de filtrado para deshabilitar fechas pasadas. -->
 
 <template>
-  <div class="q-mx-xl">
+  <div>
     <div>
       <!-- Botón para abrir un selector de fecha -->
       <q-btn icon="event" round color="accent" class="q-mx-sm">

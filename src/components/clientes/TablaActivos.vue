@@ -237,12 +237,12 @@ function openDevolverModal() {
   modalDevolucionIsOpen.value = true;
 }
 
-onMounted(async () => {
+(async () => {
   loading.value = true;
   await prestamosStore.getPrestamosByPerson(userId.value).then(() => {
     loading.value = false;
   });
-});
+})();
 
 watch(
   () => route.params.id,

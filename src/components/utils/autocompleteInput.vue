@@ -56,6 +56,9 @@ se muestra un mensaje indicando "No hay resultados".
         <q-item-section class="text-grey"> No hay resultados </q-item-section>
       </q-item>
     </template>
+    <template v-slot:hint v-if="hint">
+      <span> {{ hint }} </span>
+    </template>
   </q-select>
 </template>
 
@@ -68,7 +71,11 @@ defineEmits(["cambioModel"]);
 
 // definición de las variables props, las cuales se les dara su valor al
 // momento de usarlas en alguna pagina o componente
-const props = defineProps({ stringOptions: Array, modelValue: String });
+const props = defineProps({
+  stringOptions: Array,
+  modelValue: String,
+  hint: String,
+});
 
 // declaración de la variable "options " la cual es un array vacio, al cual
 // luego se le dara el valor de las opciones filtradas, las cuales se mostraran

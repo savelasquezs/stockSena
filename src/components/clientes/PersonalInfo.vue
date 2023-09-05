@@ -1,96 +1,79 @@
 <template>
-  {{ prestamosStore.currentCustomer }}
-  {{ cliente }}
-  <div class="client-info-card">
-    <q-card class="q-pa-md">
-      <q-card-section class="text-h6 q-flex q-items-center">
-        Información del Cliente
-      </q-card-section>
+  <div class="flex flex-center q-mt-lg">
+    <q-item
+      class="shadow-3 q-px-xl q-py-md skeleton"
+      v-if="!cliente.nombre"
+      style="width: 40%; min-width: 500px"
+    >
+      <q-item-section avatar>
+        <q-skeleton type="QAvatar" />
+      </q-item-section>
 
-      <q-card-section>
-        <div class="fit row wrap justify-start items-start content-start">
-          <div class="col-auto self-end q-gutter-xs q-gutter-sm">
-            <div class="q-mb-md">
-              <strong>Nombre: </strong
-              ><span class="info-client"
-                >{{ prestamosStore.currentCustomer.nombre }}
-              </span>
-              <!-- {{ cliente.nombre }} -->
-            </div>
-            <div class="q-mb-md">
-              <strong>Apellido: </strong>
-              <span class="info-client">{{
-                prestamosStore.currentCustomer.apellido
-              }}</span>
-              <!-- {{ cliente.apellido }} -->
-            </div>
-            <div class="q-mb-md">
-              <strong>Documento: </strong
-              ><span class="info-client">{{
-                prestamosStore.currentCustomer.numero_id
-              }}</span>
-              <!-- {{ cliente.apellido }} -->
-            </div>
-            <div class="q-mb-md">
-              <strong>Area: </strong
-              ><span class="info-client">{{
-                prestamosStore.currentCustomer.area
-              }}</span>
-              <!-- {{ cliente.apellido }} -->
-            </div>
-            <div class="q-mb-md">
-              <strong>Rol: </strong
-              ><span class="info-client"
-                >{{ prestamosStore.currentCustomer.rol }}
-              </span>
-              <!-- {{ cliente.nombre }} -->
-            </div>
-          </div>
-        </div>
-      </q-card-section>
-    </q-card>
+      <q-item-section>
+        <q-item-label>
+          <q-skeleton type="text" />
+        </q-item-label>
+        <q-item-label caption>
+          <q-skeleton type="text" width="65%" />
+        </q-item-label>
+      </q-item-section>
+    </q-item>
+    <q-item
+      v-else
+      style="width: 40%; min-width: 500px"
+      class="shadow-3 q-px-xl q-py-md"
+    >
+      <q-item-section avatar>
+        <q-avatar color="accent">
+          {{ firstLetter }}
+        </q-avatar>
+      </q-item-section>
+
+      <q-item-section>
+        <q-item-label class="text-h6"
+          >{{ cliente.nombre }} {{ cliente.apellido }}</q-item-label
+        >
+        <q-item-label caption>{{ cliente.numero_id }}</q-item-label>
+      </q-item-section>
+
+      <q-item-section class="flex flex-center">
+        <q-icon color="accent" size="4rem">
+          <EnMora v-if="cliente.enMora" />
+          <AlDia v-else />
+        </q-icon>
+        <q-badge
+          :color="!cliente.enMora ? 'success' : 'red-5'"
+          :label="!cliente.enMora ? 'Al dia' : 'En Mora'"
+          class="q-my-sm"
+          text-color="black"
+        />
+      </q-item-section>
+
+      <q-item-section side top class="flex">
+        <q-badge color="accent" :label="cliente.rol" class="q-my-sm" />
+        <q-badge color="secondary" :label="cliente.area" />
+      </q-item-section>
+    </q-item>
   </div>
 </template>
 
 <script setup>
 import { UseClientesStore } from "src/stores/clientesStore";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
-import { ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 import { useRoute } from "vue-router";
-const id = ref(null);
-const cliente = ref("");
-const route = useRoute();
-id.value = parseInt(route.params?.id); // default value if no params provided in the url (e
+import AlDia from "../icons/AlDia.vue";
+import EnMora from "../icons/EnMora.vue";
+
 const prestamosStore = UsePrestamosStore();
 const clientesStore = UseClientesStore();
-cliente.value = prestamosStore.currentCustomer;
+const cliente = computed(() => {
+  return prestamosStore.currentCustomer;
+});
+
+const firstLetter = computed(() => {
+  const nombre = cliente.value?.nombre;
+  return nombre ? nombre[0] : "C";
+});
+const route = useRoute();
 </script>
-
-<style scoped>
-.client-info-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px;
-}
-
-.q-card {
-  max-width: 100%;
-  width: 100%;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-.q-card-section {
-  padding: 20px;
-}
-
-.q-gutter-md > * {
-  margin-bottom: 20px;
-}
-
-.text-h6 {
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-bottom: 20px;
-}
-</style>

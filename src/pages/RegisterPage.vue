@@ -81,7 +81,7 @@ const email = ref("");
 const password1 = ref("");
 const password2 = ref("");
 const username = ref("");
-//const usuarioBD=JSON.parse(localStorage.getItem("user"));
+const usuarioBD = JSON.parse(localStorage.getItem("user"));
 const successMessage = ref("");
 const errorMessage = ref("");
 
@@ -134,10 +134,10 @@ function onSubmit() {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
+      console.log(error, errorMessage);
       // ..
+      showErrorMessage("No se pudo registrar el usuario");
     });
-
-  showErrorMessage("No se pudo registrar el usuario");
 }
 
 // function isEmailValid() {

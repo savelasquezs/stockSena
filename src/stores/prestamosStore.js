@@ -1,11 +1,10 @@
 import { defineStore } from "pinia";
+import { Dialog } from "quasar";
 import {
   collection,
   doc,
   getDoc,
   getDocs,
-  getDocsFromCache,
-  getDocsFromServer,
   onSnapshot,
   orderBy,
   query,
@@ -116,6 +115,9 @@ export const UsePrestamosStore = defineStore("prestamos", {
   getters: {},
 
   actions: {
+    resetCurrentCustomer() {
+      this.currentCustomer = {};
+    },
     async listenChanges() {
       const q = query(collection(db, "borrowings"), orderBy("dateBorrowed"));
 
@@ -157,11 +159,13 @@ export const UsePrestamosStore = defineStore("prestamos", {
       });
     },
     async getPrestamosByPerson(cedula) {
-      const cedulita = cedula.toString();
+      const cedulita = cedula;
       let docs;
       const customerRef = doc(db, "customers", cedulita);
       this.currentCustomer = (await getDoc(customerRef)).data();
-      console.log(this.currentCustomer);
+      if (!this.currentCustomer) {
+        Dialog.create("nanana");
+      }
       const q = query(collection(customerRef, "borrowings"));
       docs = await getDocs(q);
       docs = docs.docs.map((document, index) => {
