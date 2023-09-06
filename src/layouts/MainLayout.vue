@@ -22,7 +22,6 @@
         <!-- <div>Quasar v{{ $q.version }}</div> -->
         <q-btn @click="Codigo = true" label="Codigo Barra" />
         <q-btn @click="modalPrestamoOpened = true" label="Crear prestamo" />
-
       </q-toolbar>
     </q-header>
 
@@ -40,8 +39,13 @@
             :key="link.title"
             v-bind="link"
           />
-          <q-btn @click="cerrarSesion = true" label="Cerrar sesion" />
         </q-list>
+        <q-btn
+          class="flex justify-cente"
+          @click="logout()"
+          label="Cerrar sesión"
+          style="color: red; margin: auto; margin-top: 30px"
+        />
       </q-scroll-area>
 
       <q-img
@@ -127,12 +131,7 @@ const linksList = ref([
   },
 ]);
 
-
-
-//cierre de sesión del usuario
-const router = useRouter();
-
-function cerrarSesion() {
+function logout() {
   signOut(auth)
     .then(() => {
       // Sign-out successful.
@@ -140,6 +139,8 @@ function cerrarSesion() {
     })
     .catch((error) => {});
 }
+//cierre de sesión del usuario
+const router = useRouter();
 
 const leftDrawerOpen = ref(false);
 
