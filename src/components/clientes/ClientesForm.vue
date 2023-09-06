@@ -1,3 +1,7 @@
+<!-- Fecha documentación 6/09/2023 -->
+<!-- Este componente Vue.js crea un formulario de registro de clientes que recopila 
+información sobre un cliente y la envía a Firebase Firestore. Luego, muestra una 
+notificación de éxito al usuario y emite un evento personalizado cuando se guarda el cliente. -->
 <template>
   <div class="flex column flex-center q-pb-xl">
     <q-img
@@ -6,7 +10,8 @@
       style="width: 90px"
     />
   </div>
-
+  <!--Boton de almacenamiento de clientes con campos correspondientes del tipo de 
+  documento.-->
   <q-form @submit="guardarCliente">
     <div class="row justify-evenly items-start content-start">
       <div class="col-4 self-start q-gutter-md">
@@ -18,12 +23,16 @@
           transition-show="flip-up"
           transition-hide="flip-up"
         />
+        <!-- Campo ingreso de numero de documento con su validacion correspondiente
+        en dado caso de no ser el correcto. -->
         <q-input
           outlined
           label="Numero documento"
           :rules="[(val) => val > 0 || 'Por favor ingrese documento valido']"
           v-model="Numero_documento"
         />
+        <!-- Campo ingreso del nombre del individuo con su validacion correspondiente
+          en dado caso de no ser el correct. -->
         <q-input
           outlined
           label="Nombre"
@@ -34,6 +43,7 @@
           ]"
         />
       </div>
+      <!-- Campo ingreso del apellido del individuo con su validacion correspondiente. -->
       <div class="col-4 self-start q-gutter-md">
         <q-input
           outlined
@@ -43,7 +53,7 @@
             (val) => val.length > 2 || 'Por favor ingrese nombre valido',
           ]"
         />
-
+        <!-- Opcion para seleccionar el rol y las diferentes area de almacenes de la cede -->
         <q-select outlined label="Rol" v-model="Rol" :options="options_Rol" />
 
         <q-select
@@ -52,6 +62,8 @@
           v-model="Area"
           :options="options_Area"
         />
+        <!-- Al haber seleccionado las opciones cuenta con un boton para guardar la 
+        informacion almacenada. -->
         <q-btn type="submit" label="Guardar cliente" color="green-14" />
       </div>
     </div>
@@ -64,7 +76,8 @@ import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useQuasar } from "quasar";
 import { db } from "src/firebaseInit";
 import { ref } from "vue";
-
+// Se crean varias variables reactivas usando ref. Cada variable representa un campo del
+// formulario de registro de clientes.
 const Tipo_documento = ref(null);
 const options_Tipo_documento = ref([
   "Cedula de ciudadania",
@@ -78,7 +91,7 @@ const Rol = ref(null);
 const options_Rol = ref(["Instructor", "aprendiz"]);
 const Area = ref(null);
 const $q = useQuasar();
-
+// options_Area: Es un arreglo que contiene las opciones disponibles para el área.
 const emit = defineEmits(["clienteGuardado"]);
 const options_Area = ref([
   "Tics",
@@ -100,8 +113,14 @@ function guardarCliente() {
     rol: Rol.value,
     area: Area.value,
   };
+  // const docRef = doc(db, "customers", data.numero_id);: Se crea una referencia al
+  //  documento en la colección "customers" de Firebase Firestore. db es la instancia
+  //  de la base de datos Firestore previamente importada, y data.numero_id se utiliza
+  // como identificador del documento. Esto implica que cada cliente se guarda con su
+  //  número de documento como identificador único en la base de datos Firestore.
   const docRef = doc(db, "customers", data.numero_id);
   setDoc(docRef, data)
+    // Se representa una promesa que se ejecutará cuando la operación de guardado se complete con éxito.
     .then(() => {
       emit("clienteGuardado");
       $q.notify({
@@ -109,6 +128,9 @@ function guardarCliente() {
         color: "accent",
       });
     })
+    // .catch((err) => console.log(err)): Si ocurre algún error durante el proceso de
+    // guardado en Firebase Firestore, se captura el error y se muestra en la consola
+    // utilizando console.log(err).
     .catch((err) => console.log(err));
 }
 </script>

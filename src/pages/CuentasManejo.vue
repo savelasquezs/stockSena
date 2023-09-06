@@ -1,7 +1,11 @@
+<!-- Fecha document-->
 <template>
   <div class="flex justify-evenly content-center complete items-center">
     <q-page class="flex content-center window-height">
-      <div class="q-gutter-lg row justify-center items-center"   v-if="userCredential.role == 'administrador'">
+      <div
+        class="q-gutter-lg row justify-center items-center"
+        v-if="userCredential.role == 'administrador'"
+      >
         <router-link to="/register">
           <q-btn
             label="Registrar"
@@ -151,7 +155,6 @@ async function grantPermission() {
 
 userCredential.value = JSON.parse(localStorage.getItem("user"));
 </script>
-
 
 <style scoped>
 .complete {

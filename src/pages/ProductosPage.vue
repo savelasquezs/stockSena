@@ -1,15 +1,25 @@
+<!-- Fecha documentacion 4/09/2023 -->
+<!--este componente Vue.js se utiliza para mostrar y gestionar productos consumibles y 
+  devolutivos. Permite agregar, editar y ver detalles de productos, cargar datos desde un 
+  archivo y muestra estadísticas relacionadas con los productos. También utiliza 
+  componentes reutilizables y pestañas para organizar la información.  -->
 <template>
   <div style="background-color: #f5f5f5">
+    <!-- <q-input type="file" @change="handleFileSelect" v-model="fileInput" />: Este elemento <q-input> permite 
+    al usuario cargar un archivo. Cuando se selecciona un archivo, el evento @change llama
+     a la función handleFileSelect, que procesa el archivo seleccionado y lo carga en la 
+     aplicación. -->
     <q-input type="file" @change="handleFileSelect" v-model="fileInput" />
-    <!-- Contenido aquí -->
-
     {{ nombresColumnas }}
+    <!-- Se hace funcion de QDialogo el cual lanza una ventana emergente la cual cuenta con
+    opciones para agregar producto en el apartado de consumible.-->
     <QDialogo
       v-model="openedForm"
       colorButton="secondary"
       iconButton="add_circle"
       labelButton="Agregar producto consumible"
     >
+      <!--  -->
       <ProductosForm
         @enviado="openedForm = false"
         :editando="editando"
@@ -22,6 +32,7 @@
       <StadisticTableBar
         :stadisticTableBarInfo="productosStore.stadisticTableBarInfo"
       />
+      <!-- Implementacion de boton para ingreso de un nuevo producto consumible-->
       <div class="flex justify-end">
         <QDialogo
           visibleButton
