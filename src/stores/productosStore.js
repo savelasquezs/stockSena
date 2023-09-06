@@ -255,6 +255,9 @@ export const useProductosStore = defineStore("productos", {
     nameColumnsDevolutivos() {
       return this.productosConsumibles.map((producto) => producto.nombre);
     },
+    nameColumnsConsumibles() {
+      return this.productosConsumibles.map((producto) => producto.nombre);
+    },
     columnsDevolutivos: (state) => {
       const consumables = state.productosDatabase.filter(
         (producto) => !producto.isConsumable
@@ -300,6 +303,12 @@ export const useProductosStore = defineStore("productos", {
   },
   // * Acción para escuchar cambios en la colección de productos en Firestore.
   actions: {
+    getConsumableByName(productName) {
+      return this.productosConsumibles.find(
+        (producto) => producto.nombre == productName
+      );
+    },
+
     objToString(obj) {
       let str = "";
       for (const [key, value] of Object.entries(obj)) {

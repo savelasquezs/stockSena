@@ -1,4 +1,12 @@
 <template>
+  <QDialogo v-model="modalPrestamoOpened">
+    <PrestamosFormVue />
+  </QDialogo>
+
+  <QDialogo v-model="Codigo">
+    <BarcodeGenerator />
+  </QDialogo>
+
   <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar>
@@ -11,26 +19,11 @@
         />
 
         <q-toolbar-title> Sena Stock Management App </q-toolbar-title>
-        <div>
-          <p class="text-subtitle1 q-ma-sm">{{ user.email }}</p>
-        </div>
-
         <!-- <div>Quasar v{{ $q.version }}</div> -->
-        <q-btn @click="cerrarSesion" label="Cerrar Sesión" />
+        <q-btn @click="Codigo = true" label="Codigo Barra" />
+        <q-btn @click="modalPrestamoOpened = true" label="Crear prestamo" />
       </q-toolbar>
     </q-header>
-    <!--
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer> -->
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-scroll-area
@@ -47,6 +40,12 @@
             v-bind="link"
           />
         </q-list>
+        <q-btn
+          class="flex justify-cente"
+          @click="logout()"
+          label="Cerrar sesión"
+          style="color: red; margin: auto; margin-top: 30px"
+        />
       </q-scroll-area>
 
       <q-img
@@ -55,19 +54,17 @@
         style="height: 150px"
       >
         <div class="absolute-bottom bg-transparent">
-          <q-avatar size="50px" class="q-mb-sm" style="margin-bottom: -1px;">
+          <q-avatar size="50px" class="q-mb-sm" style="margin-bottom: -1px">
             <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
           </q-avatar>
-            <div v-if="userCredential">
-
-              <div class="text-weight-bold" style="margin-bottom: -15px;">
-                  <p >{{ userCredential.email }}</p>
-                  <p>{{ userCredential.almacen }}</p>
-                  {{ userCredential.displayName}}
-                </div>
-              </div>
-
+          <div v-if="userCredential">
+            <div class="text-weight-bold" style="margin-bottom: -15px">
+              <p>{{ userCredential.email }}</p>
+              <p>{{ userCredential.almacen }}</p>
+              {{ userCredential.displayName }}
+            </div>
           </div>
+        </div>
       </q-img>
     </q-drawer>
     <q-page-container>
@@ -77,7 +74,6 @@
 </template>
 
 <script setup>
-
 import { inject, ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 //importación cierre de sesión
@@ -86,9 +82,15 @@ import { auth } from "src/firebaseInit";
 //redireccion
 import { useRouter } from "vue-router";
 import { getAuth } from "firebase/auth";
+import PrestamosFormVue from "components/prestamos/PrestamosFormVue.vue";
+import BarcodeGenerator from "components/dashboard/BarcodeGenerator.vue";
+
+import QDialogo from "components/utils/QDialogo.vue";
 
 const userCredential = ref(null);
 const user = inject("user") || "raro";
+const Codigo = ref(false);
+const modalPrestamoOpened = ref(false);
 
 const linksList = ref([
   {
@@ -129,10 +131,7 @@ const linksList = ref([
   },
 ]);
 
-//cierre de sesión del usuario
-const router = useRouter();
-
-function cerrarSesion() {
+function logout() {
   signOut(auth)
     .then(() => {
       // Sign-out successful.
@@ -140,6 +139,8 @@ function cerrarSesion() {
     })
     .catch((error) => {});
 }
+//cierre de sesión del usuario
+const router = useRouter();
 
 const leftDrawerOpen = ref(false);
 

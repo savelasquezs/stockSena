@@ -1,19 +1,24 @@
 <template>
   <div
-    class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center"
+    class="fullscreen bg-white text-white text-center q-pa-md flex flex-center"
   >
     <div>
-      <div style="font-size: 30vh">69</div>
+      <q-img
+        src="https://image.freepik.com/icone-gratis/faccia-triste-in-quadrato-arrotondato_318-58503.jpg"
+        width="250px"
+      />
 
-      <div class="text-h2" style="opacity: 0.4">EINER</div>
-
+      <div class="text-h2" style="opacity: 0.4; color: #000; margin-top: 40px">
+        Lo siento, la página que estás buscando no se puede encontrar.
+      </div>
       <q-btn
         class="q-mt-xl"
-        color="white"
-        text-color="blue"
+        style="margin-top: 60px"
+        color="black"
+        text-color="white"
         unelevated
         to="/"
-        label="Go Home"
+        label="Regresar a inicio"
         no-caps
       />
     </div>

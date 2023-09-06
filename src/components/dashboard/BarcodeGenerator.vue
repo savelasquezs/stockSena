@@ -23,31 +23,19 @@ Uso:
 
 -->
 <template>
-  <!-- Cuadro de diálogo de generación de códigos de barras -->
   <q-page>
-    <!-- Titulo  mostrado (se recomienda borrar a futuro) -->
     <div class="q-pa-md">
       <h1>Generador e Impresor de Códigos de Barras</h1>
-      <!-- Botón el cual permite abrir el q-dialog o modal,
-      cambiando el estado a true -->
       <q-btn label="Abrir Generador" @click="dialogVisible = true" />
     </div>
-    <!-- Modal el cual contiene v-model="dialogVisible" que al pasar de false a
-      True se activa.
-     -->
     <q-dialog v-model="dialogVisible" persistent>
       <q-card>
         <q-card-section>
-          <!-- Titulo dentro del modal -->
           <h2 class="q-mt-md">Generador de Código de Barras</h2>
-          <!-- Input el cual contiene  v-model="barcodeData", este v-model
-          va a recibir los datos que el usuario le indique -->
           <q-input
             v-model="barcodeData"
             label="Contenido del código de barras"
           />
-          <!-- Botón el cual activa la función "generateBarcode"
-          para generar un codigo de barra con los datos ingresados -->
           <q-btn
             label="Generar Código de Barras"
             color="primary"
@@ -55,20 +43,12 @@ Uso:
             class="q-mt-lg"
           />
         </q-card-section>
-        <!-- Esta sección del template muestra el resultado del código de barras
-          generado y proporciona opciones para imprimir y cerrar el cuadro de diálogo. -->
         <q-card-section class="q-pt-none">
-          <!-- Elemento Canvas para el código de barras -->
           <canvas ref="barcodeCanvas"></canvas>
-          <!-- Elemento Q-Img para mostrar el código de barras como una imagen -->
           <q-img :src="barcodeImage" v-if="barcodeImage" class="q-mt-md" />
         </q-card-section>
-        <!-- Sección de acciones del cuadro de diálogo -->
         <q-card-actions align="right">
-          <!-- Botón para imprimir el código de barras, activa la función
-          "printBarcode" -->
           <q-btn label="Imprimir" color="primary" @click="printBarcode" />
-          <!-- Botón para cerrar el "modal", esto cambiad -->
           <q-btn label="Cerrar" @click="dialogVisible = false" />
         </q-card-actions>
       </q-card>
@@ -81,11 +61,10 @@ Uso:
 import { ref } from "vue";
 import JsBarcode from "jsbarcode";
 
-// Declaración de variables reactivas
-const dialogVisible = ref(false); // Controla la visibilidad del cuadro de diálogo.
-const barcodeData = ref(""); // Almacena los datos para generar el código de barras.
-const barcodeCanvas = ref(null); // Referencia al elemento Canvas donde se dibuja el código de barras.
-const barcodeImage = ref(null); // Almacena la imagen del código de barras generado.
+const dialogVisible = ref(false);
+const barcodeData = ref("");
+const barcodeCanvas = ref(null);
+const barcodeImage = ref(null);
 
 // Función que genera el codigo de barra
 const generateBarcode = () => {

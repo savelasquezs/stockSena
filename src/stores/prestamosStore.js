@@ -18,13 +18,12 @@
 
 //importaciones
 import { defineStore } from "pinia";
+import { Dialog } from "quasar";
 import {
   collection,
   doc,
   getDoc,
   getDocs,
-  getDocsFromCache,
-  getDocsFromServer,
   onSnapshot,
   orderBy,
   query,
@@ -169,6 +168,9 @@ export const UsePrestamosStore = defineStore("prestamos", {
 
   // Acción para escuchar cambios en la colección de préstamos en Firestore.
   actions: {
+    resetCurrentCustomer() {
+      this.currentCustomer = {};
+    },
     async listenChanges() {
     // Crear una consulta para la colección "borrowings" ordenada por "dateBorrowed".
       const q = query(collection(db, "borrowings"), orderBy("dateBorrowed"));
@@ -224,11 +226,13 @@ export const UsePrestamosStore = defineStore("prestamos", {
      */
 
     async getPrestamosByPerson(cedula) {
-      const cedulita = cedula.toString();
+      const cedulita = cedula;
       let docs;
       const customerRef = doc(db, "customers", cedulita);
       this.currentCustomer = (await getDoc(customerRef)).data();
-      console.log(this.currentCustomer);
+      if (!this.currentCustomer) {
+        Dialog.create("nanana");
+      }
       const q = query(collection(customerRef, "borrowings"));
       docs = await getDocs(q);
       docs = docs.docs.map((document, index) => {

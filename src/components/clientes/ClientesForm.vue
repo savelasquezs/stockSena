@@ -99,6 +99,7 @@ function guardarCliente() {
     apellido: Apellido.value,
     rol: Rol.value,
     area: Area.value,
+    enMora: false,
   };
   const docRef = doc(db, "customers", data.numero_id);
   setDoc(docRef, data).then(() => {

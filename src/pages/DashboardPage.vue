@@ -16,7 +16,6 @@ Descripción del archivo "DashboardPage.vue": -->
           subtitulo="Total de préstamos"
           iconColor="light-blue-13"
         />
-        <!-- Tarjeta para mostrar el número de devoluciones -->
         <TarjetaEstad
           icono="transfer_within_a_station"
           titulo="586"
@@ -49,8 +48,14 @@ Descripción del archivo "DashboardPage.vue": -->
       />
 
       <!-- importacion de la tabla -->
-      <TablaVue />
-      <!-- fin importacion de la tabla -->
+      <TableReuse
+        :dataArray="prestamosStore.prestamosDatabase"
+        :columns="prestamosStore.columns"
+        title="Tabla de Prestamos"
+        :internalColumns="prestamosStore.internalColumns"
+        tablaUrl="productos"
+        buscarPorFecha
+      />
     </div>
 
     <!-- Sección derecha del panel de control -->
@@ -115,18 +120,30 @@ Descripción del archivo "DashboardPage.vue": -->
       </div>
     </div>
   </div>
-  <!-- Generador de códigos de barras -->
+
   <BarcodeGenerator />
 </template>
 
 <script setup>
-// Importación de componentes y funciones
 import BarcodeGenerator from "components/dashboard/BarcodeGenerator.vue";
 import TarjetaEstad from "components/dashboard/TarjetaEstad.vue";
 import GraficasView from "components/dashboard/GraphVue.vue";
-import TablaVue from "components/dashboard/TablaVue.vue";
 import GraphPrueba from "components/dashboard/PruebaVue.vue";
 import LowStockItem from "components/dashboard/LowStockItem.vue";
+import { UsePrestamosStore } from "src/stores/prestamosStore";
+import stadisticTableBar from "components/utils/StadisticTableBar.vue";
+import PrestamosForm from "components/prestamos/PrestamosForm.vue";
+import TableReuse from "components/utils/TableReuse.vue";
+
+import { ref } from "vue";
+
+const openedForm = ref(false);
+const prestamosStore = UsePrestamosStore();
+const dataTableArray = ref([]);
+
+prestamosStore.listenChanges().then(() => {
+  dataTableArray.value = prestamosStore.prestamosDatabase;
+});
 
 // Datos de productos de bajo stock
 const lowStockItems = [
