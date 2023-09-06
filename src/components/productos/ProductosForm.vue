@@ -2,12 +2,7 @@
   <div class="">
     <q-form class="">
       <div class="flex column flex-center">
-        <q-img
-          src="https://th.bing.com/th/id/OIP.o9e2Vz_Xf5LNHNozfLc1YQHaHa?pid=ImgDet&rs=1"
-          loading="lazy"
-          spinner-color="white"
-          width="100px"
-        />
+        <q-img src="public\img\prestar.png" width="80px" />
         <div class="text-h6 text-center q-my-xl">INGRESAR PRODUCTO</div>
       </div>
       <div class="q-gutter-sm flex flex-center">

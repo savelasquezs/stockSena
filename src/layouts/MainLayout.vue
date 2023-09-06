@@ -3,6 +3,10 @@
     <PrestamosFormVue />
   </QDialogo>
 
+  <QDialogo v-model="Codigo">
+    <BarcodeGenerator />
+  </QDialogo>
+
   <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar>
@@ -15,11 +19,8 @@
         />
 
         <q-toolbar-title> Sena Stock Management App </q-toolbar-title>
-        <div>
-          <p class="text-subtitle1 q-ma-sm">{{ user.email }}</p>
-        </div>
-
         <!-- <div>Quasar v{{ $q.version }}</div> -->
+        <q-btn @click="Codigo = true" label="Codigo Barra" />
         <q-btn @click="modalPrestamoOpened = true" label="Crear prestamo" />
         <q-btn @click="cerrarSesion = true" label="Cerrar sesion" />
       </q-toolbar>
@@ -77,11 +78,13 @@ import { auth } from "src/firebaseInit";
 import { useRouter } from "vue-router";
 import { getAuth } from "firebase/auth";
 import PrestamosFormVue from "components/prestamos/PrestamosFormVue.vue";
+import BarcodeGenerator from "components/dashboard/BarcodeGenerator.vue";
 
 import QDialogo from "components/utils/QDialogo.vue";
 
 const userCredential = ref(null);
 const user = inject("user") || "raro";
+const Codigo = ref(false);
 const modalPrestamoOpened = ref(false);
 
 const linksList = ref([
