@@ -22,7 +22,7 @@
         <!-- <div>Quasar v{{ $q.version }}</div> -->
         <q-btn @click="Codigo = true" label="Codigo Barra" />
         <q-btn @click="modalPrestamoOpened = true" label="Crear prestamo" />
-        <q-btn @click="cerrarSesion = true" label="Cerrar sesion" />
+
       </q-toolbar>
     </q-header>
 
@@ -40,6 +40,7 @@
             :key="link.title"
             v-bind="link"
           />
+          <q-btn @click="cerrarSesion = true" label="Cerrar sesion" />
         </q-list>
       </q-scroll-area>
 
@@ -125,6 +126,8 @@ const linksList = ref([
     to: "/cuentas",
   },
 ]);
+
+
 
 //cierre de sesión del usuario
 const router = useRouter();
