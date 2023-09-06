@@ -31,18 +31,11 @@
           <div class="text-h6"></div>
         </q-card-section>
 
-        <q-card-section class="q-pt-none"
-          >Ingresa el correo
-          <!-- <q-input
-            dense
-            v-model="address"
-            autofocus
-            @keyup.enter="prompt = false"
-          /> -->
+        <q-card-section class="q-pt-none" >
           <q-input
             dense
+            label="Correo electrónico"
             v-model="userEmail"
-            aria-placeholder="Correo Electronico del usuario"
           />
           <q-select
             outlined
@@ -76,7 +69,7 @@
           </q-item-section>
 
           <q-item-section>
-            Datos {{ expanded ? "Mostrados" : "Cerrados" }}
+            Datos del usuario  {{ expanded ? "" : "" }}
           </q-item-section>
         </template>
 

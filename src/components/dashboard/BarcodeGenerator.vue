@@ -1,42 +1,27 @@
 <template>
-  <q-page>
-    <div class="q-pa-md">
-      <h1>Generador e Impresor de Códigos de Barras</h1>
-      <q-btn label="Abrir Generador" @click="dialogVisible = true" />
-    </div>
-    <q-dialog v-model="dialogVisible" persistent>
-      <q-card>
-        <q-card-section>
-          <h2 class="q-mt-md">Generador de Código de Barras</h2>
-          <q-input
-            v-model="barcodeData"
-            label="Contenido del código de barras"
-          />
-          <q-btn
-            label="Generar Código de Barras"
-            color="primary"
-            @click="generateBarcode"
-            class="q-mt-lg"
-          />
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          <canvas ref="barcodeCanvas"></canvas>
-          <q-img :src="barcodeImage" v-if="barcodeImage" class="q-mt-md" />
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn label="Imprimir" color="primary" @click="printBarcode" />
-          <q-btn label="Cerrar" @click="dialogVisible = false" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-  </q-page>
+  <div>
+    <h2 class="q-mt-">Generador de Código de Barras</h2>
+    <q-input v-model="barcodeData" label="Contenido del código de barras" />
+    <q-btn
+      label="Generar Código de Barras"
+      color="primary"
+      @click="generateBarcode"
+      class="q-mt-lg"
+    />
+  </div>
+  <div class="q-pt-none">
+    <canvas ref="barcodeCanvas"></canvas>
+    <q-img :src="barcodeImage" v-if="barcodeImage" class="q-mt-md" />
+  </div>
+  <q-card-actions align="right">
+    <q-btn label="Imprimir" color="primary" @click="printBarcode" />
+  </q-card-actions>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import JsBarcode from "jsbarcode";
 
-const dialogVisible = ref(false);
 const barcodeData = ref("");
 const barcodeCanvas = ref(null);
 const barcodeImage = ref(null);

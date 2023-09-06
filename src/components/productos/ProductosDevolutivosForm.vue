@@ -96,7 +96,6 @@ if (props.editando && !props.editandoConsumible) {
   consumableSelected.value = props.item.nombre;
   crearFormulario();
   valueCampos.value = props.item;
-  console.log();
 }
 
 // Se utiliza watch para observar cambios en consumableSelected y, cuando cambia, se llama a la función crearFormulario().

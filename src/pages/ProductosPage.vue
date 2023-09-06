@@ -5,19 +5,15 @@
   componentes reutilizables y pestañas para organizar la información.  -->
 <template>
   <div style="background-color: #f5f5f5">
-    <!-- <q-input type="file" @change="handleFileSelect" v-model="fileInput" />: Este elemento <q-input> permite 
-    al usuario cargar un archivo. Cuando se selecciona un archivo, el evento @change llama
-     a la función handleFileSelect, que procesa el archivo seleccionado y lo carga en la 
-     aplicación. -->
     <q-input type="file" @change="handleFileSelect" v-model="fileInput" />
+    <!-- Contenido aquí -->
+
     {{ nombresColumnas }}
-    <!-- Se hace funcion de QDialogo el cual lanza una ventana emergente la cual cuenta con
-    opciones para agregar producto en el apartado de consumible.-->
     <QDialogo
       v-model="openedForm"
       colorButton="secondary"
       iconButton="add_circle"
-      labelButton="Agregar producto consumible"
+      labelButton="Agregar formato producto devolutivo"
     >
       <!--  -->
       <ProductosForm
@@ -45,7 +41,7 @@
         </QDialogo>
       </div>
     </div>
-    <Tabs :tabs="tabs"
+    <Tabs :tabs="tabs" v-model="selectedTab"
       ><template #consumibles
         ><SimpleTable
           :rows="productosStore.productosConsumibles"
@@ -53,7 +49,8 @@
           agregarElementoLabel="Agregar producto"
           @agregando="resetForm"
           @editando="editElement"
-          @viendo="verDetalles"
+          editable
+          tablaUrl="productos"
         />
       </template>
       <template #devolutivos>
@@ -62,9 +59,12 @@
           :columns="productosStore.devolutivosCols"
           :internalColumns="productosStore.devolutivosInternalCols"
           @editando="editarRetornable"
+          editable="true"
+          addText="Agregar Producto"
+          @add="resetForm"
+          tablaUrl="productos"
         />
       </template>
-      <uploadData nomTabla="products" />
     </Tabs>
   </div>
 </template>
@@ -83,6 +83,7 @@ import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import ComsumiblesForm from "components/productos/ConsumiblesForm.vue";
 
 import { computed, onMounted, ref } from "vue";
+const selectedTab = ref("consumibles");
 
 import { useRouter } from "vue-router";
 const openedForm = ref(false);
@@ -95,9 +96,6 @@ const openForm = ref(false);
 
 const router = useRouter();
 
-function verDetalles(id) {
-  router.push(`productos/${id}`);
-}
 const tabs = [
   { name: "consumibles", label: "Consumibles" },
   { name: "devolutivos", label: "Devolutivos" },
@@ -115,12 +113,10 @@ const fileInput = ref(null);
 
 function editElement(object) {
   let obj;
-  console.log(object);
   if (object.productosList) {
     obj = object.productosList.find((product = product.docId == object.docId));
   }
   editandoConsumible.value = true;
-  console.log(obj);
   editando.value = true;
   itemToEdit.value = object;
   openedForm.value = true;
@@ -154,13 +150,9 @@ function handleFileSelect() {
       workbook.Sheets[worksheet]
     );
 
-    console.log(XL_row_object);
-
     databaseStore.saveElement();
   };
-  reader.onerror = (ex) => {
-    console.log(ex);
-  };
+  reader.onerror = (ex) => {};
   reader.readAsBinaryString(file);
 }
 

@@ -66,15 +66,14 @@ function recoverPasword() {
   }
   sendPasswordResetEmail(auth, email.value)
     .then(() => {
-      // Envio de restablecimiento de contraseña por medio de correo electronico
+      // Password reset email sent!
+      // ..
       console.log("recuperando contraseña");
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       // ..
-      console.log(errorCode, errorMessage);
-      console.log();
     });
 }
 function isEmailValid() {

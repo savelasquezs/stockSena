@@ -94,7 +94,6 @@ function onSubmit() {
       // El inicio de sesión fue exitoso, aquí puedes realizar acciones
       // como redireccionar al usuario a otra página o mostrar un mensaje de bienvenida.
       router.push("/");
-      console.log("Inicio de sesión exitoso", userCredential.user);
     })
     .catch((error) => {
       // Si ocurre un error, puedes mostrar un mensaje de error al usuario.

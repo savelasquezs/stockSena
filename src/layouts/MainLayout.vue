@@ -1,4 +1,12 @@
 <template>
+  <QDialogo v-model="modalPrestamoOpened">
+    <PrestamosFormVue />
+  </QDialogo>
+
+  <QDialogo v-model="Codigo">
+    <BarcodeGenerator />
+  </QDialogo>
+
   <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar>
@@ -11,26 +19,11 @@
         />
 
         <q-toolbar-title> Sena Stock Management App </q-toolbar-title>
-        <div>
-          <p class="text-subtitle1 q-ma-sm">{{ user.email }}</p>
-        </div>
-
         <!-- <div>Quasar v{{ $q.version }}</div> -->
-        <q-btn @click="cerrarSesion" label="Cerrar Sesión" />
+        <q-btn @click="Codigo = true" label="Codigo Barra" />
+        <q-btn @click="modalPrestamoOpened = true" label="Crear prestamo" />
       </q-toolbar>
     </q-header>
-    <!--
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer> -->
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-scroll-area
@@ -47,6 +40,12 @@
             v-bind="link"
           />
         </q-list>
+        <q-btn
+          class="flex justify-cente"
+          @click="logout()"
+          label="Cerrar sesión"
+          style="color: red; margin: auto; margin-top: 30px"
+        />
       </q-scroll-area>
 
       <q-img
@@ -55,11 +54,16 @@
         style="height: 150px"
       >
         <div class="absolute-bottom bg-transparent">
-          <q-avatar size="56px" class="q-mb-sm">
+          <q-avatar size="50px" class="q-mb-sm" style="margin-bottom: -1px">
             <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
           </q-avatar>
-          <div class="text-weight-bold">Razvan Stoenescu</div>
-          <div>@rstoenescu</div>
+          <div v-if="userCredential">
+            <div class="text-weight-bold" style="margin-bottom: -15px">
+              <p>{{ userCredential.email }}</p>
+              <p>{{ userCredential.almacen }}</p>
+              {{ userCredential.displayName }}
+            </div>
+          </div>
         </div>
       </q-img>
     </q-drawer>
@@ -70,40 +74,46 @@
 </template>
 
 <script setup>
-
-import { inject, ref } from 'vue';
+import { inject, ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 //importación cierre de sesión
 import { signOut } from "firebase/auth";
 import { auth } from "src/firebaseInit";
 //redireccion
 import { useRouter } from "vue-router";
+import { getAuth } from "firebase/auth";
+import PrestamosFormVue from "components/prestamos/PrestamosFormVue.vue";
+import BarcodeGenerator from "components/dashboard/BarcodeGenerator.vue";
 
+import QDialogo from "components/utils/QDialogo.vue";
 
+const userCredential = ref(null);
 const user = inject("user") || "raro";
+const Codigo = ref(false);
+const modalPrestamoOpened = ref(false);
 
 const linksList = ref([
   {
     title: "Productos",
-    caption: "Productos de almacen tics",
+    caption: "Productos de almacén TICs",
     icon: "inventory",
     to: "/productos",
   },
   {
     title: "Usuarios",
-    caption: "Profesores y aprendices Sena registrados",
+    caption: "Profesores y aprendices del SENA registrados",
     icon: "people_alt",
     to: "/clientes",
   },
   {
     title: "Dashboard",
-    caption: "Estadisticas y ultimos movimientos",
+    caption: "Estadísticas y últimos movimientos",
     icon: "dashboard",
     to: "/dashboard",
   },
   {
-    title: "Prestamos",
-    caption: "productos de Almacen tics",
+    title: "Préstamos",
+    caption: "Productos de almacén TICs",
     icon: "shopping_cart",
     to: "/prestamos",
   },
@@ -121,22 +131,21 @@ const linksList = ref([
   },
 ]);
 
-//cierre de sesión del usuario
-const router = useRouter();
-
-function cerrarSesion() {
+function logout() {
   signOut(auth)
     .then(() => {
       // Sign-out successful.
-      console.log("sesión cerrada exitosamente c:");
       router.push("/login");
     })
     .catch((error) => {});
 }
+//cierre de sesión del usuario
+const router = useRouter();
 
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+userCredential.value = JSON.parse(localStorage.getItem("user"));
 </script>

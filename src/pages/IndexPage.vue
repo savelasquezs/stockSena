@@ -39,7 +39,7 @@
         <div class="text-subtitle2 text-center">Historial</div>
       </q-card-section>
     </q-card>
-    <!-- Componente de selección de fecha -->
+
     <date-picker @guardarFecha="(fecha) => console.log(fecha)" />
   </div>
   <!-- Página principal -->
@@ -69,11 +69,6 @@ const onSubmit = async () => {
     age: age.value,
     algo: pais.value,
   });
-  console.log(
-    "the data was saved successfully with id: ",
-    docRef.id,
-    docRef.data
-  );
 };
 // Lista reactiva para almacenar datos de Firestore
 const data = ref([]);
@@ -84,10 +79,8 @@ onSnapshot(tabla, (snapshot) => {
       data.value.push({ docId: change.doc.id, ...change.doc.data() });
     }
     if (change.type === "modified") {
-      console.log("Modified city: ", change.doc.data());
     }
     if (change.type === "removed") {
-      console.log("Removed city: ", change.doc.data());
     }
   });
 });

@@ -19,7 +19,6 @@ import CuentasManejoVue from "./pages/CuentasManejo.vue";
 
 const productosStore = useProductosStore();
 const DatabaseStore = useDatabaseStore();
-console.log(DatabaseStore);
 DatabaseStore.escucharCambios(
   productosStore,
   "products",
@@ -35,19 +34,14 @@ let timer;
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const uid = user.uid;
-    console.log(user.email);
     localStorage.setItem("user", user.email);
     await getDoc(doc(collection(db, "users"), uid)).then((doc) => {
       if (doc.exists()) {
-        console.log(doc.data().almacen);
         localStorage.setItem("user", JSON.stringify(doc.data()));
         usuario.value = doc.data();
       }
     });
-
-    console.log("El usuario inicio la sesión (app)");
   } else {
-    console.log("El usuario cerro sesion (app)");
     localStorage.setItem("user", "");
   }
 });

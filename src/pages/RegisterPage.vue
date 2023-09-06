@@ -101,14 +101,14 @@ const username = ref("");
 //const usuarioBD=JSON.parse(localStorage.getItem("user"));
 const successMessage = ref("");
 const errorMessage = ref("");
-// Las funciones showSuccessMessage y showErrorMessage se utilizan para mostrar mensajes
-// de éxito y error respectivamente en la página después de realizar acciones.
+
 function showSuccessMessage(message) {
   successMessage.value = message;
   setTimeout(() => {
     successMessage.value = "";
   }, 3000);
 }
+
 function showErrorMessage(message) {
   errorMessage.value = message;
   setTimeout(() => {
@@ -135,11 +135,8 @@ function onSubmit() {
         almacen: usuarioBD.almacen,
       };
       const docRef = doc(db, "users", user.uid);
-      console.log(userData);
       await setDoc(docRef, userData)
-        .then(() => {
-          console.log("user acepted");
-        })
+        .then(() => {})
         .catch((error) => {
           console.error("error adding document: ", error);
         });
@@ -154,8 +151,9 @@ function onSubmit() {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
+      console.log(error, errorMessage);
       // ..
+      showErrorMessage("No se pudo registrar el usuario");
     });
 
   showErrorMessage("No se pudo registrar el usuario");

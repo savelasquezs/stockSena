@@ -112,6 +112,7 @@ function guardarCliente() {
     apellido: Apellido.value,
     rol: Rol.value,
     area: Area.value,
+    enMora: false,
   };
   // const docRef = doc(db, "customers", data.numero_id);: Se crea una referencia al
   //  documento en la colección "customers" de Firebase Firestore. db es la instancia
@@ -120,7 +121,6 @@ function guardarCliente() {
   //  número de documento como identificador único en la base de datos Firestore.
   const docRef = doc(db, "customers", data.numero_id);
   setDoc(docRef, data)
-    // Se representa una promesa que se ejecutará cuando la operación de guardado se complete con éxito.
     .then(() => {
       emit("clienteGuardado");
       $q.notify({
@@ -128,9 +128,6 @@ function guardarCliente() {
         color: "accent",
       });
     })
-    // .catch((err) => console.log(err)): Si ocurre algún error durante el proceso de
-    // guardado en Firebase Firestore, se captura el error y se muestra en la consola
-    // utilizando console.log(err).
     .catch((err) => console.log(err));
 }
 </script>

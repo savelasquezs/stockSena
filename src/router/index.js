@@ -45,8 +45,6 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach((to, from, next) => {
     if (to.matched.some((ruta) => ruta.meta.requiresAuth)) {
       const user = localStorage.getItem("user");
-      console.log(to, from);
-      console.log(user);
       if (user && user !== "") {
         next();
         return;

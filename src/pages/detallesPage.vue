@@ -7,7 +7,7 @@
   {{ product }}
   {{ id }}
   <div style="background-color: #f5f5f5"></div>
-  <!-- Informacion de  productos -->
+  <!-- Informacion de productos -->
   <div
     class="q-pa-md row items-start q-gutter-md"
     style="display: flex; justify-content: center"
@@ -17,34 +17,60 @@
         class="bg-accent text-white"
         style="display: flex; flex-direction: column"
       >
-        <!-- Campo ingreso de Nombre-Consumible-Estado-->
         <div class="text-h5">
           <strong>{{ product.nombre }}</strong>
         </div>
-        <div class="flex">
-          <div class="text-subtitle" style="flex: 1; margin: 8px">
-            Nombre: {{}}
+        <div class="flex justify-between">
+          <div class="text-subtitle3">
+            <q-icon name="inventory_2" color="primary" size="20px" />
+            Stock Total:
           </div>
-          <div class="text-subtitle3" style="text-align: right; margin: 8px">
-            Consumible: {{ product.isConsumable ? "Si" : "No" }}
-          </div>
-        </div>
-        <div class="flex">
-          <div class="text-subtitle4" style="flex: 1; margin: 8px">
-            Procesador: Core ¡5
-          </div>
-          <div class="text-subtitle5" style="text-align: right; margin: 8px">
-            Estado: Prestado
+          <div>
+            {{ product.stockTotal }}
           </div>
         </div>
-      </q-card-section>
-    </q-card>
+        <div class="flex justify-between">
+          <div class="text-subtitle3">
+            <q-icon name="lunch_dining" color="primary" size="20px" />
+            Consumible:
+          </div>
+          <div>{{ product.isConsumable ? "Si" : "No" }}</div>
+        </div>
+      </div>
+
+      <div class="derecha">
+        <div class="flex justify-between">
+          <div class="text-subtitle3">
+            <q-icon name="event_available" color="primary" size="20px" />
+            Stock Disponible :
+          </div>
+          <div>{{ product.stockTotal - product.borrowedQuantity }}</div>
+        </div>
+        <div class="flex justify-between">
+          <div class="text-subtitle3">
+            <q-icon name="event_busy" color="primary" size="20px" />
+            Stock Prestamo:
+          </div>
+          <div>{{ product.borrowedQuantity }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="shadow-3 q-pa-lg customProperties" v-if="!product.isConsumable">
+      <div
+        class="flex justify-between"
+        v-for="(property, index) in customProperties"
+        :key="index"
+      >
+        <div class="text-subtitle3">{{ property[0] }}:</div>
+        <div>{{ property[1] }}</div>
+      </div>
+    </div>
   </div>
+
   <div
     class="q-pa-md row items-center q-gutter-md"
     style="display: flex; justify-content: center"
   >
-    <!-- En la tabla de productos se mostrara los datos exactos que fueron prestados en total -->
     <q-card class="my-card">
       <q-card-section class="bg-white text-black">
         <div class="text-h5">Veces Prestadas</div>
@@ -53,14 +79,14 @@
         </div>
       </q-card-section>
     </q-card>
-    <!-- En la tabla se visualizara la cantidad de prestamos exactos en total -->
+
     <q-card class="my-card">
       <q-card-section class="bg-brown-5 text-black">
         <div class="text-h5">Cantidad En Prestamo</div>
         <div class="text-subtitle2 text-black">{{ vecesPrestada }}</div>
       </q-card-section>
     </q-card>
-    <!-- En la tabla se visualizara la cantidad de elementos que hay en el almacen -->
+
     <q-card class="my-card">
       <q-card-section class="bg-light-green text-black">
         <div class="text-h5">Cantidad en Almacén</div>
@@ -72,6 +98,8 @@
   <SimpleTable
     :rows="prestamosStore.allBorrowingsProducts"
     :columns="productosStore.columnasDetalleProducto"
+    @viendo="verDetalles"
+    customDetail
   />
 </template>
 <!-- Importa las tiendas Vuex UsePrestamosStore y useProductosStore que proporcionan
@@ -80,15 +108,13 @@
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { useProductosStore } from "src/stores/productosStore";
 import { computed, onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import SimpleTable from "components/utils/SimpleTable.vue";
 const props = defineProps(["id"]);
 const route = useRoute();
-// Se definen variables reactivas, como productoId y product, para mantener el estado del componente.
 const productoId = ref(route.params.id);
 const product = ref({});
-// La función ejecutarInicio se utiliza para cargar los datos iniciales del producto y los
-//préstamos relacionados cuando el componente se monta. Esto se hace llamando a las acciones correspondientes de las tiendas Vuex.
+
 const prestamosStore = UsePrestamosStore();
 const productosStore = useProductosStore();
 async function ejecutarInicio() {
@@ -96,6 +122,9 @@ async function ejecutarInicio() {
   product.value = productosStore.productosDatabase.find(
     (producto) => producto.docId == productoId.value
   );
+  if (!product.value.isConsumable) {
+    customProperties.value = Object.entries(product.value.custom);
+  }
 }
 ejecutarInicio();
 // Se utiliza una propiedad computada vecesPrestada para calcular la cantidad total de
@@ -117,3 +146,12 @@ watch(
   }
 );
 </script>
+
+<style scoped>
+.customProperties {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 20px;
+}
+</style>

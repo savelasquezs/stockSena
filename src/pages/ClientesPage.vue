@@ -25,7 +25,8 @@
     @agregando="formOppened = true"
     :rows="clientesStore.clientesDatabase"
     :columns="clientesStore.columns"
-    @viendo="verDetalles"
+    editable
+    tablaUrl="clientes"
   />
 </template>
 <!-- Se importa el componente StadisticTableBar, así como otros componentes relacionados, 
@@ -47,15 +48,13 @@ const router = useRouter();
 const formOppened = ref(false);
 const dataTableArray = ref([]);
 const clientesStore = UseClientesStore();
-// verDetalles(id) es una función que se utiliza para redirigir al usuario a la
-// página de detalles de un cliente específico cuando se hace clic en un cliente en
-// la tabla. La función utiliza el enrutador Vue para navegar a la ruta correspondiente.
+
 function verDetalles(id) {
   router.push(`clientes/${id}`);
 }
+
 clientesStore.listenChanges().then(() => {
   dataTableArray.value = clientesStore.clientesDatabase;
-  console.log(clientesStore.clientesDatabase);
 });
 </script>
 

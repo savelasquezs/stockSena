@@ -7,9 +7,10 @@
         <TarjetaEstad
           icono="event_available"
           titulo="202"
-          subtitulo="Total de prestamos"
+          subtitulo="Total de préstamos"
           iconColor="light-blue-13"
         />
+
         <TarjetaEstad
           icono="transfer_within_a_station"
           titulo="586"
@@ -41,8 +42,14 @@
       />
 
       <!-- importacion de la tabla -->
-      <TablaVue />
-      <!-- fin importacion de la tabla -->
+      <TableReuse
+        :dataArray="prestamosStore.prestamosDatabase"
+        :columns="prestamosStore.columns"
+        title="Tabla de Prestamos"
+        :internalColumns="prestamosStore.internalColumns"
+        tablaUrl="productos"
+        buscarPorFecha
+      />
     </div>
 
     <!-- fin de lado derecho -->
@@ -104,17 +111,27 @@
       </div>
     </div>
   </div>
-
-  <BarcodeGenerator />
 </template>
 
 <script setup>
-import BarcodeGenerator from "components/dashboard/BarcodeGenerator.vue";
 import TarjetaEstad from "components/dashboard/TarjetaEstad.vue";
 import GraficasView from "components/dashboard/GraphVue.vue";
-import TablaVue from "components/dashboard/TablaVue.vue";
 import GraphPrueba from "components/dashboard/PruebaVue.vue";
 import LowStockItem from "components/dashboard/LowStockItem.vue";
+import { UsePrestamosStore } from "src/stores/prestamosStore";
+import stadisticTableBar from "components/utils/StadisticTableBar.vue";
+import PrestamosForm from "components/prestamos/PrestamosForm.vue";
+import TableReuse from "components/utils/TableReuse.vue";
+
+import { ref } from "vue";
+
+const openedForm = ref(false);
+const prestamosStore = UsePrestamosStore();
+const dataTableArray = ref([]);
+
+prestamosStore.listenChanges().then(() => {
+  dataTableArray.value = prestamosStore.prestamosDatabase;
+});
 
 const lowStockItems = [
   {

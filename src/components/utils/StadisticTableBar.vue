@@ -1,6 +1,10 @@
 <!-- Día de la documentación: 30/08/2023
 Descripción del archivo "StadisticTableBar.vue":
 
+==============================================================
+Props: const props = defineProps(["stadisticTableBarInfo"]);
+==============================================================
+
 Características clave:
 - El componente se utiliza para mostrar información estadística en la parte superior de una página o aplicación.
 - Utiliza el componente Quasar `<q-item>` para crear un elemento interactivo.
@@ -16,13 +20,7 @@ Características clave:
   <div class="flex justify-center">
     <q-item clickable to="/">
       <!-- etiqueta en la cual se guarda la imagen -->
-      <q-img
-        src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-        loading="lazy"
-        spinner-color="white"
-        width="100px"
-        class=""
-      />
+      <q-img src="public\img\Sena.png" width="125px" />
       <!-- aqui se llama al componente "StadisticTableItem"
       en el cual se pueden especificar las caracteristicas del item-->
       <StadisticTableItem

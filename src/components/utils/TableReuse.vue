@@ -3,10 +3,9 @@
   interactivas y funcionalidades adicionales, como filtrado por fecha, expansión de filas y botones de acción
   en las celdas. A continuación, se explica cada parte del código en detalle -->
 <template>
-  <!--Se imprime el valor de expandedRows en el template usando {{ expandedRows }}. 
+  <!--Se imprime el valor de expandedRows en el template usando {{ expandedRows }}.
     Esto parece ser una variable reactiva que contiene información sobre las filas expandidas
     en la tabla. Esta línea es posiblemente solo para propósitos de depuración y puede eliminarse en la implementación final.-->
-  {{ expandedRows }}
   <!-- Se define un <q-table> que se encargará de mostrar los datos tabulados en una interfaz de tabla.  -->
   <q-table
     flat
@@ -18,7 +17,7 @@
     :filter="search"
     virtual-scroll
     :rows-per-page-options="[0]"
-    style="height: 600px"
+    style="max-height: 600px"
     class="q-mx-sm"
   >
     <!-- Se define un slot de encabezado utilizando <template v-slot:top>. -->
@@ -41,6 +40,7 @@
              lo que significa que cuando se restablecen las fechas en el componente DatePicker,
              se llama a la función resetTable.   -->
         <DatePicker
+          v-if="buscarPorFecha"
           range
           @guardarFecha="filterByDate"
           @cleanedDates="resetTable"
@@ -63,6 +63,7 @@
         icon="add_circle"
         @click="$emit('add')"
         style="width: 300px"
+        v-if="addText"
       />
     </template>
     <!-- Se define un slot de encabezado de columna utilizando <template v-slot:header="props">.
@@ -113,7 +114,7 @@
                      para el primer botón. Cuando se hace clic en este botón, se emite un evento personalizado 
                      llamado "viendo" con el valor props.rows.docId. -->
                   <q-btn
-                    @click="$emit('viendo', props.rows.docId)"
+                    @click="verDetalles(props.row.docId || props.row.productId)"
                     icon="visibility"
                     rounded
                     size="10px"
@@ -124,7 +125,7 @@
                        para el segundo botón. Similar al primer botón, cuando se hace clic en este botón, se emite
                        un evento personalizado llamado "editando" con el valor props.row.docId. -->
                   <q-btn
-                    @click="$emit('editando', props.row.docId)"
+                    v-if="editable"
                     icon="edit"
                     rounded
                     size="10px"
@@ -145,19 +146,38 @@
 // Se importa computed y ref de "vue" para crear variables reactivas y calculadas.
 import { computed, ref } from "vue";
 // Se importa el componente personalizado DatePicker desde "../utils/DatePicker.vue".
+import { useRouter } from "vue-router";
 import DatePicker from "../utils/DatePicker.vue";
 const search = ref("");
 // Se definen las variables reactivas search, rangoFechas y rows.
 const rangoFechas = ref(null);
 const rows = ref([]);
-const emit = defineEmits(["editando"]);
+const emit = defineEmits(["editando", "viendo"]);
 const props = defineProps({
   dataArray: Array,
   columns: Array,
   title: String,
   internalColumns: Array,
   addText: String,
+  editable: String,
+  agregarElementoLabel: String,
+  buscarPorFecha: Boolean,
+  customDetailRouting: Boolean,
+  tablaUrl: String,
 });
+const router = useRouter();
+
+function verDetalles(docId) {
+  console.log(props.customDetailRouting);
+  console.log(docId);
+  if (props.id) {
+    emit("viendo", docId);
+    return;
+  } else {
+    router.push(`/${props.tablaUrl}/${docId}`);
+  }
+}
+
 rows.value = props.dataArray;
 
 const expandedRows = computed(() => {

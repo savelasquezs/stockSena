@@ -20,13 +20,11 @@
     <div class="text-h5 q-mb-xl text-center">
       ¿Seguro que quiere devolver los siguientes items?
     </div>
-    <!-- Scroll area para mostrar elementos a devolver -->
     <q-scroll-area
       :thumb-style="thumbStyle"
       :bar-style="barStyle"
       style="height: 300px"
     >
-      <!-- Lista de elementos a devolver -->
       <q-item
         v-for="elemento in copySelectedRows"
         :key="elemento.index"
@@ -71,7 +69,10 @@
               round
               color="primary"
               @click="elemento.devolver++"
-              :disable="elemento.devolver == elemento.quantity"
+              :disable="
+                elemento.devolver ==
+                elemento.quantity - elemento.returnedQuantity
+              "
             />
           </div>
         </q-item-section>
@@ -99,6 +100,8 @@
   <!-- Tabla de préstamos -->
 
   <SimpleTable
+    @viendo="verDetalles"
+    customDetail
     :loading="loading"
     :agregarElementoLabel="selectedPrestamos.length > 0 ? 'Devolver' : null"
     @agregando="openDevolverModal"
@@ -107,7 +110,7 @@
         (prestamo) => prestamo.returnedQuantity < prestamo.quantity
       )
     "
-    seleccionar="true"
+    seleccionar
     :columns="clientesStore.columnsPrestamosPersona"
     @cambioSelected="(value) => (selectedPrestamos = value)"
   />
@@ -122,7 +125,7 @@ import Qdialogo from "components/utils/QDialogo.vue";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import { useProductosStore } from "src/stores/productosStore";
@@ -140,6 +143,8 @@ const route = useRoute();
 const userId = ref(route.params.id);
 const guardando = ref(false);
 const loading = ref(false);
+const router = useRouter();
+const emit = defineEmits(["devuelto"]);
 
 const rows = databaseStore.escucharCambiosInternalCollection(
   prestamosStore,
@@ -149,11 +154,10 @@ const rows = databaseStore.escucharCambiosInternalCollection(
   "dateBorrowed",
   "allPersonDocs"
 );
-// Función para realizar la devolución de elementos
+
 function devolver() {
   guardando.value = true;
   copySelectedRows.value.forEach(async (element) => {
-    // Obtener información del préstamo
     console.log(element);
     const docPrestamoRef = doc(db, "borrowings", element.prestamoId);
     let prestamo = await getDoc(docPrestamoRef);
@@ -172,7 +176,7 @@ function devolver() {
     prestamoProductos[element.indexLista].notasDevolucion = notasDevolucion;
     prestamoProductos[element.indexLista].fechaDevolucion = fechaDevolucion;
     console.log(prestamoProductos);
-    // Actualizar el documento de préstamo en la base de datos
+
     await updateDoc(docPrestamoRef, {
       productosList: prestamoProductos,
       notasGeneralesDEvolucion: notasGeneralesDevolucion.value,
@@ -198,7 +202,6 @@ function devolver() {
       "borrowings",
       element.docId
     );
-    console.log(docCustomerBorrowingRef);
 
     await updateDoc(docCustomerBorrowingRef, {
       returnedQuantity: (element.returnedQuantity += parseInt(
@@ -226,10 +229,10 @@ function devolver() {
     });
 
     console.log(docProductBorrowingRef);
-    //Cerrar el modal de devolución y restablecer el estado de guardado
+
     modalDevolucionIsOpen.value = false;
-    // console.log(prestamoElement);
     guardando.value = false;
+    emit("devuelto");
   });
 }
 // Función para deseleccionar una fila de elementos a devolver
@@ -252,14 +255,14 @@ function openDevolverModal() {
   });
   modalDevolucionIsOpen.value = true;
 }
-// Cargar datos de préstamos cuando el componente está montado
+
 onMounted(async () => {
   loading.value = true;
   await prestamosStore.getPrestamosByPerson(userId.value).then(() => {
     loading.value = false;
   });
 });
-// Vigilar cambios en el parámetro de ruta 'id' y actualizar los préstamos
+
 watch(
   () => route.params.id,
   async (toId, fromId) => {
