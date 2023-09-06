@@ -1,28 +1,36 @@
+<!-- Día de la documentación: 05/09/2023
+
+Descripción del archivo "DashboardPage.vue": -->
 <template>
-  <!-- lado izquierdo -->
+  <!-- Panel de control -->
   <div class="bg-grey-4 flex justify-around papaDeTodo">
+    <!-- lado izquierdo -->
     <!-- Inicio tarjeta central -->
     <div class="q-pa-md q-gutter-md" style="width: 70%; padding: 20px">
+      <!-- Tarjetas centrales con estadísticas -->
       <div class="flex no-wrap justify-evenly">
+        <!-- Tarjeta para mostrar el total de préstamos -->
         <TarjetaEstad
           icono="event_available"
           titulo="202"
           subtitulo="Total de préstamos"
           iconColor="light-blue-13"
         />
+        <!-- Tarjeta para mostrar el número de devoluciones -->
         <TarjetaEstad
           icono="transfer_within_a_station"
           titulo="586"
           subtitulo="Devoluciones"
           iconColor="light-blue-13"
         />
-
+        <!-- Tarjeta para mostrar el número de cambios -->
         <TarjetaEstad
           icono="social_distance"
           titulo="300"
           subtitulo="Cambios"
           iconColor="light-blue-13"
         />
+        <!-- Tarjeta para mostrar el número de productos agotados -->
         <TarjetaEstad
           icono="error"
           titulo="121"
@@ -45,10 +53,11 @@
       <!-- fin importacion de la tabla -->
     </div>
 
-    <!-- fin de lado derecho -->
+    <!-- Sección derecha del panel de control -->
     <div class="pequeño shadow-2 flex column" style="padding: 20px; gap: 2rem">
       <!-- inicio tarjetas laterales superiores -->
       <div class="flex no-wrap justify-evenly">
+        <!-- Tarjetas laterales superiores -->
         <TarjetaEstad
           icono="inventory"
           titulo="586"
@@ -76,10 +85,11 @@
           iconColor="light-blue-13"
         />
       </div>
+      <!-- Tarjetas laterales superiores -->
       <div class="shadow-3 bg-white" style="border-radius: 5px">
         <GraficasView idCanvas="myCanvas" />
       </div>
-
+      <!-- Lista de productos de bajo stock -->
       <div class="shadow-3">
         <div class="flex justify-between items-center q-pa-sm">
           <span class="subtitle-1"> Productos de bajo Stock</span>
@@ -91,6 +101,7 @@
           class="rounded-borders"
           style="max-width: 350px"
         >
+          <!-- Iteración sobre elementos de bajo stock -->
           <LowStockItem
             v-for="item in lowStockItems"
             :key="item.name"
@@ -104,11 +115,12 @@
       </div>
     </div>
   </div>
-
+  <!-- Generador de códigos de barras -->
   <BarcodeGenerator />
 </template>
 
 <script setup>
+// Importación de componentes y funciones
 import BarcodeGenerator from "components/dashboard/BarcodeGenerator.vue";
 import TarjetaEstad from "components/dashboard/TarjetaEstad.vue";
 import GraficasView from "components/dashboard/GraphVue.vue";
@@ -116,6 +128,7 @@ import TablaVue from "components/dashboard/TablaVue.vue";
 import GraphPrueba from "components/dashboard/PruebaVue.vue";
 import LowStockItem from "components/dashboard/LowStockItem.vue";
 
+// Datos de productos de bajo stock
 const lowStockItems = [
   {
     avatarColor: "accent",
