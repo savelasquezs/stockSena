@@ -70,16 +70,8 @@
         </div>
       </div>
     </div>
-    <div class="shadow-3 q-pa-lg customProperties" v-if="!product.isConsumable">
-      <div
-        class="flex justify-between"
-        v-for="(property, index) in customProperties"
-        :key="index"
-      >
-        <div class="text-subtitle3">{{ property[0] }}:</div>
-        <div>{{ property[1] }}</div>
-      </div>
-    </div>
+
+    <CustomPropertiesTable :producto="product" v-if="!product.isConsumable" />
   </div>
 
   <div
@@ -129,15 +121,15 @@
 <script setup>
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { useProductosStore } from "src/stores/productosStore";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import SimpleTable from "components/utils/SimpleTable.vue";
+import CustomPropertiesTable from "components/productos/CustomPropertiesTable.vue";
 const props = defineProps(["id"]);
 const route = useRoute();
 const router = useRouter();
 const productoId = ref(route.params.id);
 const product = ref({});
-const customProperties = ref([]);
 
 function verDetalles(id) {
   const prestamo = prestamosStore.allBorrowingsProducts.find(
@@ -154,9 +146,6 @@ async function ejecutarInicio() {
   product.value = productosStore.productosDatabase.find(
     (producto) => producto.docId == productoId.value
   );
-  if (!product.value.isConsumable) {
-    customProperties.value = Object.entries(product.value.custom);
-  }
 }
 ejecutarInicio();
 
@@ -175,12 +164,3 @@ watch(
   }
 );
 </script>
-
-<style scoped>
-.customProperties {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: 1fr 1fr;
-  column-gap: 20px;
-}
-</style>

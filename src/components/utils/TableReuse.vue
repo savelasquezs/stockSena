@@ -73,7 +73,14 @@
           />
         </q-td>
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
-          {{ col.value }}
+          <q-item
+            clickable
+            :to="customerUrl(col.value)"
+            class="coloreble"
+            v-if="col.name == 'document'"
+            >{{ col.value }}
+          </q-item>
+          <span v-else>{{ col.value }}</span>
         </q-td>
       </q-tr>
       <q-tr v-show="props.row.expand" :props="props">
@@ -136,6 +143,10 @@ const props = defineProps({
   tablaUrl: String,
 });
 const router = useRouter();
+
+const customerUrl = (documentId) => {
+  return `/clientes/${documentId}`;
+};
 
 function verDetalles(docId) {
   console.log(props.customDetailRouting);
