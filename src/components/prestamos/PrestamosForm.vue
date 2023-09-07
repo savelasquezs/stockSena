@@ -253,7 +253,7 @@ function prestarProducto() {
   const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
   const dueDate = new Date(dateBorrowed + sevenDaysInMilliseconds).getTime();
   const listaProductos = productosList.value.map((registro) => {
-    const data = {
+    const datalistaProductos = {
       productId: registro.docId,
       product: registro.producto,
       quantity: registro.cantidad,
@@ -263,12 +263,12 @@ function prestarProducto() {
       returnedQuantity: 0,
     };
     if (registro.isConsumable) {
-      data.unidadMedida = registro.unidadMedida;
+      datalistaProductos.unidadMedida = registro.unidadMedida;
     } else {
-      data.estadoEntrega = registro.estadoEntrega;
-      data.custom = registro.custom;
+      datalistaProductos.estadoEntrega = registro.estadoEntrega;
+      datalistaProductos.custom = registro.custom;
     }
-    return data;
+    return datalistaProductos;
   });
   const data = {
     customerDocumentNumber: documentNumber.value,

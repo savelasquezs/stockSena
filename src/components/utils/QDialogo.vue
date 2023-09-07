@@ -46,6 +46,9 @@ un slot.
       <q-card-section class="row justify-end q-pb-none">
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
+      <div class="flex flex-center">
+        <q-avatar :icon="iconModal" color="accent" text-color="white" />
+      </div>
       <q-card-section>
         <!-- Espacio para incluir contenido personalizado dentro del diálogo -->
         <slot />
@@ -70,6 +73,7 @@ const props = defineProps({
   labelButton: String,
   visibleButton: Boolean,
   width: String,
+  iconModal: String,
 });
 // se envian los props y modelValue, si model value == True
 // openDialog heredara el valor del v-model declarado al

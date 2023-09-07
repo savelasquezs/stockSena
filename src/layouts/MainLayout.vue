@@ -1,5 +1,5 @@
 <template>
-  <QDialogo v-model="modalPrestamoOpened">
+  <QDialogo v-model="modalPrestamoOpened" iconModal="real_estate_agent">
     <PrestamosFormVue />
   </QDialogo>
 
