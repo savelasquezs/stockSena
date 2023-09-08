@@ -26,7 +26,7 @@
         />
         <q-btn
           color="accent"
-          @click="prestar"
+          @click="prestarProducto"
           label="Prestar"
           class="q-mt-md"
           :loading="guardandoPrestamo"
@@ -47,37 +47,36 @@ import { useRoute } from "vue-router";
 import { useProductosStore } from "src/stores/productosStore";
 import DatePicker from "components/utils/DatePicker.vue";
 import CustomPropertiesTable from "components/productos/CustomPropertiesTable.vue";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import ExpansionItem from "components/prestamos/ExpansionItem.vue";
 import InputClienteSearch from "components/prestamos/InputClienteSearch.vue";
+import { UseUtilsStore } from "src/stores/utilsStore";
 const productosList = ref([]);
 const $q = useQuasar();
 const prestamosStore = UsePrestamosStore();
 const productosStore = useProductosStore();
 const generalDescription = ref("");
 const guardandoPrestamo = ref(false);
+const utils = UseUtilsStore();
 
-function notifyProduct(message) {
-  $q.notify({
-    type: "negative",
-    message,
-    position: "center",
-    timeout: 1500,
-  });
-}
+const emit = defineEmits(["prestamoGuardado"]);
 function deselectRow(id) {
   console.log(id);
   productosList.value = productosList.value.filter(
     (producto) => producto.docId != id
   );
 }
+const cliente = computed(() => {
+  console.log(prestamosStore.currentCustomer);
+  return prestamosStore.currentCustomer;
+});
 
 function agregarProducto(producto) {
   if (
     productosList.value.some((elemento) => elemento.docId == producto.docId)
   ) {
-    notifyProduct("Este producto ya esta en tu lista");
+    utils.notifyError("Este producto ya esta en tu lista");
     return;
   }
   productosList.value.unshift({
@@ -85,13 +84,12 @@ function agregarProducto(producto) {
     prestar: 1,
     fechaEntrega: new Date().toLocaleDateString("es-CO"),
   });
+  console.log(productosList.value);
 }
 
-function prestar() {
+function datosPreparados() {
   guardandoPrestamo.value = true;
   const dateBorrowed = new Date().getTime();
-  console.log(productosList.value);
-
   const listaProductos = productosList.value.map((registro) => {
     let separador = registro.fechaEntrega.includes("-") ? "-" : "/";
     const fechaEntregaArray = registro.fechaEntrega.split(separador);
@@ -110,7 +108,7 @@ function prestar() {
       barCode: registro.codigoBarra,
       dateBorrowed,
       dueDate: new Date(registro.fechaEntrega).getTime() + milisecondsDay,
-      descripcionProducto: registro.notas || registro.descripcion,
+      descripcionProducto: registro.notas || registro.descripcion || "",
       returnedQuantity: 0,
     };
     if (registro.isConsumable) {
@@ -121,12 +119,20 @@ function prestar() {
     }
     return data;
   });
-  console.log(listaProductos);
+  const dataToSave = {
+    customerDocumentNumber: cliente.value.numero_id,
+    productosList: listaProductos,
+    customer: {
+      documentNumber: cliente.value.numero_id,
+      name: cliente.value.nombre,
+      documentType: cliente.value.tipoDoc,
+    },
+    description: generalDescription.value,
+    dateBorrowed,
+  };
+  console.log(dataToSave);
+  return dataToSave;
 }
-
-const cliente = computed(() => {
-  return prestamosStore.currentCustomer;
-});
 
 const route = useRoute();
 onBeforeUnmount(() => {
@@ -138,40 +144,28 @@ onBeforeUnmount(() => {
 });
 
 function prestarProducto() {
-  const dateBorrowed = new Date().getTime();
-
-  const data = {
-    customerDocumentNumber: documentNumber.value,
-    productosList: listaProductos,
-    customer: {
-      documentNumber: documentNumber.value,
-      name: cliente.value.nombre,
-      documentType: selectedDocumentType.value,
-    },
-    description: description.value,
-    dateBorrowed,
-  };
+  const data = datosPreparados();
 
   productosList.value.forEach(async (product) => {
     const docref = doc(db, "products", product.docId);
     await updateDoc(docref, {
       borrowedQuantity:
-        parseInt(product.cantidadPrestada) + parseInt(product.cantidad),
+        parseInt(product.borrowedQuantity) + parseInt(product.prestar),
     });
   });
 
   addDoc(collection(db, "borrowings"), data).then((prestamo) => {
-    const clienteDocRef = doc(db, "customers", documentNumber.value);
-    listaProductos.forEach(async (producto, indexLista) => {
+    const clienteDocRef = doc(db, "customers", cliente.value.numero_id);
+    data.productosList.forEach(async (producto, indexLista) => {
       const productoDocRef = doc(db, "products", producto.productId);
       const dataToProductos = {
         indexLista,
         diaPrestamo: producto.dateBorrowed,
         cantidadPrestada: producto.quantity,
         customer: {
-          documentNumber: documentNumber.value,
+          documentNumber: cliente.value.numero_id,
           name: cliente.value.nombre,
-          documentType: selectedDocumentType.value,
+          documentType: cliente.value.tipoDoc,
         },
       };
       if (!producto.isConsumable) {

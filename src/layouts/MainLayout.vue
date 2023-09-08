@@ -1,6 +1,6 @@
 <template>
   <QDialogo v-model="modalPrestamoOpened" iconModal="real_estate_agent">
-    <PrestamosFormVue />
+    <PrestamosFormVue @prestamoGuardado="modalPrestamoOpened = false" />
   </QDialogo>
 
   <QDialogo v-model="Codigo">

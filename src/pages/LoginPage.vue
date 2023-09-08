@@ -14,7 +14,9 @@
           v-model="email"
           label="Ingresa tu correo*"
           lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+          :rules="[
+            (val) => (val && val.length > 0) || 'El correo no puede ir vacio',
+          ]"
         />
 
         <q-input
@@ -25,7 +27,7 @@
           lazy-rules
           :rules="[
             (val) =>
-              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
+              (val !== null && val !== '') || 'Debes ingresar una contraseña',
           ]"
         />
 
@@ -35,6 +37,7 @@
           color="primary"
           class="q-gutter-ml"
           style="width: 370px; height: 45px"
+          :loading="loadingLogin"
         />
         <p style="text-align: center; margin-top: 20px">
           <span
@@ -56,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onUnmounted, ref } from "vue";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "src/firebaseInit";
@@ -68,8 +71,10 @@ import { collection, doc, getDoc } from "firebase/firestore";
 const router = useRouter();
 const email = ref("");
 const password = ref("");
+const loadingLogin = ref(false);
 
 function onSubmit() {
+  loadingLogin.value = true;
   // if (!isEmailValid()) {
   //   alert("Por favor, ingresa un correo válido de @misena.edu.co");
   //   return;
@@ -101,6 +106,10 @@ function recoverPasword() {
 function registerUser() {
   router.push("/register");
 }
+
+onUnmounted(() => {
+  loadingLogin.value = false;
+});
 </script>
 
 <style>

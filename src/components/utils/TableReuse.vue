@@ -15,6 +15,7 @@
     :rows-per-page-options="[0]"
     style="max-height: 600px"
     class="q-mx-sm"
+    dense
   >
     <!-- Se define un slot de encabezado utilizando <template v-slot:top>. -->
     <template v-slot:top>
@@ -72,14 +73,23 @@
             :icon="props.row.expand ? 'remove' : 'add'"
           />
         </q-td>
-        <q-td v-for="col in props.cols" :key="col.name" :props="props">
-          <q-item
-            clickable
-            :to="customerUrl(col.value)"
-            class="coloreble"
-            v-if="col.name == 'document'"
-            >{{ col.value }}
-          </q-item>
+        <q-td v-for="col in props.cols" :key="col.name" :props="props" style="">
+          <div v-if="col.name == 'document'" class="">
+            <q-item
+              style="clickable; width:100%"
+              :to="customerUrl(col.value)"
+              class="coloreble flex flex-center"
+              dense
+            >
+              <q-item-section avatar side>
+                <q-icon color="accent" name="ads_click" />
+              </q-item-section>
+              <q-item-section side class="text-blue">
+                {{ col.value }}</q-item-section
+              >
+            </q-item>
+          </div>
+
           <span v-else>{{ col.value }}</span>
         </q-td>
       </q-tr>

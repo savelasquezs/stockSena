@@ -65,9 +65,14 @@ import { useRoute } from "vue-router";
 import AlDia from "../icons/AlDia.vue";
 import EnMora from "../icons/EnMora.vue";
 
+const props = defineProps({ busquedaCustom: Boolean });
+
 const prestamosStore = UsePrestamosStore();
 const clientesStore = UseClientesStore();
-const cliente = computed(() => {
+let cliente = computed(() => {
+  if (props.busquedaCustom) {
+    return clientesStore.currentCustomer;
+  }
   return prestamosStore.currentCustomer;
 });
 

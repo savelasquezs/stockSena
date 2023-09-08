@@ -6,26 +6,36 @@
     v-model="documento"
     label="Documento"
     type="number"
-    @change="buscarCliente"
+    @change="
+      busquedaCustom ? buscarClienteTraspaso() : buscarClientePrestamos()
+    "
   >
     <template v-slot:prepend>
       <q-icon name="person_search" />
     </template>
     <template v-slot:append>
-      <q-btn icon="search" @click="buscarCliente" round />
+      <q-btn icon="search" round />
     </template>
   </q-input>
 </template>
 
 <script setup>
+import { UseClientesStore } from "src/stores/clientesStore";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { ref } from "vue";
 
+const props = defineProps({ busquedaCustom: Boolean });
+
 const prestamosStore = UsePrestamosStore();
+const clientesStore = UseClientesStore();
 const documento = ref("");
-async function buscarCliente() {
+async function buscarClientePrestamos() {
   console.log(documento.value);
   await prestamosStore.getPrestamosByPerson(documento.value);
+}
+
+function buscarClienteTraspaso() {
+  clientesStore.getCurrentCliente(documento.value);
 }
 </script>
 
