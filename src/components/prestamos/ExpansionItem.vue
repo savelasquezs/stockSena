@@ -1,5 +1,5 @@
 <template>
-  <div v-for="(producto, index) in productos" :key="index">
+  <div v-for="(producto, index) in productosList" :key="index">
     <q-expansion-item expand-icon-toggle expand-separator>
       <template v-slot:header>
         <q-item-section avatar>
@@ -69,12 +69,12 @@
           <q-btn
             icon="delete"
             style="width: 50px"
-            @click="deselectRow(producto)"
+            @click="$emit('deselectElement', producto.docId)"
           />
         </q-item-section>
       </template>
 
-      <q-card>
+      <q-card style="max-width: 100%">
         <q-card-section class="q-px-lg bg-grey-1">
           <q-separator />
           <div class="flex flex-center bg-white">
@@ -111,10 +111,9 @@
 <script setup>
 import CustomPropertiesTable from "components/productos/CustomPropertiesTable.vue";
 import DatePicker from "components/utils/DatePicker.vue";
-import { ref } from "vue";
-const props = defineProps({ productosList: Object });
 
-const productos = ref(props.productosList);
+const props = defineProps({ productosList: Object });
+const emit = defineEmits(["deselectElement"]);
 </script>
 
 <style lang="scss" scoped></style>

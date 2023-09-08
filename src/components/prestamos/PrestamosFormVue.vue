@@ -11,7 +11,10 @@
         class="shadow-1"
         v-if="productosList.length > 0"
       >
-        <ExpansionItem :productosList="productosList" />
+        <ExpansionItem
+          :productosList="productosList"
+          @deselectElement="deselectRow"
+        />
       </q-scroll-area>
       <div v-if="productosList.length > 0">
         <q-input
@@ -63,6 +66,12 @@ function notifyProduct(message) {
     timeout: 1500,
   });
 }
+function deselectRow(id) {
+  console.log(id);
+  productosList.value = productosList.value.filter(
+    (producto) => producto.docId != id
+  );
+}
 
 function agregarProducto(producto) {
   if (
@@ -78,25 +87,29 @@ function agregarProducto(producto) {
   });
 }
 
-function deselectRow(elemento) {
-  productosList.value = productosList.value.filter(
-    (producto) => producto.docId != elemento.docId
-  );
-}
 function prestar() {
   guardandoPrestamo.value = true;
   const dateBorrowed = new Date().getTime();
   console.log(productosList.value);
+
   const listaProductos = productosList.value.map((registro) => {
+    let separador = registro.fechaEntrega.includes("-") ? "-" : "/";
+    const fechaEntregaArray = registro.fechaEntrega.split(separador);
+    registro.fechaEntrega =
+      fechaEntregaArray[1] +
+      "-" +
+      fechaEntregaArray[0] +
+      "-" +
+      fechaEntregaArray[2];
+    const milisecondsDay = 23 * 60 * 60 * 1000;
     const data = {
       productId: registro.docId,
       product: registro.nombre,
       quantity: registro.prestar,
       isConsumable: registro.isConsumable,
       barCode: registro.codigoBarra,
-
       dateBorrowed,
-      dueDate: registro.fechaEntrega,
+      dueDate: new Date(registro.fechaEntrega).getTime() + milisecondsDay,
       descripcionProducto: registro.notas || registro.descripcion,
       returnedQuantity: 0,
     };
