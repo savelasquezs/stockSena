@@ -89,7 +89,12 @@ import { UseClientesStore } from "src/stores/clientesStore";
 import { data } from "autoprefixer";
 
 const emit = defineEmits(["deselectRow", "devuelto"]);
-const props = defineProps({ listaElementos: Array, tipoDev: String });
+const props = defineProps({
+  listaElementos: Array,
+  tipoDev: String,
+  clienteReceptor: Object,
+  clienteEmisor: Object,
+});
 const guardando = ref(false);
 const notasGeneralesDevolucion = ref("");
 const route = useRoute();
@@ -99,10 +104,6 @@ const productosStore = useProductosStore();
 
 const clienteReceptor = computed(() => {
   return clientesStore.currentCustomer;
-});
-
-const clienteEmisor = computed(() => {
-  return productosStore.currentCustomer;
 });
 
 function dataToBorrow() {
@@ -132,17 +133,17 @@ function dataToBorrow() {
         element.estadoEntrega || element.estadoFisico || "Excelente";
       nuevoElemento.custom = element.custom;
     }
-    nuevaLista.push(dataToBorrow);
+    nuevaLista.push(nuevoElemento);
   });
   const dataToSave = {
-    customerDocumentNumber: clientesStore.currentCustomer.numero_id,
+    customerDocumentNumber: props.clienteReceptor.numero_id,
     productosList: nuevaLista,
     customer: {
-      documentNumber: clientesStore.currentCustomer.numero_id,
-      name: clientesStore.currentCustomer.nombre,
-      documentType: clientesStore.currentCustomer.tipoDoc,
+      documentNumber: props.clienteReceptor.numero_id,
+      name: props.clienteReceptor.nombre,
+      documentType: props.clienteReceptor.tipoDoc,
     },
-    description: notasGeneralesDevolucion,
+    description: notasGeneralesDevolucion.value,
     dateBorrowed,
   };
   console.log(dataToSave);
@@ -151,8 +152,10 @@ function dataToBorrow() {
 
 async function prestarProducto() {
   const data = dataToBorrow();
+  console.log(data);
 
   data.productosList.forEach(async (product) => {
+    console.log(product);
     const docref = doc(db, "products", product.productId);
     await updateDoc(docref, {
       borrowedQuantity:
@@ -161,11 +164,7 @@ async function prestarProducto() {
   });
 
   await addDoc(collection(db, "borrowings"), data).then((prestamo) => {
-    const clienteDocRef = doc(
-      db,
-      "customers",
-      clientesStore.currentCustomer.numero_id
-    );
+    const clienteDocRef = doc(db, "customers", props.clienteReceptor.numero_id);
     data.productosList.forEach(async (producto, indexLista) => {
       const productoDocRef = doc(db, "products", producto.productId);
       const dataToProductos = {
@@ -173,9 +172,9 @@ async function prestarProducto() {
         diaPrestamo: producto.dateBorrowed,
         cantidadPrestada: producto.quantity,
         customer: {
-          documentNumber: clientesStore.currentCustomer.numero_id,
-          name: clientesStore.currentCustomer.nombre,
-          documentType: clientesStore.currentCustomer.tipoDoc,
+          documentNumber: props.clienteReceptor.numero_id,
+          name: props.clienteReceptor.nombre,
+          documentType: props.clienteReceptor.tipoDoc,
         },
       };
       if (!producto.isConsumable) {
@@ -186,8 +185,8 @@ async function prestarProducto() {
         dataToProductos
       );
       await addDoc(collection(clienteDocRef, "borrowings"), {
-        nombreEmisorTraspaso: clienteEmisor.value.nombre,
-        docEmisorTraspaso: clienteEmisor.value.numero_id,
+        nombreEmisorTraspaso: props.clienteEmisor.nombre,
+        docEmisorTraspaso: props.clienteEmisor.numero_id,
         productoBorrowId: productoref.id,
         indexLista,
         prestamoId: prestamo.id,

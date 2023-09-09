@@ -26,6 +26,8 @@
       v-if="tipoDev"
       :tipoDev="tipoDev"
       :listaElementos="copySelectedRows"
+      :clienteReceptor="clientesStore.currentCustomer"
+      :clienteEmisor="prestamosStore.currentCustomer"
       @deselectRow="deselectRow"
       @devuelto="devolver"
     />
