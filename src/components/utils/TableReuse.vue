@@ -151,6 +151,7 @@ const props = defineProps({
   buscarPorFecha: Boolean,
   customDetailRouting: Boolean,
   tablaUrl: String,
+  table: String,
 });
 const router = useRouter();
 
@@ -198,8 +199,11 @@ function filterByDate(valorFechas) {
     );
     // La propiedad rows se inicializa con el valor de props.dataArray, que se espera que sea una matriz de datos para la tabla.
     const filtro = props.dataArray.filter((item) => {
-      if (props.table == "borrowings")
+      if (props.table == "borrowings") {
+        console.log({ item: item.dateBorrowed, fromDate, toDate });
         return item.dateBorrowed > fromDate && item.dateBorrowed < toDate;
+      }
+      console.log({ item: item.fecha, fromDate, toDate });
       return item.fecha > fromDate && item.fecha < toDate;
     });
     rows.value = filtro;

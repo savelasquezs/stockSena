@@ -25,6 +25,7 @@
       @add="openedForm = true"
       tablaUrl="productos"
       buscarPorFecha
+      table="borrowings"
     />
   </div>
 </template>
