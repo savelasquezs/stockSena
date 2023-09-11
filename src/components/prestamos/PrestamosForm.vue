@@ -1,3 +1,9 @@
+<!-- Fecha documentación 6/09/2023 -->
+<!--  este componente Vue.js permite a los usuarios registrar préstamos de productos a clientes.
+  Los usuarios pueden seleccionar un cliente o buscar uno por número de documento, agregar 
+  productos a prestar, proporcionar una descripción y enviar el formulario para registrar el 
+  préstamo en Firebase Firestore. El componente utiliza varias reglas de validación y muestra 
+  mensajes de error cuando sea necesario. -->
 <template>
   <div>
     <div class="flex column flex-center">
@@ -7,7 +13,7 @@
         text-color="white"
         class="text-center"
       />
-      <h3 class="text-h6 text-center">Registro de préstamos</h3>
+      <h3 class="text-h6 text-center">Registro de prestamos</h3>
     </div>
     <div class="" v-if="!cliente">
       <q-select
@@ -24,6 +30,7 @@
         :rules="[numberRule]"
         class="q-my-sm"
       />
+      <!-- Botón para buscar el cliente en la base de datos -->
       <q-btn
         @click="buscarCliente"
         color="positive"
@@ -32,7 +39,9 @@
         style="width: 250px"
       />
     </div>
+    <!-- Formulario principal (visible si hay un cliente seleccionado) -->
     <q-form @submit="prestarProducto" v-if="cliente">
+      <!-- Información del cliente -->
       <q-item>
         <q-item-section top avatar>
           <q-avatar>
@@ -53,9 +62,11 @@
           <q-item-label caption>{{ cliente.area }}</q-item-label>
         </q-item-section>
       </q-item>
+      <!-- addproductList(): Agrega un nuevo producto a la lista de productos a prestar. -->
       <q-item class="flex flex-center" clickable @click="addproductList">
         <q-icon name="add_circle" size="30px" color="primary"></q-icon>
       </q-item>
+      <!-- Área desplazable que contiene la lista de productos a prestar -->
       <q-scroll-area
         style="height: 200px; max-width: 700px; width: 500px"
         visible
@@ -65,6 +76,7 @@
           v-for="(producto, index) in productosList"
           :key="producto"
         >
+          <!-- Campo de autocompletado para buscar productos -->
           <AutocompleteInput
             :stringOptions="productosStore.productosNombres"
             class="q-mx-sm"
@@ -91,7 +103,7 @@
             ]"
             :max="producto.maxQuantity"
           />
-
+          <!-- deleteProductList(index): Elimina un producto de la lista. -->
           <q-item
             clickable
             dense
@@ -103,6 +115,7 @@
           </q-item>
         </div>
       </q-scroll-area>
+      <!-- Campo de descripción -->
       <q-input
         v-if="productosList.length > 0"
         label="Descripción"
@@ -111,6 +124,7 @@
         class="q-ma-sm"
         outlined
       />
+      <!-- Botón para enviar el formulario de registro de préstamo -->
       <q-btn
         v-if="productosList.length > 0"
         color="positive"
@@ -149,14 +163,15 @@ const router = useRouter();
 const $q = useQuasar();
 const productosStore = useProductosStore();
 const productosList = ref([]);
-
+// Función para agregar un nuevo producto a la lista
 function addproductList() {
   productosList.value.unshift({ producto: "", cantidad: 1 });
 }
 function deleteProductList(index) {
   productosList.value.splice(index, 1);
 }
-
+// setProduct(nombreProducto, index): Establece un producto en la lista de productos a prestar
+// y recopila información adicional sobre el producto.
 function setProduct(nombreProducto, index) {
   if (
     productosList.value.some((registro) => registro.producto == nombreProducto)
@@ -187,7 +202,7 @@ const selectedDocumentType = ref(null);
 const documentNumber = ref(null);
 const cliente = ref(null);
 const description = ref("");
-
+// buscarCliente(): Realiza una búsqueda de cliente en la base de datos en función del número de documento proporcionado.
 async function buscarCliente() {
   $q.loading.show();
   const q = query(

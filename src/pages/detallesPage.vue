@@ -1,39 +1,24 @@
+<!-- Fecha Documentacion 5/09/2023 -->
+<!-- Este componente muestra información detallada sobre un producto y se asegura de que 
+  los datos se actualicen automáticamente cuando cambias el producto seleccionado a través
+  de la ruta. Esto se logra mediante la observación de la ruta y la interacción con las 
+  tiendas Vuex que contienen los datos relacionados con productos y préstamos. -->
 <template>
+  {{ product }}
+  {{ id }}
+  <div style="background-color: #f5f5f5"></div>
   <!-- Informacion de productos -->
-  <div class="flex justify-center">
-    <q-item style="width: 30%" class="q-pa-lg">
-      <q-item-section avatar>
-        <q-avatar color="accent" text-color="white"
-          >{{ product.nombre[0] }}
-        </q-avatar>
-      </q-item-section>
-
-      <q-item-section>
-        <q-item-label class="flex flex-center"
-          ><span class="text-h5 text-weight-bold">{{
-            product.nombre
-          }}</span></q-item-label
-        >
-        <q-item-label caption class="flex flex-center"
-          >codigo de barra : {{ product.codigoBarra }}</q-item-label
-        >
-      </q-item-section>
-    </q-item>
-  </div>
-  <q-separator />
-
   <div
     class="q-pa-md row items-start q-gutter-md"
     style="display: flex; justify-content: center"
   >
-    <div class="shadow-3 q-pa-lg flex">
-      <div class="izquierda q-mr-lg">
-        <div class="flex justify-between">
-          <div v-if="product.isConsumable" class="text-subtitle3">
-            <q-icon name="poll" color="primary" size="20px" />
-            Unidad de medida:
-          </div>
-          <div>{{ product.unidadMedida }}</div>
+    <q-card class="my-card">
+      <q-card-section
+        class="bg-accent text-white"
+        style="display: flex; flex-direction: column"
+      >
+        <div class="text-h5">
+          <strong>{{ product.nombre }}</strong>
         </div>
         <div class="flex justify-between">
           <div class="text-subtitle3">
@@ -70,47 +55,46 @@
         </div>
       </div>
     </div>
-
-    <CustomPropertiesTable :producto="product" v-if="!product.isConsumable" />
+    <div class="shadow-3 q-pa-lg customProperties" v-if="!product.isConsumable">
+      <div
+        class="flex justify-between"
+        v-for="(property, index) in customProperties"
+        :key="index"
+      >
+        <div class="text-subtitle3">{{ property[0] }}:</div>
+        <div>{{ property[1] }}</div>
+      </div>
+    </div>
   </div>
 
   <div
     class="q-pa-md row items-center q-gutter-md"
     style="display: flex; justify-content: center"
   >
-    <div>
-      <div class="shadow-3 q-pa-lg text-h6 text-accent text-weight-bold">
-        Veces Prestadas
-
-        <div class="text-subtitle2 text-black flex justify-center">
+    <q-card class="my-card">
+      <q-card-section class="bg-white text-black">
+        <div class="text-h5">Veces Prestadas</div>
+        <div class="text-subtitle text-green">
           {{ prestamosStore.allBorrowingsProducts.length }}
         </div>
-      </div>
-    </div>
+      </q-card-section>
+    </q-card>
 
-    <div>
-      <div class="shadow-3 q-pa-lg">
-        <div class="text-h6 text-primary text-weight-bold">
-          Cantidad En Prestamo
-        </div>
-        <div class="text-subtitle3 text-black flex justify-center">
-          {{ vecesPrestada }}
-        </div>
-      </div>
-    </div>
+    <q-card class="my-card">
+      <q-card-section class="bg-brown-5 text-black">
+        <div class="text-h5">Cantidad En Prestamo</div>
+        <div class="text-subtitle2 text-black">{{ vecesPrestada }}</div>
+      </q-card-section>
+    </q-card>
 
-    <div class="shadow-3 q-pa-lg">
-      <div class="bg-white text-orange text-h6 text-weight-bold">
-        Cantidad En Almacén
-        <div>
-          <div class="text-subtitle text-black flex justify-center">
-            {{ cantidadAlmacen }}
-          </div>
-        </div>
-      </div>
-    </div>
+    <q-card class="my-card">
+      <q-card-section class="bg-light-green text-black">
+        <div class="text-h5">Cantidad en Almacén</div>
+        <div class="text-subtitle text-black">6</div>
+      </q-card-section>
+    </q-card>
   </div>
-
+  <!-- Implementación de componente el cual toma las filas y columnas. -->
   <SimpleTable
     :rows="prestamosStore.allBorrowingsProducts"
     :columns="productosStore.columnasDetalleProducto"
@@ -118,26 +102,18 @@
     customDetail
   />
 </template>
+<!-- Importa las tiendas Vuex UsePrestamosStore y useProductosStore que proporcionan
+  acceso a los datos relacionados con préstamos y productos. -->
 <script setup>
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { useProductosStore } from "src/stores/productosStore";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import SimpleTable from "components/utils/SimpleTable.vue";
-import CustomPropertiesTable from "components/productos/CustomPropertiesTable.vue";
 const props = defineProps(["id"]);
 const route = useRoute();
-const router = useRouter();
 const productoId = ref(route.params.id);
 const product = ref({});
-
-function verDetalles(id) {
-  const prestamo = prestamosStore.allBorrowingsProducts.find(
-    (prestamo) => prestamo.docId == id
-  );
-  const clienteId = prestamo.customer.documentNumber;
-  router.push(`/clientes/${clienteId}`);
-}
 
 const prestamosStore = UsePrestamosStore();
 const productosStore = useProductosStore();
@@ -146,16 +122,22 @@ async function ejecutarInicio() {
   product.value = productosStore.productosDatabase.find(
     (producto) => producto.docId == productoId.value
   );
+  if (!product.value.isConsumable) {
+    customProperties.value = Object.entries(product.value.custom);
+  }
 }
 ejecutarInicio();
-
+// Se utiliza una propiedad computada vecesPrestada para calcular la cantidad total de
+// veces que se ha prestado el producto. Esto se hace sumando la propiedad cantidadPrestada
+// de cada préstamo en
 const vecesPrestada = computed(() => {
   return prestamosStore.allBorrowingsProducts.reduce(
     (a, b) => a + parseInt(b.cantidadPrestada),
     0
   );
 });
-
+// Se utiliza watch para observar cambios en la ruta y actualizar los datos del producto y
+// los préstamos cuando cambia el id del producto en la ruta.
 watch(
   () => route.params.id,
   async (toId, fromId) => {
@@ -164,3 +146,12 @@ watch(
   }
 );
 </script>
+
+<style scoped>
+.customProperties {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 20px;
+}
+</style>

@@ -1,37 +1,88 @@
+<!--Fecha documentación-->
+<!-- Este componente maneja la devolución de elementos prestados y muestra una lista de 
+  préstamos con la capacidad de seleccionar elementos para la devolución. La lógica se encarga 
+  de actualizar los registros en la base de datos y gestionar la interfaz de usuario de manera
+  adecuada.-->
 <template>
-  <Qdialogo v-model="modalDevolucionIsOpen" iconModal="autorenew">
-    <div class="flex flex-center column">
-      <div class="text-h6">Que quieres hacer hoy?</div>
-      <q-separator />
-      <div>
-        <q-radio
-          v-model="tipoDev"
-          checked-icon="task_alt"
-          unchecked-icon="panorama_fish_eye"
-          val="devolucion"
-          label="Una devolución"
-        />
-        <q-radio
-          v-model="tipoDev"
-          checked-icon="task_alt"
-          unchecked-icon="panorama_fish_eye"
-          val="cambioUser"
-          label="Traspasar productos a otro usuario"
-        />
-      </div>
+  <Qdialogo v-model="modalDevolucionIsOpen">
+    <div class="flex flex-center">
+      <q-avatar
+        color="accent"
+        text-color="white"
+        icon="autorenew"
+        size="70px"
+        class="q-mb-lg"
+      />
     </div>
-    <TraspasoForm v-if="tipoDev == 'cambioUser'" />
-
-    <DevolverForm
-      v-if="tipoDev"
-      :tipoDev="tipoDev"
-      :listaElementos="copySelectedRows"
-      :clienteReceptor="clientesStore.currentCustomer"
-      :clienteEmisor="prestamosStore.currentCustomer"
-      @deselectRow="deselectRow"
-      @devuelto="devolver"
+    <div class="text-h5 q-mb-xl text-center">
+      ¿Seguro que quiere devolver los siguientes items?
+    </div>
+    <q-scroll-area style="height: 300px">
+      <q-item
+        v-for="elemento in copySelectedRows"
+        :key="elemento.index"
+        class="shadow-3 q-my-lg"
+      >
+        <q-item-section side>
+          <div class="flex flex-center">
+            <q-avatar color="accent" size="40px" text-color="white">{{
+              elemento.product[0]
+            }}</q-avatar>
+          </div>
+        </q-item-section>
+        <q-item-section caption>
+          <div>
+            {{ elemento.product }}
+            {{ elemento.productId }}
+          </div>
+          <q-separator />
+        </q-item-section>
+        <q-item-section>
+          <div class="flex flex-center">
+            <q-btn
+              icon="do_not_disturb_on"
+              round
+              color="red-5"
+              @click="elemento.devolver--"
+              :disable="elemento.devolver < 2"
+            />
+            <span class="text-subtitle2 q-mx-sm"
+              ><span :class="elemento.quantity == 1 ? 'text-grey' : ''">{{
+                elemento.devolver
+              }}</span></span
+            >
+            <q-btn
+              icon="add_circle"
+              round
+              color="primary"
+              @click="elemento.devolver++"
+              :disable="
+                elemento.devolver ==
+                elemento.quantity - elemento.returnedQuantity
+              "
+            />
+          </div>
+        </q-item-section>
+        <q-item-section side>
+          <q-btn
+            icon="delete"
+            style="width: 50px"
+            @click="deselectRow(elemento)"
+          />
+        </q-item-section>
+      </q-item>
+    </q-scroll-area>
+    <q-btn
+      class="q-mt-xl"
+      icon="save"
+      color="primary"
+      style="width: 100%"
+      label="Devolver Elementos"
+      @click="devolver"
+      :loading="guardando"
     />
   </Qdialogo>
+  <!-- Tabla de préstamos -->
 
   <SimpleTable
     @viendo="verDetalles"
@@ -51,6 +102,7 @@
 </template>
 
 <script setup>
+// Importación de componentes y librerías
 import SimpleTable from "components/utils/SimpleTable.vue";
 import { UseClientesStore } from "src/stores/clientesStore";
 import Qdialogo from "components/utils/QDialogo.vue";
@@ -63,6 +115,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import DevolverForm from "components/clientes/DevolverForm.vue";
 
+// Declaración de variables reactivas y referencias
 const selectedPrestamos = ref([]);
 const copySelectedRows = ref([]);
 
@@ -87,11 +140,6 @@ const rows = databaseStore.escucharCambiosInternalCollection(
   "dateBorrowed",
   "allPersonDocs"
 );
-
-function devolver() {
-  emit("devuelto");
-  modalDevolucionIsOpen.value = false;
-}
 const verDetalles = (id) => {
   const producto = prestamosStore.allPersonDocs.find(
     (prestamo) => prestamo.docId == id
@@ -100,6 +148,84 @@ const verDetalles = (id) => {
   router.push(`/productos/${productoId}`);
 };
 
+async function devolver() {
+  guardando.value = true;
+  copySelectedRows.value.forEach(async (element) => {
+    const docPrestamoRef = doc(db, "borrowings", element.prestamoId);
+    let prestamo = await getDoc(docPrestamoRef);
+    const estadoDevuelto =
+      element.estadoDevuelto || element.estadoEntrega || "excelente";
+    const notasDevolucion = element.notasDevolucion || "";
+    const fechaDevolucion = new Date().getTime();
+
+    //update prestamos
+    const prestamoProductos = prestamo.data().productosList;
+    prestamoProductos[element.indexLista].returnedQuantity =
+      parseInt(prestamoProductos[element.indexLista].returnedQuantity) +
+      parseInt(element.devolver);
+    prestamoProductos[element.indexLista].returnedState = estadoDevuelto;
+
+    prestamoProductos[element.indexLista].notasDevolucion = notasDevolucion;
+    prestamoProductos[element.indexLista].fechaDevolucion = fechaDevolucion;
+
+    await updateDoc(docPrestamoRef, {
+      productosList: prestamoProductos,
+      notasGeneralesDEvolucion: notasGeneralesDevolucion.value,
+    });
+
+    //update productos cantidad disponible
+
+    const docProductoRef = doc(db, "products", element.productId);
+    let productElement = productosStore.productosDatabase.find(
+      (producto) => producto.docId == element.productId
+    );
+    const borrowedQuantity =
+      parseInt(productElement.borrowedQuantity) - element.devolver;
+    const data = {
+      borrowedQuantity,
+    };
+    await updateDoc(docProductoRef, data);
+
+    //update customers borrowings
+    const docCustomerBorrowingRef = doc(
+      db,
+      "customers",
+      userId.value.toString(),
+      "borrowings",
+      element.docId
+    );
+
+    await updateDoc(docCustomerBorrowingRef, {
+      returnedQuantity: (element.returnedQuantity += parseInt(
+        element.devolver
+      )),
+      fechaDevolucion,
+      notasDevolucion,
+      estadoDevuelto,
+    });
+
+    //update product borrowings
+    const docProductBorrowingRef = doc(
+      db,
+      "products",
+      element.productId,
+      "borrowings",
+      element.productoBorrowId
+    );
+
+    await updateDoc(docProductBorrowingRef, {
+      returnedQuantity: (element.returnedQuantity += element.devolver),
+      fechaDevolucion,
+      notasDevolucion,
+      estadoDevuelto,
+    });
+
+    modalDevolucionIsOpen.value = false;
+    guardando.value = false;
+    emit("devuelto");
+  });
+}
+
 function deselectRow(row) {
   // Find the index of the row in the selected array
   copySelectedRows.value = copySelectedRows.value.filter(
@@ -107,7 +233,7 @@ function deselectRow(row) {
   );
   if (copySelectedRows.value.length == 0) modalDevolucionIsOpen.value = false;
 }
-
+// Función para abrir el modal de devolución y calcular la cantidad a devolver
 function openDevolverModal() {
   copySelectedRows.value = selectedPrestamos.value.map((prestamo) => {
     return {
@@ -120,12 +246,12 @@ function openDevolverModal() {
   modalDevolucionIsOpen.value = true;
 }
 
-(async () => {
+onMounted(async () => {
   loading.value = true;
   await prestamosStore.getPrestamosByPerson(userId.value).then(() => {
     loading.value = false;
   });
-})();
+});
 
 watch(
   () => route.params.id,
