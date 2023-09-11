@@ -4,7 +4,6 @@
   archivo y muestra estadísticas relacionadas con los productos. También utiliza
   componentes reutilizables y pestañas para organizar la información.  -->
 <template>
-  <h1>EINER</h1>
   <div style="background-color: #f5f5f5">
     <q-input type="file" @change="handleFileSelect" v-model="fileInput" />
     <!-- Contenido aquí -->
