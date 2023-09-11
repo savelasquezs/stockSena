@@ -21,7 +21,6 @@
       :columns="prestamosStore.columns"
       title="Tabla de Prestamos"
       :internalColumns="prestamosStore.internalColumns"
-      addText="Agregar Prestamo"
       @add="openedForm = true"
       tablaUrl="productos"
       buscarPorFecha

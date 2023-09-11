@@ -1,5 +1,4 @@
 <template>
-  {{ cliente }}
   <InputClienteSearch v-if="!cliente.nombre" />
 
   <div v-else>
@@ -78,6 +77,11 @@ function agregarProducto(producto) {
     productosList.value.some((elemento) => elemento.docId == producto.docId)
   ) {
     utils.notifyError("Este producto ya esta en tu lista");
+    return;
+  }
+  console.log(producto);
+  if (producto.stockTotal - producto.borrowedQuantity <= 0) {
+    utils.notifyError("Lo sentimos, no tenemos mas disponibles");
     return;
   }
   productosList.value.unshift({

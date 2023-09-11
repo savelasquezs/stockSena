@@ -148,7 +148,7 @@ const props = defineProps({
 
 // Guarda los datos ingresados en el formulario ene tipo
 // array
-const formulario = ref({});
+const formulario = ref({ unidadMedida: "Unidad" });
 
 // Variable que contiene un array de unidades de medición
 const options = ref(["Unidad", "Libra", "Kilo", "Metro"]);
