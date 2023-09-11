@@ -1,6 +1,10 @@
+<!-- Fecha documentación 30/08/23 -->
+<!-- Implementacion de las funcionalidades principales que se presentan en la pagina productos -->
+<!-- Este código es una parte de un componente de una aplicación web que utiliza el framework Vue.js y Firebase
+     para realizar operaciones relacionadas con la carga, conversión y descarga de archivos Excel. -->
 <template>
   <!-- Se añade un boton que permite entrar a el explorador de archivos y seleccionar
-    un archivo con formato xls-->
+     un archivo con formato xls-->
   <q-file
     v-model="fileExcel"
     label="Cargar Archivos"
@@ -11,7 +15,7 @@
     style="max-width: 300px"
   />
   <!-- Se añade un boton que permite convertir los archivos adjuntados a formato tipo
-    json -->
+  json -->
   <q-btn
     @click="passToJasson"
     icon="file_upload"
@@ -58,7 +62,8 @@ const passToJasson = () => {
   //Se define el evento onload para el lector de archivos. Al cargar el archivo pasa de
   //formato Excel a JSON.
   reader.onload = (e) => {
-    //onload, se accede al resultado del lector (e.target.result), que es el contenido binario del archivo Excel cargado.
+    //onload, se accede al resultado del lector (e.target.result),
+    // que es el contenido binario del archivo Excel cargado.
     const data = e.target.result;
     const workbook = XLSX.read(data, { type: "binary" });
     const worksheet = workbook.SheetNames[0];

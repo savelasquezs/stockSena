@@ -1,3 +1,7 @@
+<!--  Fecha documentación 30/08/23-->
+<!-- este componente crea una interfaz de pestañas y paneles utilizando la librería Quasar. 
+  Las pestañas se generan a partir de una matriz de pestañas proporcionada como propiedad. 
+  Al hacer clic en una pestaña, se muestra el contenido asociado en los paneles correspondientes. -->
 <template>
   <div class="q-pa-md tabs">
     <div class="q-gutter-y-md">
@@ -37,6 +41,7 @@
   </div>
 </template>
 
+<!-- Esta sección del código es donde se manejan las lógicas y las variables reactivas del componente. -->
 <script setup>
 // Se importa ref desde "vue" para manejar una variable reactiva llamada tab.
 import { useVModel } from "@vueuse/core";
