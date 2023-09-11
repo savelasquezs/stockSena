@@ -54,9 +54,7 @@
           </span>
         </p>
         <p style="text-align: center; margin-top: 20px">
-          <span> ¿No tienes cuenta? </span>
           <span style="color: #1976d2; cursor: pointer" @click="registerUser">
-            Registrar Cuenta
           </span>
         </p>
       </q-form>
@@ -121,8 +119,6 @@ function onSubmit() {
         position: "top",
         timeout: 3000, // Duración de la notificación en milisegundos
       });
-
-      console.error("Error al iniciar sesión", error.code);
     });
 }
 

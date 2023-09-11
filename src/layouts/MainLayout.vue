@@ -50,12 +50,12 @@
 
       <q-img
         class="absolute-top"
-        src="https://cdn.quasar.dev/img/material.png"
+        src="public\img\fondo.png"
         style="height: 150px"
       >
         <div class="absolute-bottom bg-transparent">
           <q-avatar size="50px" class="q-mb-sm" style="margin-bottom: -1px">
-            <q-icon name="account_circle" />
+            <q-img src="public\img\icono.png" />
           </q-avatar>
           <div v-if="userCredential">
             <div class="text-weight-bold" style="margin-bottom: -15px">
