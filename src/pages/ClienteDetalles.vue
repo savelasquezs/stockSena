@@ -4,6 +4,7 @@ Descripción del archivo "ClientesDetalles.vue": -->
 <template>
   <!-- Muestra la información personal del cliente -->
   <PersonalInfo />
+  {{ selectedTab }}
 
   <!-- Componente Tabs para alternar entre "Prestamos Activos" e "Historial de prestamos"
   Contenido de la pestaña "Prestamos Activos" -->
