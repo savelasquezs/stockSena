@@ -97,7 +97,6 @@ Características clave:
         outlined
         v-model.number="formulario.descripcion"
         label="Descripción"
-        required
         class="q-my-lg"
       >
         <template v-slot:append>

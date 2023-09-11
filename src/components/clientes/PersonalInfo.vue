@@ -1,59 +1,83 @@
+<!--Fecha documentacion 6/09/23-->
+<!-- Este componente representa una tarjeta de información del cliente con tres columnas 
+que muestran datos ficticios del cliente, como Nombre, Apellido, Documento y Estado. 
+La tarjeta se estiliza usando las clases CSS proporcionadas por Quasar, y se aplican estilos 
+adicionales para personalizar la apariencia. -->
 <template>
-  <div class="flex flex-center q-mt-lg">
-    <q-item
-      class="shadow-3 q-px-xl q-py-md skeleton"
-      v-if="!cliente.nombre"
-      style="width: 40%; min-width: 500px"
-    >
-      <q-item-section avatar>
-        <q-skeleton type="QAvatar" />
-      </q-item-section>
+  <div class="client-info-card">
+    <q-card class="q-pa-md">
+      <q-card-section class="text-h6 q-flex q-items-center">
+        Información del Cliente
+      </q-card-section>
 
-      <q-item-section>
-        <q-item-label>
-          <q-skeleton type="text" />
-        </q-item-label>
-        <q-item-label caption>
-          <q-skeleton type="text" width="65%" />
-        </q-item-label>
-      </q-item-section>
-    </q-item>
-    <q-item
-      v-else
-      style="width: 40%; min-width: 500px"
-      class="shadow-3 q-px-xl q-py-md"
-    >
-      <q-item-section avatar>
-        <q-avatar color="accent">
-          {{ firstLetter }}
-        </q-avatar>
-      </q-item-section>
+      <q-card-section>
+        <div class="fit row wrap justify-start items-start content-start">
+          <div class="col-auto self-end q-gutter-xs q-gutter-sm">
+            <div class="q-mb-md">
+              <strong>Nombre:</strong><span class="info-client">Joan</span>
+              <!-- {{ cliente.nombre }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Apellido:</strong>
+              <span class="info-client">Zapata</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Docuemnto:</strong
+              ><span class="info-client">1027800932</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Estado:</strong><span class="info-client">Morosos</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+          </div>
 
-      <q-item-section>
-        <q-item-label class="text-h6"
-          >{{ cliente.nombre }} {{ cliente.apellido }}</q-item-label
-        >
-        <q-item-label caption>{{ cliente.numero_id }}</q-item-label>
-      </q-item-section>
+          <div class="col-auto offset-2 q-gutter-sm">
+            <div class="q-mb-md">
+              <strong>Nombre:</strong><span class="info-client">Joan</span>
+              <!-- {{ cliente.nombre }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Apellido:</strong>
+              <span class="info-client">Zapata</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Docuemnto:</strong
+              ><span class="info-client">1027800932</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Estado:</strong><span class="info-client">Morosos</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+          </div>
 
-      <q-item-section class="flex flex-center">
-        <q-icon color="accent" size="4rem">
-          <EnMora v-if="cliente.enMora" />
-          <AlDia v-else />
-        </q-icon>
-        <q-badge
-          :color="!cliente.enMora ? 'success' : 'red-5'"
-          :label="!cliente.enMora ? 'Al dia' : 'En Mora'"
-          class="q-my-sm"
-          text-color="black"
-        />
-      </q-item-section>
-
-      <q-item-section side top class="flex">
-        <q-badge color="accent" :label="cliente.rol" class="q-my-sm" />
-        <q-badge color="secondary" :label="cliente.area" />
-      </q-item-section>
-    </q-item>
+          <div class="col-auto offset-3 q-gutter-sm">
+            <div class="q-mb-md"></div>
+            <div class="q-mb-md">
+              <strong>Nombre:</strong><span class="info-client">Joan</span>
+              <!-- {{ cliente.nombre }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Apellido:</strong>
+              <span class="info-client">Zapata</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Docuemnto:</strong
+              ><span class="info-client">1027800932</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+            <div class="q-mb-md">
+              <strong>Estado:</strong><span class="info-client">Morosos</span>
+              <!-- {{ cliente.apellido }} -->
+            </div>
+          </div>
+        </div>
+      </q-card-section>
+    </q-card>
   </div>
 </template>
 
@@ -65,14 +89,9 @@ import { useRoute } from "vue-router";
 import AlDia from "../icons/AlDia.vue";
 import EnMora from "../icons/EnMora.vue";
 
-const props = defineProps({ busquedaCustom: Boolean });
-
 const prestamosStore = UsePrestamosStore();
 const clientesStore = UseClientesStore();
-let cliente = computed(() => {
-  if (props.busquedaCustom) {
-    return clientesStore.currentCustomer;
-  }
+const cliente = computed(() => {
   return prestamosStore.currentCustomer;
 });
 

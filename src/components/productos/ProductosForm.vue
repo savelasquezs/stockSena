@@ -1,4 +1,6 @@
+<!-- Fecha documentación 6/09/2023 -->
 <template>
+  <!-- Estructura de link de codigo fuentes -->
   <div class="">
     <q-form class="">
       <div class="flex column flex-center">

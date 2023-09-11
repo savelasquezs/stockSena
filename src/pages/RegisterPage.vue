@@ -1,3 +1,9 @@
+<!-- Fecha documentación 4/09/23 -->
+<!-- Este componente crea una página de registro de usuarios que permite a los usuarios
+  registrarse en una aplicación. Utiliza Firebase para manejar la autenticación y
+  Firestore para almacenar información adicional del usuario. La página muestra mensajes
+  de éxito y error después de que el usuario realiza una acción y proporciona una
+  experiencia de registro de usuario completa. -->
 <template>
   <div class="paginaCompleta">
     <div class="flex flex-center content-center">
@@ -21,18 +27,18 @@
           label="Ingresa tu nombre *"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-          />
+        />
 
-          <q-input
+        <q-input
           filled
           type="email"
           v-model="email"
           label="Ingresa tu email *"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-          />
+        />
 
-          <q-input
+        <q-input
           filled
           type="password"
           v-model="password1"
@@ -43,6 +49,8 @@
               (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
             ]"
         />
+        <!-- Se utiliza el componente q-input de Quasar para crear campos de entrada de
+        texto para verificacion de contraseña nuevamente. Adicionalmente cuenta con validaciones. -->
         <q-input
           filled
           type="password"
@@ -70,6 +78,11 @@
 </div>
 </template>
 
+<!-- Se importan las funciones necesarias de Firebase Authentication (sendEmailVerification,
+   signOut, updateProfile, createUserWithEmailAndPassword) para realizar operaciones de
+   registro y autenticación de usuarios.-->
+<!-- Se importan auth y db de src/firebaseInit para interactuar con Firebase Authentication
+   y Firestore.-->
 <script setup>
 import { ref } from "vue";
 import { sendEmailVerification, signOut, updateProfile } from "firebase/auth";
@@ -84,7 +97,7 @@ const email = ref("");
 const password1 = ref("");
 const password2 = ref("");
 const username = ref("");
-const usuarioBD = JSON.parse(localStorage.getItem("user"));
+//const usuarioBD=JSON.parse(localStorage.getItem("user"));
 const successMessage = ref("");
 const errorMessage = ref("");
 
@@ -141,6 +154,8 @@ function onSubmit() {
       // ..
       showErrorMessage("No se pudo registrar el usuario");
     });
+
+  showErrorMessage("No se pudo registrar el usuario");
 }
 
 // function isEmailValid() {

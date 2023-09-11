@@ -1,3 +1,6 @@
+<!-- Fecha documentación 5/09/2023 -->
+<!-- En dado caso de entrar a una pagina con un enlace no disponible se arrojara
+una alerta de error 404 -->
 <template>
   <div
     class="fullscreen bg-white text-white text-center q-pa-md flex flex-center"
