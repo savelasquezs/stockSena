@@ -1,4 +1,5 @@
 <template>
+  {{ cliente }}
   <InputClienteSearch v-if="!cliente.nombre" />
 
   <div v-else>
@@ -124,8 +125,9 @@ function datosPreparados() {
     productosList: listaProductos,
     customer: {
       documentNumber: cliente.value.numero_id,
-      name: cliente.value.nombre,
+      name: `${cliente.value.nombre} ${cliente.value.apellido}`,
       documentType: cliente.value.tipoDoc,
+      rol: cliente.value.rol,
     },
     description: generalDescription.value,
     dateBorrowed,
@@ -164,8 +166,9 @@ function prestarProducto() {
         cantidadPrestada: producto.quantity,
         customer: {
           documentNumber: cliente.value.numero_id,
-          name: cliente.value.nombre,
+          name: `${cliente.value.nombre} ${cliente.value.apellido}`,
           documentType: cliente.value.tipoDoc,
+          rol: cliente.value.rol,
         },
       };
       if (!producto.isConsumable) {

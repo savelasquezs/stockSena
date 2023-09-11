@@ -140,8 +140,9 @@ function dataToBorrow() {
     productosList: nuevaLista,
     customer: {
       documentNumber: props.clienteReceptor.numero_id,
-      name: props.clienteReceptor.nombre,
+      name: `${props.clienteReceptor.nombre} ${props.clienteReceptor.apellido}`,
       documentType: props.clienteReceptor.tipoDoc,
+      rol: props.clienteReceptor.rol,
     },
     description: notasGeneralesDevolucion.value,
     dateBorrowed,
@@ -173,8 +174,9 @@ async function prestarProducto() {
         cantidadPrestada: producto.quantity,
         customer: {
           documentNumber: props.clienteReceptor.numero_id,
-          name: props.clienteReceptor.nombre,
+          name: `${props.clienteReceptor.nombre} ${props.clienteReceptor.apellido}`,
           documentType: props.clienteReceptor.tipoDoc,
+          rol: props.clienteReceptor.rol,
         },
       };
       if (!producto.isConsumable) {
