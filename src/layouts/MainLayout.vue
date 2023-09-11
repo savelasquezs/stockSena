@@ -1,6 +1,6 @@
 <template>
   <QDialogo v-model="modalPrestamoOpened" iconModal="real_estate_agent">
-    <PrestamosFormVue />
+    <PrestamosFormVue @prestamoGuardado="modalPrestamoOpened = false" />
   </QDialogo>
 
   <QDialogo v-model="Codigo">
@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { inject, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 //importación cierre de sesión
 import { signOut } from "firebase/auth";
@@ -87,7 +87,7 @@ import BarcodeGenerator from "components/dashboard/BarcodeGenerator.vue";
 
 import QDialogo from "components/utils/QDialogo.vue";
 
-const userCredential = ref(null);
+const userCredential = ref({});
 const user = inject("user") || "raro";
 const Codigo = ref(false);
 const modalPrestamoOpened = ref(false);
@@ -147,5 +147,10 @@ const leftDrawerOpen = ref(false);
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
-userCredential.value = JSON.parse(localStorage.getItem("user"));
+
+(async () => {
+  console.log(localStorage.getItem("user"));
+  userCredential.value = await JSON.parse(localStorage.getItem("user"));
+  console.log(localStorage.getItem("user"));
+})();
 </script>

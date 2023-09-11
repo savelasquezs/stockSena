@@ -14,7 +14,9 @@
           v-model="email"
           label="Ingresa tu correo*"
           lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+          :rules="[
+            (val) => (val && val.length > 0) || 'El correo no puede ir vacio',
+          ]"
         />
 
         <q-input
@@ -25,7 +27,7 @@
           lazy-rules
           :rules="[
             (val) =>
-              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
+              (val !== null && val !== '') || 'Debes ingresar una contraseña',
           ]"
         />
 
@@ -35,6 +37,7 @@
           color="primary"
           class="q-gutter-ml"
           style="width: 370px; height: 45px"
+          :loading="loadingLogin"
         />
 
         <!-- Mostrar mensaje de error -->
@@ -64,6 +67,8 @@
 
 <script setup>
 import { ref } from "vue";
+import { onUnmounted, ref } from "vue";
+
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "src/firebaseInit";
 import { sendPasswordResetEmail } from "firebase/auth";
@@ -74,10 +79,15 @@ const router = useRouter();
 const email = ref("");
 const password = ref("");
 const errorMessage = ref(""); // Variable para mostrar mensajes de error
+const loadingLogin = ref(false);
 
 function onSubmit() {
-  // Limpiar mensajes de error anteriores
   errorMessage.value = "";
+  loadingLogin.value = true;
+  // if (!isEmailValid()) {
+  //   alert("Por favor, ingresa un correo válido de @misena.edu.co");
+  //   return;
+  // }
 
   // Realizar el inicio de sesión con Firebase
 
@@ -129,6 +139,10 @@ function recoverPassword() {
 function registerUser() {
   router.push("/register");
 }
+
+onUnmounted(() => {
+  loadingLogin.value = false;
+});
 </script>
 
 <style>

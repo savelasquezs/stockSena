@@ -34,11 +34,11 @@ let timer;
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const uid = user.uid;
-    localStorage.setItem("user", user.email);
     await getDoc(doc(collection(db, "users"), uid)).then((doc) => {
       if (doc.exists()) {
         localStorage.setItem("user", JSON.stringify(doc.data()));
         usuario.value = doc.data();
+        router.push("/");
       }
     });
   } else {

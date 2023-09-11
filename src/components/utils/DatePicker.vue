@@ -114,63 +114,26 @@ const myLocale = ref({
   monthsShort: "Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic".split("_"),
   firstDayOfWeek: 1, // 0-6, 0 - Sunday, 1 Monday, ...
   format24h: true,
-  pluralDay: "dias",
+  pluralDay: "dia/s",
 });
 
 // variable la cual contiene el dia actual, esto para que se muestre,
 // la fecha actual, esto de forma predeterminada, sin embargo puede cambiar
 // para contener otras fechas.
-const dueDate = ref(todayDate());
+const dueDate = ref(new Date().toLocaleDateString());
 
 // función la cual permite resetear los cambios hechos por
 // los usuarios, dejando el calendario con la fecha actual.
 function resetModel() {
-  dueDate.value = todayDate();
+  dueDate.value = new Date().toLocaleDateString();
   emit("cleanedDates");
 }
 
-// Función para completar valores numéricos con un cero a la izquierda
-// (por ejemplo, 05)
-function completeValue(value) {
-  if (value < 10) {
-    let valor = "0" + value.toString();
-    return valor;
-  }
-  return value;
-}
-
 // Función para obtener la fecha actual en el formato esperado (DD-MM-YYYY)
-function todayDate() {
-  const fechaAlRevez = new Date().toLocaleDateString().split("/");
-  const newFecha =
-    fechaAlRevez[2] +
-    "/" +
-    completeValue(fechaAlRevez[0]) +
-    "/" +
-    completeValue(fechaAlRevez[1]);
-  return newFecha;
-}
 
 // Función que define las deshabilita las fechas, anteriores al dia actual
 function dateOptionsFn(date) {
-  const fechaAlRevez = new Date().toLocaleDateString().split("/");
-  function completeValue(value) {
-    if (value < 10) {
-      let valor = "0" + value.toString();
-
-      return valor;
-    }
-
-    return value;
-  }
-  completeValue(10);
-  const newFecha =
-    fechaAlRevez[2] +
-    "/" +
-    completeValue(fechaAlRevez[0]) +
-    "/" +
-    completeValue(fechaAlRevez[1]);
-  return date >= newFecha;
+  return date >= new Date().toISOString().slice(0, 10).replaceAll("-", "/");
 }
 
 // Función que siempre devuelve "true" para opciones de fecha vacías y

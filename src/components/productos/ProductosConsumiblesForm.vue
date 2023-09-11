@@ -128,7 +128,7 @@ Características clave:
     </div>
     <div class="flex justify-end"></div>
     <!-- Se usa el componente de subir datos -->
-    <uploadData nomTabla="products" tipo="cons" />
+    <uploadData nomTabla="products" tipo="consumable" />
   </q-form>
 </template>
 
