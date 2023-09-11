@@ -3,7 +3,7 @@
     <PrestamosFormVue @prestamoGuardado="modalPrestamoOpened = false" />
   </QDialogo>
 
-  <QDialogo v-model="Codigo">
+  <QDialogo v-model="Codigo" iconModal="view_week">
     <BarcodeGenerator />
   </QDialogo>
 
