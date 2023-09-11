@@ -120,8 +120,6 @@ Descripción del archivo "DashboardPage.vue": -->
       </div>
     </div>
   </div>
-
-  <BarcodeGenerator />
 </template>
 
 <script setup>
