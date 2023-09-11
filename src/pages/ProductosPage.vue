@@ -25,6 +25,7 @@
           colorButton="secondary"
           iconButton="add_circle"
           labelButton="Agregar producto consumible"
+          iconModal="save"
         >
           <ComsumiblesForm @productoGuardado="openConsumableForm = false" />
         </QDialogo>

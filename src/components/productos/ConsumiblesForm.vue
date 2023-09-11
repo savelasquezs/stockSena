@@ -11,18 +11,6 @@ Descripción del archivo "consumiblesForm.vue":
 <template>
   <!-- Contenido del formulario de productos devolutivos -->
   <div>
-    <!-- Elemento visual del formulario -->
-    <div class="flex justify-center">
-      <q-avatar
-        icon="save"
-        color="primary"
-        text-color="white"
-        size="70px"
-        class="q-mb-xl"
-      />
-    </div>
-    <!-- Elemento visual del formulario -->
-
     <div class="text-h5 text-center">Productos Devolutivos</div>
     <!-- Campo para ingresar el nombre del producto devolutivo, el
     se almacen en la variable v-model="nombre" -->
@@ -78,7 +66,6 @@ Descripción del archivo "consumiblesForm.vue":
         <div
           v-for="(campo, index) in listaCampos"
           :key="campo"
-          style="width: 500px"
           class="flex justify-evenly q-ma-lg"
         >
           <!-- Lista de campos configurables -->
@@ -103,6 +90,7 @@ Descripción del archivo "consumiblesForm.vue":
         </div>
         <!-- Botón para guardar -->
         <q-btn
+          v-if="listaCampos.length > 0"
           style="width: 100%"
           label="Guardar Consumible"
           icon="save"
