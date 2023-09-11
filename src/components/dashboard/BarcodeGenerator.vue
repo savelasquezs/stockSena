@@ -27,9 +27,9 @@ Uso:
 
   <q-card-section>
     <h2 class="q-mt-md">Generador de Código de Barras</h2>
-    <q-input v-model="barcodeData" label="Contenido del código de barras" />
+    <q-input v-model="barcodeData" label="Contenido del código de barra" />
     <q-btn
-      label="Generar Código de Barras"
+      label="Generar Código de Barra"
       color="primary"
       @click="generateBarcode"
       class="q-mt-lg"
