@@ -1,7 +1,10 @@
 <template>
   <div class="flex justify-evenly content-center complete items-center">
     <q-page class="flex content-center window-height">
-      <div class="q-gutter-lg row justify-center items-center"   v-if="userCredential.role == 'administrador'">
+      <div
+        class="q-gutter-lg row justify-center items-center"
+        v-if="userCredential.role == 'administrador'"
+      >
         <router-link to="/register">
           <q-btn
             label="Registrar"
@@ -27,12 +30,8 @@
           <div class="text-h6"></div>
         </q-card-section>
 
-        <q-card-section class="q-pt-none" >
-          <q-input
-            dense
-            label="Correo electrónico"
-            v-model="userEmail"
-          />
+        <q-card-section class="q-pt-none">
+          <q-input dense label="Correo electrónico" v-model="userEmail" />
           <q-select
             outlined
             label="Rol"
@@ -60,12 +59,12 @@
         <template v-slot:header="{ expanded }">
           <q-item-section avatar>
             <q-avatar>
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              <q-img src="public\img\icono.png" />
             </q-avatar>
           </q-item-section>
 
           <q-item-section>
-            Datos del usuario  {{ expanded ? "" : "" }}
+            Datos del usuario {{ expanded ? "" : "" }}
           </q-item-section>
         </template>
 
@@ -144,7 +143,6 @@ async function grantPermission() {
 
 userCredential.value = JSON.parse(localStorage.getItem("user"));
 </script>
-
 
 <style scoped>
 .complete {

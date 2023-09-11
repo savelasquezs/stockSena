@@ -103,8 +103,8 @@ export const UsePrestamosStore = defineStore("prestamos", {
         sortable: true,
       },
 
-      { name: "rol", label: "Rol", field: "rol", sortable: true },
-      { name: "ficha", label: "Ficha", field: "ficha", sortable: true },
+      { name: "rol", label: "Rol",  field: (row) => row.customer.rol, sortable: true },
+
       {
         name: "date",
         label: "Fecha préstamo",
