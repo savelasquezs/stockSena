@@ -4,6 +4,7 @@
       v-model="openedForm"
       colorButton="secondary"
       iconButton="add_circle"
+      iconModal="real_estate_agent"
       labelButton="Agregar formato producto devolutivo"
     >
       <ProductosForm

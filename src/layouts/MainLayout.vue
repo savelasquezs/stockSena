@@ -48,17 +48,13 @@
         />
       </q-scroll-area>
 
-      <q-img
-        class="absolute-top"
-        src="public\img\fondo.png"
-        style="height: 150px"
-      >
+      <q-img class="absolute-top" style="height: 150px">
         <div class="absolute-bottom bg-transparent">
           <q-avatar size="50px" class="q-mb-sm" style="margin-bottom: -1px">
             <q-img src="public\img\icono.png" />
           </q-avatar>
           <div v-if="userCredential">
-            <div class="text-weight-bold" style="margin-bottom: -15px">
+            <div class="text-black-bold" style="margin-bottom: -15px">
               <p>{{ userCredential.email }}</p>
               <p>{{ userCredential.almacen }}</p>
               {{ userCredential.displayName }}
