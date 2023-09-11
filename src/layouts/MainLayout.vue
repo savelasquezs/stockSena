@@ -7,7 +7,7 @@
     <BarcodeGenerator />
   </QDialogo>
 
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" class="page-background-gray">
     <q-header elevated>
       <q-toolbar>
         <q-btn
