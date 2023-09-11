@@ -99,15 +99,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
         format: (val) => `${val}`,
         sortable: true,
       },
-      {
-        name: "apellido",
-        required: true,
-        label: "Apellido",
-        align: "left",
-        field: (row) => row.customer.apellido,
-        format: (val) => `${val}`,
-        sortable: true,
-      },
+
       { name: "rol", label: "Rol", field: "rol", sortable: true },
       { name: "ficha", label: "Ficha", field: "ficha", sortable: true },
       {
