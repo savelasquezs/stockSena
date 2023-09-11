@@ -66,7 +66,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { onUnmounted, ref } from "vue";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -104,6 +103,7 @@ function onSubmit() {
       });
     })
     .catch((error) => {
+      loadingLogin.value = false;
       const errorCode = error.code;
       let errorMessage = "Error desconocido"; // Mensaje predeterminado
 
