@@ -18,6 +18,8 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -39,13 +41,12 @@ const notificar = (message) => {
 };
 
 export const useDatabaseStore = defineStore("database", {
-  /**
-     * Escuchar cambios en una colección.
-     * @memberof useDatabaseStore
-     * @param {string} tabla - Nombre de la colección a escuchar.
-     * @param {string} ordenarPor - Campo por el cual ordenar los resultados (opcional).
-     * @param {string} arrayName - Nombre del array en el estado para actualizar con los cambios.
-     */
+  state: () => {
+    return {
+      productosPrestadosPersona: [],
+    };
+  },
+
   actions: {
     async escucharCambios(store, tabla, ordenarPor, arrayName) {
       // Crear una consulta para la colección especificada, opcionalmente ordenada por un campo.
@@ -56,7 +57,7 @@ export const useDatabaseStore = defineStore("database", {
       onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type == "added") {
-             // Si se agrega un nuevo documento, agregarlo al principio del array en el estado.
+            // Si se agrega un nuevo documento, agregarlo al principio del array en el estado.
             if (!store[arrayName].some((item) => item.docId == change.doc.id)) {
               const data = {
                 docId: change.doc.id,
@@ -65,7 +66,7 @@ export const useDatabaseStore = defineStore("database", {
               store[arrayName].unshift(data);
             }
           } else if (change.type == "modified") {
-             // Si un documento existente se modifica, actualizar sus datos en el array en el estado.
+            // Si un documento existente se modifica, actualizar sus datos en el array en el estado.
             let cambio = store[arrayName].find(
               (item) => item.docId == change.doc.id
             );
@@ -105,7 +106,7 @@ export const useDatabaseStore = defineStore("database", {
       const coleccion = collection(refTablaGeneral, tabla);
       const q = ordenarPor ? query(coleccion, orderBy(ordenarPor)) : coleccion;
 
-       // Establecer un observador en la consulta para detectar cambios en la subcolección.
+      // Establecer un observador en la consulta para detectar cambios en la subcolección.
       onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type == "added") {
@@ -158,7 +159,7 @@ export const useDatabaseStore = defineStore("database", {
       notificar("Guardado exitosamente");
       return docRef;
     },
-     /**
+    /**
      * Actualizar un elemento existente en una colección.
      * @memberof useDatabaseStore
      * @param {object} data - Nuevos datos para el elemento.
@@ -172,8 +173,39 @@ export const useDatabaseStore = defineStore("database", {
       const docRef = doc(db, tabla, id);
       // Notificar al usuario sobre el éxito de la operación
       notificar("Registro actualizado exitosamente");
-       // Actualizar el documento con los nuevos datos.
+      // Actualizar el documento con los nuevos datos.
       await updateDoc(docRef, completedData);
+    },
+
+    updateMoraPersona(idCliente) {
+      if (this.productosPrestadosPersona.some((producto) => producto.enMora)) {
+        this.updateElement({ enMora }, "customers", idCliente);
+      }
+    },
+
+    async updateMoraCliente(idCliente, idBorrowing = null, quantity = null) {
+      // Obtener los documentos de la subcoleccion
+
+      const borrowingsRef = collection(
+        doc(db, "customers", idCliente),
+        "borrowings"
+      );
+      const querySnapshot = await getDocs(borrowingsRef);
+      querySnapshot.forEach((doc) => {
+        // Hacer algo con cada documento
+        const today = new Date().getTime;
+        let enMora = false;
+        if (today > doc.data().dueDate) {
+          enMora = true;
+        }
+        this.productosPrestadosPersona.push({
+          docId: doc.id,
+          enMora,
+          ...doc.data(),
+        });
+        console.log(doc.data());
+      });
+      this.updateMoraCliente(idCliente);
     },
   },
 });

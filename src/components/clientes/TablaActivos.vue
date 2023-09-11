@@ -39,11 +39,7 @@
     :loading="loading"
     :agregarElementoLabel="selectedPrestamos.length > 0 ? 'Devolver' : null"
     @agregando="openDevolverModal"
-    :rows="
-      prestamosStore.allPersonDocs.filter(
-        (prestamo) => prestamo.returnedQuantity < prestamo.quantity
-      )
-    "
+    :rows="prestamosStore.activeBorrowings"
     seleccionar
     :columns="clientesStore.columnsPrestamosPersona"
     @cambioSelected="(value) => (selectedPrestamos = value)"

@@ -18,6 +18,7 @@
 
 //importaciones
 import { defineStore } from "pinia";
+
 import { Dialog } from "quasar";
 import {
   collection,
@@ -31,7 +32,9 @@ import {
 } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import { UseUtilsStore } from "./utilsStore";
+import { useDatabaseStore } from "./DatabaseStore";
 
+const databaseStore = useDatabaseStore();
 // Definición del store de préstamos.
 export const UsePrestamosStore = defineStore("prestamos", {
   state: () => ({
@@ -167,7 +170,12 @@ export const UsePrestamosStore = defineStore("prestamos", {
     allBorrowingsProducts: [],
     currentCustomer: {},
   }),
-  getters: {},
+  getters: {
+    activeBorrowings: (state) =>
+      state.allPersonDocs.filter(
+        (prestamo) => prestamo.returnedQuantity < prestamo.quantity
+      ),
+  },
 
   // Acción para escuchar cambios en la colección de préstamos en Firestore.
   actions: {
@@ -222,6 +230,17 @@ export const UsePrestamosStore = defineStore("prestamos", {
         });
       });
     },
+
+    updateMoraPerson(cedula) {
+      const moraActual = this.currentCustomer.enMora;
+      const enMora = this.activeBorrowings.some((pedido) => pedido.enMora);
+      console.log(moraActual, enMora);
+      if (moraActual != enMora) {
+        databaseStore.updateElement({ enMora }, "customers", cedula);
+        this.currentCustomer = { ...this.currentCustomer, enMora };
+      }
+    },
+
     /**
      * Acción para obtener préstamos por persona.
      * @param {string} cedula - Cédula de la persona.
@@ -230,9 +249,8 @@ export const UsePrestamosStore = defineStore("prestamos", {
 
     async getPrestamosByPerson(cedula) {
       const utils = UseUtilsStore();
-      const cedulita = cedula;
       let docs;
-      const customerRef = doc(db, "customers", cedulita);
+      const customerRef = doc(db, "customers", cedula);
       this.currentCustomer = await getDoc(customerRef);
       console.log(this.currentCustomer);
       if (!this.currentCustomer.data()) {
@@ -243,9 +261,17 @@ export const UsePrestamosStore = defineStore("prestamos", {
       const q = query(collection(customerRef, "borrowings"));
       docs = await getDocs(q);
       docs = docs.docs.map((document, index) => {
-        return { index, docId: document.id, ...document.data() };
+        const today = new Date().getTime();
+        let enMora = false;
+
+        if (today > document.data().dueDate) {
+          enMora = true;
+        }
+        return { index, docId: document.id, ...document.data(), enMora };
       });
       this.allPersonDocs = docs;
+      this.updateMoraPerson(cedula);
+      console.log(this.allPersonDocs);
       return docs;
     },
     /**
