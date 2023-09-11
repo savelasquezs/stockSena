@@ -1,10 +1,6 @@
 <template>
   <div class="flex column flex-center q-pb-xl">
-    <q-img
-      src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-      loading="lazy"
-      style="width: 90px"
-    />
+    <q-img src="public\img\Sena.png" width="125px" />
   </div>
 
   <q-form @submit="guardarCliente">
