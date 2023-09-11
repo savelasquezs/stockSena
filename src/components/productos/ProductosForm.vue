@@ -2,7 +2,6 @@
   <div class="">
     <q-form class="">
       <div class="flex column flex-center">
-        <q-img src="public\img\prestar.png" width="80px" />
         <div class="text-h6 text-center q-my-xl">INGRESAR PRODUCTO</div>
       </div>
       <div class="q-gutter-sm flex flex-center">
