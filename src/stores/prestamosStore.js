@@ -30,13 +30,14 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "src/firebaseInit";
+import { UseUtilsStore } from "./utilsStore";
 
 // Definición del store de préstamos.
 export const UsePrestamosStore = defineStore("prestamos", {
   state: () => ({
     prestamosDatabase: [],
     stadisticTableBarInfo: [
-       /** Definición de los datos que se van a mostrar en las estadisticas
+      /** Definición de los datos que se van a mostrar en las estadisticas
         ejemplo:{
        * name:nombre de la columana
        * align:alineamiento
@@ -71,7 +72,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
       },
     ],
     columns: [
-       /** Definición de columnas para tablas relacionadas con prestamos.
+      /** Definición de columnas para tablas relacionadas con prestamos.
         Estos campos son los que se le pasan a la columna, y varian segun
         las columnas y como se definan
         ejemplo:{
@@ -112,7 +113,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
       },
     ],
     internalColumns: [
-    //definición de las internal columsn
+      //definición de las internal columsn
       {
         name: "productoId",
         align: "center",
@@ -172,7 +173,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
       this.currentCustomer = {};
     },
     async listenChanges() {
-    // Crear una consulta para la colección "borrowings" ordenada por "dateBorrowed".
+      // Crear una consulta para la colección "borrowings" ordenada por "dateBorrowed".
       const q = query(collection(db, "borrowings"), orderBy("dateBorrowed"));
 
       // Establecer un observador en la consulta.
@@ -226,13 +227,17 @@ export const UsePrestamosStore = defineStore("prestamos", {
      */
 
     async getPrestamosByPerson(cedula) {
+      const utils = UseUtilsStore();
       const cedulita = cedula;
       let docs;
       const customerRef = doc(db, "customers", cedulita);
-      this.currentCustomer = (await getDoc(customerRef)).data();
-      if (!this.currentCustomer) {
-        Dialog.create("nanana");
+      this.currentCustomer = await getDoc(customerRef);
+      console.log(this.currentCustomer);
+      if (!this.currentCustomer.data()) {
+        utils.notifyError("No encontramos el cliente", "warning");
+        return;
       }
+      this.currentCustomer = this.currentCustomer.data();
       const q = query(collection(customerRef, "borrowings"));
       docs = await getDocs(q);
       docs = docs.docs.map((document, index) => {

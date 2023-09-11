@@ -97,7 +97,6 @@ Características clave:
         outlined
         v-model.number="formulario.descripcion"
         label="Descripción"
-        required
         class="q-my-lg"
       >
         <template v-slot:append>
@@ -129,7 +128,7 @@ Características clave:
     </div>
     <div class="flex justify-end"></div>
     <!-- Se usa el componente de subir datos -->
-    <uploadData nomTabla="products" tipo="cons" />
+    <uploadData nomTabla="products" tipo="consumable" />
   </q-form>
 </template>
 

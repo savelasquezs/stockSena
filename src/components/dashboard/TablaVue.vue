@@ -1,4 +1,27 @@
+<!-- Día de la documentación: 06/09/2023
+Descripción del archivo "TablaVue.vue":
+
+Este archivo representa un componente Vue.js que muestra una tabla de datos utilizando el componente "q-table" de Quasar Framework.
+La tabla muestra información de préstamos, incluyendo documento, nombre, ficha, fecha de préstamo y cantidad. También permite expandir filas para ver más detalles de cada préstamo.
+
+Características clave:
+- Utiliza el componente "q-table" de Quasar Framework para mostrar datos en forma de tabla.
+- Permite ordenar los datos por columna haciendo clic en los encabezados de columna.
+- Proporciona la capacidad de expandir filas para ver detalles adicionales de cada préstamo.
+
+Props recibidos:
+- Ninguno
+
+Eventos emitidos:
+- Ninguno
+
+Uso:
+- Este componente se utiliza para visualizar y gestionar datos de préstamos en forma de tabla en una página o vista de la aplicación.
+
+Nota: por ahora los datos mostrados en la tabla son ingresados directamente en el codigo.
+Es necesario volcer el codigo mas reactivo-->
 <template>
+  <!-- Contenedor principal de la tabla -->
   <div class="q-pa-md" style="background-color: #f5f5f5">
     <q-table
       flat
@@ -8,17 +31,22 @@
       :columns="columns"
       row-key="name"
     >
+      <!-- Definición de la estructura de la cabecera de la tabla -->
       <template v-slot:header="props">
         <q-tr :props="props">
+          <!-- Celda de expansión automática -->
           <q-th auto-width />
+          <!-- Generación de las columnas de cabecera -->
           <q-th v-for="col in props.cols" :key="col.name" :props="props">{{
             col.label
           }}</q-th>
         </q-tr>
       </template>
 
+      <!-- Definición de la estructura del cuerpo de la tabla -->
       <template v-slot:body="props">
         <q-tr :props="props">
+          <!-- Botón de expansión de fila -->
           <q-td auto-width>
             <q-btn
               size="sm"
@@ -29,11 +57,14 @@
               :icon="props.expand ? 'remove' : 'add'"
             />
           </q-td>
+          <!-- Generación de las celdas de datos -->
           <q-td v-for="col in props.cols" :key="col.name" :props="props">{{
             col.value
           }}</q-td>
         </q-tr>
+        <!-- Fila adicional que se muestra al expandir una fila -->
         <q-tr v-show="props.expand" :props="props">
+          <!-- Contenido de descripción de préstamo -->
           <q-td colspan="100%"
             ><div class="text-left">Descripción préstamo:</div></q-td
           >
@@ -44,6 +75,7 @@
 </template>
 
 <script setup>
+// Definición de las columnas de la tabla
 const columns = [
   {
     name: "document",
@@ -65,7 +97,7 @@ const columns = [
   { name: "date", label: "Fecha préstamo", field: "date" },
   { name: "amout", label: "Cantidad", field: "amout" },
 ];
-
+// Datos de ejemplo para llenar la tabla
 const rows = [
   { document: 159, name: "Frozen Yogurt", ficha: 6.0, date: 24, amout: 4.0 },
   {

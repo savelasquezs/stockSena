@@ -81,15 +81,19 @@ adicionales para personalizar la apariencia. -->
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { UseClientesStore } from "src/stores/clientesStore";
+import { UsePrestamosStore } from "src/stores/prestamosStore";
+import { computed, onBeforeUnmount, ref } from "vue";
+import { useRoute } from "vue-router";
+import AlDia from "../icons/AlDia.vue";
+import EnMora from "../icons/EnMora.vue";
 
-<style scoped>
-.client-info-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px;
-}
+const prestamosStore = UsePrestamosStore();
+const clientesStore = UseClientesStore();
+const cliente = computed(() => {
+  return prestamosStore.currentCustomer;
+});
 
 const firstLetter = computed(() => {
   const nombre = cliente.value?.nombre;

@@ -4,11 +4,7 @@ información sobre un cliente y la envía a Firebase Firestore. Luego, muestra u
 notificación de éxito al usuario y emite un evento personalizado cuando se guarda el cliente. -->
 <template>
   <div class="flex column flex-center q-pb-xl">
-    <q-img
-      src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-      loading="lazy"
-      style="width: 90px"
-    />
+    <q-img src="public\img\Sena.png" width="125px" />
   </div>
   <!--Boton de almacenamiento de clientes con campos correspondientes del tipo de 
   documento.-->

@@ -21,7 +21,6 @@ import { db } from "src/firebaseInit";
 //Definición del store de productos.
 export const useProductosStore = defineStore("productos", {
   state: () => ({
-
     // productosDatabase: [], // Almacena la lista de productos obtenida de Firestore.
     // devolutivosCols: [ /* ... */ ], // Columnas para la tabla de productos devolutivos.
     // devolutivosInternalCols: [ /* ... */ ], // Columnas internas para detalles de productos devolutivos.
@@ -230,7 +229,7 @@ export const useProductosStore = defineStore("productos", {
       { name: "acciones", label: "Acciones", field: "acciones" },
     ],
   }),
-// Getters personalizados para obtener información específica de los productos.
+  // Getters personalizados para obtener información específica de los productos.
   getters: {
     doubleCount: (state) => state.counter * 2,
     productosNombres: (state) => {
@@ -309,6 +308,12 @@ export const useProductosStore = defineStore("productos", {
       );
     },
 
+    getConsumableByCodeBar(code) {
+      return this.productosDevolutivos.find(
+        (producto) => producto.codigoBarra == code
+      );
+    },
+
     objToString(obj) {
       let str = "";
       for (const [key, value] of Object.entries(obj)) {
@@ -320,7 +325,7 @@ export const useProductosStore = defineStore("productos", {
     async listenChanges() {
       const q = query(collection(db, "products"), orderBy("name"));
 
-    // Establecer un observador en la consulta.
+      // Establecer un observador en la consulta.
       onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           //en caso de añadir un registro
@@ -336,7 +341,7 @@ export const useProductosStore = defineStore("productos", {
               };
               // Agregar el producto al principio de la lista.
               this.productosDatabase.unshift(data);
-            }//en caso de añadir un modificar
+            } //en caso de añadir un modificar
           } else if (change.type == "modified") {
             let cambio = this.productosDatabase.find(
               (item) => item.docId == change.doc.id
@@ -347,9 +352,9 @@ export const useProductosStore = defineStore("productos", {
             this.productosDatabase[index] = {
               ...cambio,
               ...change.doc.data(),
-            };//en caso de añadir un eliminar algun registro
+            }; //en caso de añadir un eliminar algun registro
           } else if (change.type == "removed") {
-             // Si se elimina un producto, filtrar y actualizar la lista eliminando el producto correspondiente.
+            // Si se elimina un producto, filtrar y actualizar la lista eliminando el producto correspondiente.
             this.productosDatabase = this.productosDatabase.filter(
               (item) => item.docId != change.doc.id
             );

@@ -24,7 +24,7 @@
     class="q-ml-sm"
     style="width: 210px"
   />
-  <!--Se implementa un boton que permite descargar un formato clientes unicamente con los 
+  <!--Se implementa un boton que permite descargar un formato clientes unicamente con los
     campos principales para que el individuo pueda rellenar a gusto-->
   <q-btn
     @click="templateExcel"
@@ -48,7 +48,7 @@ import { storage } from "src/firebaseInit"; // Importa tu configuración de Fire
 const databaseStore = useDatabaseStore();
 const fileExcel = ref([]);
 
-const props = defineProps({ nomTabla: String });
+const props = defineProps({ nomTabla: String, tipo: String });
 
 //Se define una función llamada passToJasson, que se encarga de convertir un archivo Excel
 //en formato JSON y luego subir ese JSON a Firebase
@@ -94,7 +94,13 @@ const uploadToFirebase = (objJson) => {
   if (objLength < 100) {
     console.log("primer if");
     objJson.forEach((element) => {
-      databaseStore.saveElement(element, props.nomTabla);
+      let item = element;
+      if (props.tipo == "consumable") {
+        item = { ...element, borrowedQuantity: 0, isConsumable: true };
+      } else if (props.tipo == "devolutivo") {
+        item = { ...element, borrowedQuantity: 0, isConsumable: false };
+      }
+      databaseStore.saveElement(item, props.nomTabla);
     });
 
     // Si objLength es menor que 10000 pero mayor o igual que 100,
@@ -104,7 +110,13 @@ const uploadToFirebase = (objJson) => {
   } else if (objLength < 10000) {
     console.log("segundo if");
     objJson.forEach((array) => {
-      array.forEach((item) => {
+      array.forEach((element) => {
+        let item = element;
+        if (props.tipo == "consumable") {
+          item = { ...element, borrowedQuantity: 0, isConsumable: true };
+        } else if (props.tipo == "devolutivo") {
+          item = { ...element, borrowedQuantity: 0, isConsumable: false };
+        }
         databaseStore.saveElement(item, props.nomTabla);
       });
     });
@@ -131,10 +143,10 @@ const templateExcel = async () => {
     // Si no se cumple ninguna de las condiciones anteriores, se muestra un mensaje de error en la consola y la función retorna.
     if (props.nomTabla == "products") {
       filePath =
-        "gs://sena-stock-management.appspot.com/Plantilla Clientes.xlsx";
+        "gs://sena-stock-management.appspot.com/Plantilla produtos.xlsx";
     } else if (props.nomTabla == "clientes") {
       filePath =
-        "gs://sena-stock-management.appspot.com/Plantilla produtos.xlsxx";
+        "gs://sena-stock-management.appspot.com/Plantilla Clientes.xlsxx";
     } else {
       console.log("error, no se conoce la plantilla");
       return;

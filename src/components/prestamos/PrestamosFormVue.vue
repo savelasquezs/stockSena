@@ -1,210 +1,138 @@
 <template>
-  <div class="flex flex-center">
-    <q-avatar
-      icon="real_estate_agent"
-      color="accent"
-      text-color="white"
-      class="text-center"
-    />
-  </div>
-  <div v-if="!cliente.nombre">
-    <h3 class="text-h6 text-center">Ingresa un documento de identidad</h3>
-    <q-input
-      color="teal"
-      filled
-      v-model="documento"
-      label="Documento"
-      type="number"
-      @change="buscarCliente"
-    >
-      <template v-slot:prepend>
-        <q-icon name="person_search" />
-      </template>
-      <template v-slot:append>
-        <q-btn icon="search" @click="buscarCliente" round />
-      </template>
-    </q-input>
-  </div>
+  <InputClienteSearch v-if="!cliente.nombre" />
+
   <div v-else>
     <PersonalInfo />
+    <SearchProducts @productSelected="agregarProducto" />
 
-    <div class="flex justify-between q-ma-md shadow-1 q-pa-md">
-      <div>
-        <q-item>
-          <q-item-section avatar>
-            <q-icon color="accent" size="3rem">
-              <DevolutivosIcon />
-            </q-icon>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Prestar producto Devolutivo</q-item-label>
-          </q-item-section>
-        </q-item>
+    <div class="q-pa-md">
+      <q-scroll-area
+        style="height: 200px"
+        class="shadow-1"
+        v-if="productosList.length > 0"
+      >
+        <ExpansionItem
+          :productosList="productosList"
+          @deselectElement="deselectRow"
+        />
+      </q-scroll-area>
+      <div v-if="productosList.length > 0">
         <q-input
-          bottom-slots
-          v-model="devolutivoSearch"
-          label="Codigo de barras"
-          counter
-          type="number"
-          :dense="dense"
-        >
-          <template v-slot:append>
-            <q-icon
-              name="close"
-              @click="devolutivoSearch = ''"
-              class="cursor-pointer"
-            />
-          </template>
-
-          <template v-slot:hint>
-            <span> Codigo de barras producto devolutivo </span>
-          </template>
-        </q-input>
-      </div>
-      <q-separator vertical />
-      <div>
-        <q-item>
-          <q-item-section avatar>
-            <q-icon color="accent" size="3rem">
-              <ConsumiblesIcon />
-            </q-icon>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Prestar producto Consumible</q-item-label>
-          </q-item-section>
-        </q-item>
-        <AutocompleteInput
-          hint="Busca el nombre del producto"
-          :stringOptions="productosStore.nameColumnsConsumibles"
-          @cambioModel="setConsumible"
-          v-model="consumibleSelected"
+          label="Notas del prestamo"
+          v-model="generalDescription"
+          autogrow
+          class="q-ma-sm"
+          outlined
+        />
+        <q-btn
+          color="accent"
+          @click="prestarProducto"
+          label="Prestar"
+          class="q-mt-md"
+          :loading="guardandoPrestamo"
+          style="width: 100%"
         />
       </div>
-    </div>
-    <div class="q-pa-md">
-      <q-scroll-area style="height: 300px" class="shadow-1">
-        <div v-for="(producto, index) in productosList" :key="index">
-          <q-expansion-item expand-icon-toggle expand-separator>
-            <template v-slot:header>
-              <q-item-section avatar>
-                <q-avatar color="accent" text-color="white">{{
-                  producto.nombre[0]
-                }}</q-avatar>
-              </q-item-section>
-
-              <q-item-section>{{ producto.nombre }} </q-item-section>
-
-              <q-item-section>
-                <div class="flex flex-center" style="width: 200px">
-                  <q-btn
-                    icon="do_not_disturb_on"
-                    round
-                    color="red-5"
-                    @click="producto.prestar--"
-                    :disable="producto.prestar < 2"
-                  />
-                  <q-input
-                    dense
-                    class="text-subtitle2 q-mx-sm"
-                    min="1"
-                    :max="producto.stockTotal - producto.borrowedQuantity"
-                    v-model="producto.prestar"
-                    type="number"
-                    :rules="[
-                      (val) =>
-                        val >= 0 &&
-                        val <= producto.stockTotal - producto.borrowedQuantity,
-                    ]"
-                  />
-
-                  <q-btn
-                    icon="add_circle"
-                    round
-                    color="primary"
-                    @click="producto.prestar++"
-                    :disable="
-                      producto.prestar ==
-                      producto.stockTotal - producto.borrowedQuantity
-                    "
-                  />
-                </div>
-              </q-item-section>
-              <q-item-section>
-                <div class="flex flex-center">
-                  <DatePicker
-                    @guardarFecha="(fecha) => (producto.fechaEntrega = fecha)"
-                  />
-                  <q-input disable v-model="producto.fechaEntrega"
-                    ><template v-slot:hint>
-                      <span> Entrega </span>
-                    </template></q-input
-                  >
-                </div>
-              </q-item-section>
-              <q-item-section side>
-                <q-btn
-                  icon="delete"
-                  style="width: 50px"
-                  @click="deselectRow(producto)"
-                />
-              </q-item-section>
-            </template>
-
-            <q-card>
-              <q-card-section>
-                {{ producto.descripcion }}
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-
-          <q-separator />
-        </div>
-      </q-scroll-area>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useQuasar } from "quasar";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
+import SearchProducts from "components/prestamos/SearchProducts.vue";
 import { computed, onBeforeUnmount, ref } from "vue";
 import PersonalInfo from "components/clientes/PersonalInfo.vue";
 import { useRoute } from "vue-router";
-import ConsumiblesIcon from "components/icons/ConsumiblesIcon.vue";
-import DevolutivosIcon from "components/icons/DevolutivosIcon.vue";
-import AutocompleteInput from "components/utils/autocompleteInput.vue";
 import { useProductosStore } from "src/stores/productosStore";
 import DatePicker from "components/utils/DatePicker.vue";
+import CustomPropertiesTable from "components/productos/CustomPropertiesTable.vue";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { db } from "src/firebaseInit";
+import ExpansionItem from "components/prestamos/ExpansionItem.vue";
+import InputClienteSearch from "components/prestamos/InputClienteSearch.vue";
+import { UseUtilsStore } from "src/stores/utilsStore";
 const productosList = ref([]);
-const consumibleSelected = ref("");
-
-const documento = ref("");
+const $q = useQuasar();
 const prestamosStore = UsePrestamosStore();
-const devolutivoSearch = ref("");
-const currentProduct = ref({});
+const productosStore = useProductosStore();
+const generalDescription = ref("");
+const guardandoPrestamo = ref(false);
+const utils = UseUtilsStore();
 
-function setConsumible(algo) {
-  const producto = productosStore.getConsumableByName(algo);
-  currentProduct.value = producto;
-  console.log(algo);
-  console.log(producto);
+const emit = defineEmits(["prestamoGuardado"]);
+function deselectRow(id) {
+  console.log(id);
+  productosList.value = productosList.value.filter(
+    (producto) => producto.docId != id
+  );
+}
+const cliente = computed(() => {
+  console.log(prestamosStore.currentCustomer);
+  return prestamosStore.currentCustomer;
+});
 
+function agregarProducto(producto) {
+  if (
+    productosList.value.some((elemento) => elemento.docId == producto.docId)
+  ) {
+    utils.notifyError("Este producto ya esta en tu lista");
+    return;
+  }
   productosList.value.unshift({
     ...producto,
     prestar: 1,
     fechaEntrega: new Date().toLocaleDateString("es-CO"),
   });
+  console.log(productosList.value);
 }
 
-const productosStore = useProductosStore();
-
-async function buscarCliente() {
-  console.log(documento.value);
-  await prestamosStore.getPrestamosByPerson(documento.value);
+function datosPreparados() {
+  guardandoPrestamo.value = true;
+  const dateBorrowed = new Date().getTime();
+  const listaProductos = productosList.value.map((registro) => {
+    let separador = registro.fechaEntrega.includes("-") ? "-" : "/";
+    const fechaEntregaArray = registro.fechaEntrega.split(separador);
+    registro.fechaEntrega =
+      fechaEntregaArray[1] +
+      "-" +
+      fechaEntregaArray[0] +
+      "-" +
+      fechaEntregaArray[2];
+    const milisecondsDay = 23 * 60 * 60 * 1000;
+    const data = {
+      productId: registro.docId,
+      product: registro.nombre,
+      quantity: registro.prestar,
+      isConsumable: registro.isConsumable,
+      barCode: registro.codigoBarra,
+      dateBorrowed,
+      dueDate: new Date(registro.fechaEntrega).getTime() + milisecondsDay,
+      descripcionProducto: registro.notas || registro.descripcion || "",
+      returnedQuantity: 0,
+    };
+    if (registro.isConsumable) {
+      data.unidadMedida = registro.unidadMedida;
+    } else {
+      data.estadoEntrega = registro.estadoEntrega || registro.estadoFisico;
+      data.custom = registro.custom;
+    }
+    return data;
+  });
+  const dataToSave = {
+    customerDocumentNumber: cliente.value.numero_id,
+    productosList: listaProductos,
+    customer: {
+      documentNumber: cliente.value.numero_id,
+      name: cliente.value.nombre,
+      documentType: cliente.value.tipoDoc,
+    },
+    description: generalDescription.value,
+    dateBorrowed,
+  };
+  console.log(dataToSave);
+  return dataToSave;
 }
-
-const cliente = computed(() => {
-  return prestamosStore.currentCustomer;
-});
 
 const route = useRoute();
 onBeforeUnmount(() => {
@@ -214,6 +142,54 @@ onBeforeUnmount(() => {
     prestamosStore.resetCurrentCustomer();
   }
 });
+
+function prestarProducto() {
+  const data = datosPreparados();
+
+  productosList.value.forEach(async (product) => {
+    const docref = doc(db, "products", product.docId);
+    await updateDoc(docref, {
+      borrowedQuantity:
+        parseInt(product.borrowedQuantity) + parseInt(product.prestar),
+    });
+  });
+
+  addDoc(collection(db, "borrowings"), data).then((prestamo) => {
+    const clienteDocRef = doc(db, "customers", cliente.value.numero_id);
+    data.productosList.forEach(async (producto, indexLista) => {
+      const productoDocRef = doc(db, "products", producto.productId);
+      const dataToProductos = {
+        indexLista,
+        diaPrestamo: producto.dateBorrowed,
+        cantidadPrestada: producto.quantity,
+        customer: {
+          documentNumber: cliente.value.numero_id,
+          name: cliente.value.nombre,
+          documentType: cliente.value.tipoDoc,
+        },
+      };
+      if (!producto.isConsumable) {
+        dataToProductos.estadoEntrega = producto.estadoEntrega;
+      }
+      const productoref = await addDoc(
+        collection(productoDocRef, "borrowings"),
+        dataToProductos
+      );
+      addDoc(collection(clienteDocRef, "borrowings"), {
+        productoBorrowId: productoref.id,
+        indexLista,
+        prestamoId: prestamo.id,
+        ...producto,
+      }).then((resultado) => {});
+    });
+
+    emit("prestamoGuardado");
+    $q.notify({
+      message: "Pedido Guardado exitosamente",
+      color: "accent",
+    });
+  });
+}
 </script>
 
 <style lang="scss" scoped></style>

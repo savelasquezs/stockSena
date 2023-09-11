@@ -19,6 +19,7 @@
     :rows-per-page-options="[0]"
     style="max-height: 600px"
     class="q-mx-sm"
+    dense
   >
     <!-- Se define un slot de encabezado utilizando <template v-slot:top>. -->
     <template v-slot:top>
@@ -90,8 +91,24 @@
            Esto representa las celdas de datos en la fila. Utiliza una directiva v-for para iterar sobre las columnas (col) en props.cols. 
            Cada columna tiene un nombre único (col.name) que se usa como clave (key) para identificar de manera única cada celda. -->
         </q-td>
-        <q-td v-for="col in props.cols" :key="col.name" :props="props">
-          {{ col.value }}
+        <q-td v-for="col in props.cols" :key="col.name" :props="props" style="">
+          <div v-if="col.name == 'document'" class="">
+            <q-item
+              style="clickable; width:100%"
+              :to="customerUrl(col.value)"
+              class="coloreble flex flex-center"
+              dense
+            >
+              <q-item-section avatar side>
+                <q-icon color="accent" name="ads_click" />
+              </q-item-section>
+              <q-item-section side class="text-blue">
+                {{ col.value }}</q-item-section
+              >
+            </q-item>
+          </div>
+
+          <span v-else>{{ col.value }}</span>
         </q-td>
       </q-tr>
       <!-- <q-tr v-show="props.row.expand" :props="props">: Esto representa una segunda fila que se muestra solo cuando la fila principal
@@ -166,6 +183,10 @@ const props = defineProps({
   tablaUrl: String,
 });
 const router = useRouter();
+
+const customerUrl = (documentId) => {
+  return `/clientes/${documentId}`;
+};
 
 function verDetalles(docId) {
   console.log(props.customDetailRouting);

@@ -12,13 +12,22 @@ Características clave:
 
 //Importaciónes
 import { defineStore } from "pinia";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { db } from "src/firebaseInit";
+import { UseUtilsStore } from "./utilsStore";
+import { UsePrestamosStore } from "./prestamosStore";
 
 //Definición del store
 export const UseClientesStore = defineStore("clientes", {
   state: () => ({
-    clientesDatabase: [],//Almacena la lista de clientes obtenida de Firestore.
+    clientesDatabase: [], //Almacena la lista de clientes obtenida de Firestore.
     columns: [
       // Definición de columnas para tablas relacionadas con clientes.
       // Cada objeto en "columns" define una columna en una tabla con sus propiedades.
@@ -160,6 +169,7 @@ export const UseClientesStore = defineStore("clientes", {
         periodo: "Ultima semana",
       },
     ],
+    currentCustomer: {},
   }),
   getters: {},
 
@@ -205,7 +215,7 @@ export const UseClientesStore = defineStore("clientes", {
               (item) => item.docId != change.doc.id
             );
           }
-           // Determinar la fuente de los datos (caché local o servidor)
+          // Determinar la fuente de los datos (caché local o servidor)
           const source = snapshot.metadata.fromCache
             ? "local cache clientes"
             : "server";
@@ -213,6 +223,29 @@ export const UseClientesStore = defineStore("clientes", {
           console.log("Data came from " + source);
         });
       });
+    },
+    async getCurrentCliente(cedula) {
+      const utils = UseUtilsStore();
+      const prestamosStore = UsePrestamosStore();
+      console.log(prestamosStore.currentCustomer);
+      if (cedula == prestamosStore.currentCustomer.numero_id) {
+        utils.notifyError("Debes ingresar el documento del receptor");
+        setTimeout(() => {
+          utils.notifyError(
+            "El ingresado corresponde al cliente actual",
+            "warning"
+          );
+        }, 1200);
+        return;
+      }
+      const customerRef = doc(db, "customers", cedula);
+      const current = await getDoc(customerRef);
+
+      if (!current.data()) {
+        utils.notifyError("No encontramos el cliente", "warning");
+        return;
+      }
+      this.currentCustomer = current.data();
     },
   },
 });
