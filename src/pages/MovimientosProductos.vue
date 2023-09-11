@@ -13,9 +13,6 @@
       </q-card-section>
     </q-card>
   </q-dialog>
-  routes es una matriz que contiene objetos de ruta. Cada objeto representa una
-  ruta en la aplicación y contiene información sobre cómo se debe manejar esa
-  ruta.
 
   <TableReuse
     :dataArray="movimientosStore.movimientosDatabase"
