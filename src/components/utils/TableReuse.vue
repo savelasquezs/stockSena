@@ -151,6 +151,7 @@ const props = defineProps({
   buscarPorFecha: Boolean,
   customDetailRouting: Boolean,
   tablaUrl: String,
+  table: String,
 });
 const router = useRouter();
 
