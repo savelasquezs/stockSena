@@ -54,10 +54,12 @@
             <q-img src="public\img\icono.png" />
           </q-avatar>
           <div v-if="userCredential">
-            <div class="text-black-bold" style="margin-bottom: -15px">
-              <p>{{ userCredential.email }}</p>
-              <p>{{ userCredential.almacen }}</p>
-              {{ userCredential.displayName }}
+            <div
+              class="text-weight-medium text-black"
+              style="margin-bottom: 8px"
+            >
+              <p>{{ userCredential.displayName }}</p>
+              <p>Almacén: {{ userCredential.almacen }}</p>
             </div>
           </div>
         </div>
@@ -110,7 +112,7 @@ const linksList = ref([
   {
     title: "Préstamos",
     caption: "Productos de almacén TICs",
-    icon: "shopping_cart",
+    icon: "real_estate_agent",
     to: "/prestamos",
   },
   {
