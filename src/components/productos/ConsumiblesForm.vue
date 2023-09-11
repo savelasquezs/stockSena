@@ -63,40 +63,47 @@ Descripción del archivo "consumiblesForm.vue":
       </div>
       <div>
         <!-- Lista de campos configurables -->
-        <div
-          v-for="(campo, index) in listaCampos"
-          :key="campo"
-          class="flex justify-evenly q-ma-lg"
-        >
-          <!-- Lista de campos configurables -->
-          <q-input label="nombre del campo" v-model="campo.nombreCampo" />
-          <!-- Lista desplegable para el tipo de dato -->
-          <q-select
-            label="Tipo de dato"
-            :options="tipoDatos"
-            style="width: 200px"
-            v-model="campo.tipoDato"
-          />
-          <!-- Botón para eliminar el campo -->
-          <q-item
-            clickable
-            dense
-            class="items-center"
-            style="height: 56px"
-            @click="deleteProductList(index)"
+        <q-form @submit="guardarDevolutivo">
+          <div
+            v-for="(campo, index) in listaCampos"
+            :key="campo"
+            class="flex justify-evenly q-ma-lg"
           >
-            <q-icon name="delete" size="24px" color="red-8"></q-icon>
-          </q-item>
-        </div>
-        <!-- Botón para guardar -->
-        <q-btn
-          v-if="listaCampos.length > 0"
-          style="width: 100%"
-          label="Guardar Consumible"
-          icon="save"
-          color="primary"
-          @click="guardarDevolutivo"
-        />
+            <!-- Lista de campos configurables -->
+            <q-input
+              label="nombre del campo"
+              v-model="campo.nombreCampo"
+              :rules="[(val) => !!val || 'Este campo es requerido']"
+            />
+            <!-- Lista desplegable para el tipo de dato -->
+            <q-select
+              label="Tipo de dato"
+              :options="tipoDatos"
+              style="width: 200px"
+              v-model="campo.tipoDato"
+              :rules="[(val) => !!val || 'Este campo es requerido']"
+            />
+            <!-- Botón para eliminar el campo -->
+            <q-item
+              clickable
+              dense
+              class="items-center"
+              style="height: 56px"
+              @click="deleteProductList(index)"
+            >
+              <q-icon name="delete" size="24px" color="red-8"></q-icon>
+            </q-item>
+          </div>
+          <!-- Botón para guardar -->
+          <q-btn
+            v-if="listaCampos.length > 0"
+            style="width: 100%"
+            label="Guardar Consumible"
+            icon="save"
+            color="primary"
+            type="submit"
+          />
+        </q-form>
       </div>
     </div>
   </div>
