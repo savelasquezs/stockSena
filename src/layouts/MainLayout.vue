@@ -56,10 +56,10 @@
           <div v-if="userCredential">
             <div
               class="text-weight-medium text-black"
-              style="margin-bottom: 8px"
+              style="margin-bottom: -15px"
             >
-              <p>{{ userCredential.displayName }}</p>
-              <p>Almacén: {{ userCredential.almacen }}</p>
+              <p>{{ userCredential.email }}</p>
+              <p>Almacen: {{ userCredential.almacen }}</p>
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@ const linksList = ref([
   {
     title: "Préstamos",
     caption: "Productos de almacén TICs",
-    icon: "real_estate_agent",
+    icon: "shopping_cart",
     to: "/prestamos",
   },
   {
