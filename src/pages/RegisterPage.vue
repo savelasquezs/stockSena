@@ -1,33 +1,38 @@
 <template>
-  <div class="flex flex-center content-center paginaCompleta">
-    <div class="q-pa-md" style="max-width: 400px">
-      <q-form @submit="onSubmit" class="q-gutter-md">
-        <q-img
-          src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-          loading="lazy"
-          spinner-color="white"
-          width="150px"
-          class=""
-        />
-        <q-input
+  <div class="paginaCompleta">
+    <div class="flex flex-center content-center">
+      <div class="form-container">
+        <q-form @submit="onSubmit" class="q-gutter-md">
+          <div class="logo-container">
+
+            <q-img
+            src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
+            loading="lazy"
+            spinner-color="white"
+            width="150px"
+            class=""
+            />
+          </div>
+
+          <q-input
           filled
           type="text"
           v-model="username"
-          label="Ingrese su nombre *"
+          label="Ingresa tu nombre *"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-        />
+          />
 
-        <q-input
+          <q-input
           filled
           type="email"
           v-model="email"
           label="Ingresa tu email *"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-        />
+          />
 
-        <q-input
+          <q-input
           filled
           type="password"
           v-model="password1"
@@ -36,7 +41,7 @@
           :rules="[
             (val) =>
               (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
-          ]"
+            ]"
         />
         <q-input
           filled
@@ -50,11 +55,8 @@
             (val) => val == password1 || 'la contraseña no coincide',
           ]"
         />
-
-        <div>
           <q-btn label="Registrar" type="submit" color="primary" />
           <q-btn @click="returnLogin()" color="primary" label="Regresar" />
-        </div>
       </q-form>
     </div>
   </div>
@@ -65,6 +67,7 @@
     </div>
     <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
   </div>
+</div>
 </template>
 
 <script setup>
@@ -153,8 +156,23 @@ function returnLogin() {
 <style>
 .paginaCompleta {
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
 }
-/* ... (otros estilos) ... */
+
+.form-container {
+  max-width: 600px;
+  background-color: #fff; /* Cambia el color de fondo del formulario */
+  padding: 100px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Agrega sombra al formulario */
+}
+.logo-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
 .message-container {
   position: fixed;
   top: 20px;
