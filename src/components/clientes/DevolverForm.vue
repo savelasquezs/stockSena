@@ -62,20 +62,13 @@
     icon="save"
     color="primary"
     style="width: 100%"
-    label="Devolver Elementos"
+    :label="tipoDev == 'devolucion' ? 'Devolver Elementos' : 'Crear traspaso'"
     @click="devolver"
     :loading="guardando"
-    v-if="tipoDev == 'devolucion'"
-  />
-  <q-btn
-    class="q-mt-xl"
-    icon="save"
-    color="primary"
-    style="width: 100%"
-    label="Crear traspaso"
-    @click="hacerTraspaso"
-    :loading="guardando"
-    v-else-if="tipoDev == 'cambioUser' && clienteReceptor.nombre"
+    v-if="
+      tipoDev == 'devolucion' ||
+      (tipoDev == 'cambioUser' && clienteReceptor.nombre)
+    "
   />
 </template>
 
@@ -107,11 +100,10 @@ const clienteReceptor = computed(() => {
 });
 
 function dataToBorrow() {
-  console.log(clientesStore.currentCustomer);
   let nuevaLista = [];
-  const dueDate = new Date(
-    new Date(new Date().toLocaleDateString()).getTime() + 23 * 60 * 60 * 1000
-  );
+  const dueDate =
+    new Date(new Date(new Date().toDateString())).getTime() +
+    23 * 60 * 60 * 1000;
   const dateBorrowed = new Date().getTime();
   props.listaElementos.forEach(async (element) => {
     console.log(element);
@@ -154,20 +146,11 @@ function dataToBorrow() {
 async function prestarProducto() {
   const data = dataToBorrow();
   console.log(data);
-
-  data.productosList.forEach(async (product) => {
-    console.log(product);
-    const docref = doc(db, "products", product.productId);
-    await updateDoc(docref, {
-      borrowedQuantity:
-        parseInt(product.borrowedQuantity) + parseInt(product.prestar),
-    });
-  });
-
   await addDoc(collection(db, "borrowings"), data).then((prestamo) => {
     const clienteDocRef = doc(db, "customers", props.clienteReceptor.numero_id);
     data.productosList.forEach(async (producto, indexLista) => {
       const productoDocRef = doc(db, "products", producto.productId);
+      console.log({ producto, clienteReceptor });
       const dataToProductos = {
         indexLista,
         diaPrestamo: producto.dateBorrowed,
@@ -198,109 +181,125 @@ async function prestarProducto() {
   });
 }
 
+async function updatePrestamos(
+  element,
+  notasDevolucion,
+  fechaDevolucion,
+  estadoDevuelto
+) {
+  const docPrestamoRef = doc(db, "borrowings", element.prestamoId);
+  let prestamo = await getDoc(docPrestamoRef);
+  const prestamoProductos = prestamo.data().productosList;
+  prestamoProductos[element.indexLista].returnedQuantity =
+    parseInt(prestamoProductos[element.indexLista].returnedQuantity) +
+    parseInt(element.devolver);
+  prestamoProductos[element.indexLista].returnedState = estadoDevuelto;
+
+  prestamoProductos[element.indexLista].notasDevolucion = notasDevolucion;
+  prestamoProductos[element.indexLista].fechaDevolucion = fechaDevolucion;
+
+  await updateDoc(docPrestamoRef, {
+    productosList: prestamoProductos,
+    notasGeneralesDEvolucion: notasGeneralesDevolucion.value,
+  });
+}
+
+async function updateProduct(element) {
+  //update productos cantidad disponible
+
+  const docProductoRef = doc(db, "products", element.productId);
+  let productElement = productosStore.productosDatabase.find(
+    (producto) => producto.docId == element.productId
+  );
+  const borrowedQuantity =
+    parseInt(productElement.borrowedQuantity) - element.devolver;
+  const data = {
+    borrowedQuantity,
+  };
+  await updateDoc(docProductoRef, data);
+}
+
+async function updateCustomerBorrowings(
+  element,
+  notasDevolucion,
+  fechaDevolucion,
+  estadoDevuelto
+) {
+  const docCustomerBorrowingRef = doc(
+    db,
+    "customers",
+    userId.value.toString(),
+    "borrowings",
+    element.docId
+  );
+
+  await updateDoc(docCustomerBorrowingRef, {
+    returnedQuantity: (element.returnedQuantity += parseInt(element.devolver)),
+    fechaDevolucion,
+    notasDevolucion,
+    estadoDevuelto,
+  });
+}
+
+async function updateProductBorrowings(
+  element,
+  notasDevolucion,
+  fechaDevolucion,
+  estadoDevuelto
+) {
+  //update product borrowings
+  const docProductBorrowingRef = doc(
+    db,
+    "products",
+    element.productId,
+    "borrowings",
+    element.productoBorrowId
+  );
+
+  await updateDoc(docProductBorrowingRef, {
+    returnedQuantity: (element.returnedQuantity += element.devolver),
+    fechaDevolucion,
+    notasDevolucion,
+    estadoDevuelto,
+  });
+}
+
 async function devolver() {
   guardando.value = true;
   props.listaElementos.forEach(async (element) => {
-    console.log(element);
-    const nuevoElemento = {
-      barCode: element.barCode,
-      dateBorrowed: new Date().getTime(),
-      descripcionProducto: element.descripcionProducto,
-      dueDate: new Date(
-        new Date(new Date().toLocaleDateString()).getTime() +
-          23 * 60 * 60 * 1000
-      ),
-      isConsumable: element.isConsumable,
-      product: element.product,
-      productId: element.productId,
-      quantity: element.devolver,
-      returnedQuantity: 0,
-    };
-    if (element.isConsumable) {
-      nuevoElemento.unidadMedida = element.unidadMedida;
-    } else {
-      nuevoElemento.estadoEntrega =
-        element.estadoEntrega || element.estadoFisico || "Excelente";
-      nuevoElemento.custom = element.custom;
-    }
-    const docPrestamoRef = doc(db, "borrowings", element.prestamoId);
-    let prestamo = await getDoc(docPrestamoRef);
+    console.log();
+
     const estadoDevuelto =
       element.estadoDevuelto || element.estadoEntrega || "excelente";
     const notasDevolucion = element.notasDevolucion || "";
     const fechaDevolucion = new Date().getTime();
-
-    //update prestamos
-    const prestamoProductos = prestamo.data().productosList;
-    prestamoProductos[element.indexLista].returnedQuantity =
-      parseInt(prestamoProductos[element.indexLista].returnedQuantity) +
-      parseInt(element.devolver);
-    prestamoProductos[element.indexLista].returnedState = estadoDevuelto;
-
-    prestamoProductos[element.indexLista].notasDevolucion = notasDevolucion;
-    prestamoProductos[element.indexLista].fechaDevolucion = fechaDevolucion;
-
-    await updateDoc(docPrestamoRef, {
-      productosList: prestamoProductos,
-      notasGeneralesDEvolucion: notasGeneralesDevolucion.value,
-    });
-
-    //update productos cantidad disponible
-
-    const docProductoRef = doc(db, "products", element.productId);
-    let productElement = productosStore.productosDatabase.find(
-      (producto) => producto.docId == element.productId
+    await updateCustomerBorrowings(
+      element,
+      notasDevolucion,
+      fechaDevolucion,
+      estadoDevuelto
     );
-    const borrowedQuantity =
-      parseInt(productElement.borrowedQuantity) - element.devolver;
-    const data = {
-      borrowedQuantity,
-    };
-    await updateDoc(docProductoRef, data);
+    await updateProductBorrowings(
+      element,
+      notasDevolucion,
+      fechaDevolucion,
+      estadoDevuelto
+    );
+    await updatePrestamos(
+      element,
+      notasDevolucion,
+      fechaDevolucion,
+      estadoDevuelto
+    );
+    if (props.tipoDev == "devolucion") {
+      await updateProduct(element);
+    }
 
     //update customers borrowings
-    const docCustomerBorrowingRef = doc(
-      db,
-      "customers",
-      userId.value.toString(),
-      "borrowings",
-      element.docId
-    );
-
-    await updateDoc(docCustomerBorrowingRef, {
-      returnedQuantity: (element.returnedQuantity += parseInt(
-        element.devolver
-      )),
-      fechaDevolucion,
-      notasDevolucion,
-      estadoDevuelto,
-    });
-
-    //update product borrowings
-    const docProductBorrowingRef = doc(
-      db,
-      "products",
-      element.productId,
-      "borrowings",
-      element.productoBorrowId
-    );
-
-    await updateDoc(docProductBorrowingRef, {
-      returnedQuantity: (element.returnedQuantity += element.devolver),
-      fechaDevolucion,
-      notasDevolucion,
-      estadoDevuelto,
-    });
   });
-  guardando.value = false;
-  emit("devuelto");
-}
-
-async function hacerTraspaso() {
-  guardando.value = true;
-
-  await devolver();
-  await prestarProducto();
+  if (props.tipoDev == "cambioUser") {
+    await prestarProducto();
+  }
   guardando.value = false;
   emit("devuelto");
 }
