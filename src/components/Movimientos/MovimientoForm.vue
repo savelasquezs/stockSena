@@ -32,7 +32,7 @@ Uso:
     />
 
     <!-- Opciones adicionales si v-if="movimiento == 'Ingreso entonces se activa
-    el formulario -->s
+    el formulario -->
     <div class="q-gutter-sm" v-if="movimiento == 'Ingreso'">
       <!-- Opción para registrar un nuevo producto -->
       <q-radio
