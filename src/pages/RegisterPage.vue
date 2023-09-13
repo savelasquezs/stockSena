@@ -56,7 +56,7 @@
           ]"
         />
           <q-btn label="Registrar" type="submit" color="primary" />
-          <q-btn @click="returnLogin()" color="primary" label="Regresar" />
+          <q-btn @click="returnManejo()" color="primary" label="Regresar" />
       </q-form>
     </div>
   </div>
@@ -130,7 +130,7 @@ function onSubmit() {
       sendEmailVerification(userCredential.user);
       signOut(auth);
       // ...
-      returnLogin();
+      returnManejo();
 
       showSuccessMessage("Usuario registrado exitosamente");
     })
@@ -148,8 +148,8 @@ function onSubmit() {
 //   return email.value.endsWith("@misena.edu.co");
 // }
 
-function returnLogin() {
-  router.push("/login");
+function returnManejo() {
+  router.push("/cuentas");
 }
 </script>
 
