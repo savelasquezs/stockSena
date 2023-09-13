@@ -94,6 +94,8 @@ const uploadToFirebase = (objJson) => {
         item = { ...element, borrowedQuantity: 0, isConsumable: true };
       } else if (props.tipo == "devolutivo") {
         item = { ...element, borrowedQuantity: 0, isConsumable: false };
+      } else if (props.tipo == "customers") {
+        item = { ...element, enMora: false };
       }
       databaseStore.saveElement(item, props.nomTabla);
     });
@@ -111,6 +113,8 @@ const uploadToFirebase = (objJson) => {
           item = { ...element, borrowedQuantity: 0, isConsumable: true };
         } else if (props.tipo == "devolutivo") {
           item = { ...element, borrowedQuantity: 0, isConsumable: false };
+        } else if (props.tipo == "customers") {
+          item = { ...element, enMora: false };
         }
         databaseStore.saveElement(item, props.nomTabla);
       });
@@ -138,10 +142,10 @@ const templateExcel = async () => {
     // Si no se cumple ninguna de las condiciones anteriores, se muestra un mensaje de error en la consola y la función retorna.
     if (props.nomTabla == "products") {
       filePath =
-        "gs://sena-stock-management.appspot.com/Plantilla produtos.xlsx";
-    } else if (props.nomTabla == "clientes") {
+        "gs://sena-stock-management.appspot.com/Plantilla consumibles.xlsx";
+    } else if (props.nomTabla == "customers") {
       filePath =
-        "gs://sena-stock-management.appspot.com/Plantilla Clientes.xlsxx";
+        "gs://sena-stock-management.appspot.com/Plantilla clientes.xlsx";
     } else {
       console.log("error, no se conoce la plantilla");
       return;
