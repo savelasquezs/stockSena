@@ -33,16 +33,20 @@ import ClientesForm from "src/components/clientes/ClientesForm.vue";
 import { data } from "autoprefixer";
 import SimpleTable from "components/utils/SimpleTable.vue";
 import { useRouter } from "vue-router";
+import { useDatabaseStore } from "src/stores/DatabaseStore";
 
 const router = useRouter();
 
 const formOppened = ref(false);
 const dataTableArray = ref([]);
 const clientesStore = UseClientesStore();
+const databaseStore = useDatabaseStore();
 
 clientesStore.listenChanges().then(() => {
   dataTableArray.value = clientesStore.clientesDatabase;
 });
+
+//-----------------------------------------
 </script>
 
 <style lang="scss" scoped></style>

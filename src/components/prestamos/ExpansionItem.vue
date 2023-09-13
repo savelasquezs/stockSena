@@ -55,7 +55,6 @@
         <q-item-section>
           <div class="flex flex-center">
             <DatePicker
-              options
               @guardarFecha="(fecha) => (producto.fechaEntrega = fecha)"
             />
             <q-input disable v-model="producto.fechaEntrega"

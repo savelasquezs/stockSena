@@ -14,7 +14,9 @@
  */
 
 //Importaciónes de firebase
+
 import {
+  collectionGroup,
   addDoc,
   collection,
   doc,
@@ -83,6 +85,7 @@ export const useDatabaseStore = defineStore("database", {
         });
       });
     },
+
     /**
      * Escuchar cambios en una subcolección dentro de un documento principal.
      * @memberof useDatabaseStore
@@ -112,6 +115,9 @@ export const useDatabaseStore = defineStore("database", {
           if (change.type == "added") {
             if (!store[arrayName].some((item) => item.docId == change.doc.id)) {
               // Si se agrega un nuevo documento, agregarlo al principio del array en el estado.
+              if (store == "customers") {
+                console.log("jajajaj customers");
+              }
               const data = {
                 docId: change.doc.id,
                 ...change.doc.data(),
