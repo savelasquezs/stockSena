@@ -4,70 +4,69 @@
       <div class="form-container">
         <q-form @submit="onSubmit" class="q-gutter-md">
           <div class="logo-container">
-
-            <q-img
-            src="https://www.sena.edu.co/Style%20Library/alayout/images/logoSena.png"
-            loading="lazy"
-            spinner-color="white"
-            width="150px"
-            class=""
-            />
+            <q-img src="public\img\Sena.png" width="125px" style="top: -25px" />
           </div>
 
           <q-input
-          filled
-          type="text"
-          v-model="username"
-          label="Ingresa tu nombre *"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-          />
-
-          <q-input
-          filled
-          type="email"
-          v-model="email"
-          label="Ingresa tu email *"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-          />
-
-          <q-input
-          filled
-          type="password"
-          v-model="password1"
-          label="Ingresa tu contraseña *"
-          lazy-rules
-          :rules="[
-            (val) =>
-              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
+            filled
+            type="text"
+            v-model="username"
+            label="Ingresa tu nombre *"
+            lazy-rules
+            :rules="[
+              (val) => (val && val.length > 0) || 'Please type something',
             ]"
-        />
-        <q-input
-          filled
-          type="password"
-          v-model="password2"
-          label="Repita su contraseña *"
-          lazy-rules
-          :rules="[
-            (val) =>
-              (val !== null && val !== '') || 'Ingresa tu contraseña correcta',
-            (val) => val == password1 || 'la contraseña no coincide',
-          ]"
-        />
+          />
+
+          <q-input
+            filled
+            type="email"
+            v-model="email"
+            label="Ingresa tu email *"
+            lazy-rules
+            :rules="[
+              (val) => (val && val.length > 0) || 'Please type something',
+            ]"
+          />
+
+          <q-input
+            filled
+            type="password"
+            v-model="password1"
+            label="Ingresa tu contraseña *"
+            lazy-rules
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') ||
+                'Ingresa tu contraseña correcta',
+            ]"
+          />
+          <q-input
+            filled
+            type="password"
+            v-model="password2"
+            label="Repita su contraseña *"
+            lazy-rules
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') ||
+                'Ingresa tu contraseña correcta',
+              (val) => val == password1 || 'la contraseña no coincide',
+            ]"
+          />
           <q-btn label="Registrar" type="submit" color="primary" />
           <q-btn @click="returnLogin()" color="primary" label="Regresar" />
-      </q-form>
+        </q-form>
+      </div>
     </div>
-  </div>
 
-  <div class="message-container">
-    <div class="success-message" v-if="successMessage">
-      {{ successMessage }}
+    <div class="message-container">
+      <div class="success-message" v-if="successMessage">
+        {{ successMessage }}
+      </div>
+      <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
     </div>
-    <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
   </div>
-</div>
 </template>
 
 <script setup>

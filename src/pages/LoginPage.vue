@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-center">
     <div>
-      <h5 class="text-h5 q-mb-md">INGRESA A TU ALMACÉN</h5>
+      <h5 class="text-h5 flex flex-center">BIENVENIDO/A</h5>
       <p class="q-mb-md" style="color: #858282">
-        Ingresa Correo y Contraseña de tu Almacén
+        Ingresa Correo y Contraseña de tu almacén
       </p>
     </div>
     <div class="q-pa-md" style="max-width: 400px">
@@ -80,32 +80,29 @@ const password = ref("");
 const errorMessage = ref(""); // Variable para mostrar mensajes de error
 const loadingLogin = ref(false);
 
+let failedLoginAttempts = 0; // Contador de intentos fallidos
+const maxFailedAttempts = 3; // Límite de intentos fallidos antes de mostrar la opción de recuperación de contraseña
+
 function onSubmit() {
   errorMessage.value = "";
   loadingLogin.value = true;
-  // if (!isEmailValid()) {
-  //   alert("Por favor, ingresa un correo válido de @misena.edu.co");
-  //   return;
-  // }
-
-  // Realizar el inicio de sesión con Firebase
 
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
       router.push("/");
+      failedLoginAttempts = 0; // Restablecer el contador de intentos fallidos en caso de inicio de sesión exitoso
 
-      // Muestra una notificación de éxito
       Notify.create({
-        type: "positive", // Tipo de notificación de éxito
+        type: "positive",
         message: "Inicio de sesión exitoso",
         position: "top",
-        timeout: 3000, // Duración de la notificación en milisegundos
+        timeout: 3000,
       });
     })
     .catch((error) => {
       loadingLogin.value = false;
       const errorCode = error.code;
-      let errorMessage = "Error desconocido"; // Mensaje predeterminado
+      let errorMessage = "Error desconocido";
 
       switch (errorCode) {
         case "auth/invalid-email":
@@ -114,21 +111,39 @@ function onSubmit() {
         case "auth/user-not-found":
           errorMessage = "Usuario no encontrado, inténtalo de nuevo";
           break;
-        case "auth/invalid-password":
-          errorMessage = "Contraseña inválida";
-          break;
         case "auth/wrong-password":
           errorMessage = "La contraseña es incorrecta, inténtalo de nuevo";
+          failedLoginAttempts++; // Incrementar el contador de intentos fallidos
           break;
       }
 
-      // Muestra notificacion de error
       Notify.create({
-        type: "negative", // Tipo de notificación de error
+        type: "negative",
         message: errorMessage,
         position: "top",
-        timeout: 3000, // Duración de la notificación en milisegundos
+        timeout: 3000,
       });
+
+      // Verificar si se supera el límite de intentos fallidos
+      if (failedLoginAttempts >= maxFailedAttempts) {
+        // Mostrar un mensaje para recuperar la contraseña
+        Notify.create({
+          type: "warning",
+          message:
+            "Has superado el límite de intentos fallidos. ¿Deseas recuperar tu contraseña?",
+          position: "top",
+          timeout: 50000, // Aumenta el tiempo para dar tiempo al usuario de hacer clic en el enlace/botón
+          actions: [
+            {
+              label: "Recuperar Contraseña",
+              color: "positive",
+              handler: () => {
+                router.push("/recover");
+              },
+            },
+          ],
+        });
+      }
     });
 }
 

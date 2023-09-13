@@ -1,9 +1,9 @@
 <template>
   <div class="q-pa-md q-gutter-md q-flex">
     <div>
-      <h5 class="text-h5 q-mb-md" style="">INGRESA A TU ALMACÉN</h5>
+      <h5 class="text-h5 q-mb-md" style="">Recuperar Contraseña</h5>
       <p class="q-mb-md" style="color: #858282">
-        Ingresa con tu email y contraseña de tu almacén
+        Ingresa dirección de correo electrónico
       </p>
     </div>
     <div class="">
@@ -21,14 +21,10 @@
     </div>
 
     <div class="q-gutter-md">
-      <q-btn
-        @click="recoverPasword"
-        color="primary"
-        label="Recuperar contraseña"
-      />
+      <q-btn @click="recoverPasword" color="primary" label="Recuperar" />
       <q-btn
         @click="returnLogin()"
-        label="Regresar"
+        label="Regresar "
         style="background-color: red; color: #ffff"
       />
     </div>
