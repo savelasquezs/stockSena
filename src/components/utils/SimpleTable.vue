@@ -80,19 +80,35 @@
         </template>
         <template v-slot:body-cell-caritas="props">
           <q-td :props="props">
-            <q-icon
-              :name="
-                props.row.quantity > props.row.returnedQuantity
-                  ? 'sentiment_dissatisfied'
-                  : 'sentiment_very_satisfied'
-              "
-              size="30px"
+            <q-badge
               :color="
                 props.row.quantity > props.row.returnedQuantity
-                  ? 'red-5'
-                  : 'accent'
+                  ? 'yellow-6'
+                  : 'success'
               "
-            />
+              text-color="black"
+            >
+              {{ props.row.quantity - props.row.returnedQuantity }}
+              <q-icon
+                :name="
+                  props.row.quantity > props.row.returnedQuantity
+                    ? 'warning'
+                    : 'sentiment_very_satisfied'
+                "
+                size="14px"
+                class="q-ml-xs"
+              />
+            </q-badge>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-enMora="props">
+          <q-td :props="props">
+            <div class="flex flex-center">
+              <q-icon color="accent" size="1.5rem">
+                <EnMora v-if="props.row.enMora" />
+                <AlDia v-else />
+              </q-icon>
+            </div>
           </q-td>
         </template>
 
@@ -113,6 +129,8 @@
 import { exportFile } from "quasar";
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import AlDia from "components/icons/AlDia.vue";
+import EnMora from "components/icons/EnMora.vue";
 const emit = defineEmits([
   "agregando",
   "viendo",

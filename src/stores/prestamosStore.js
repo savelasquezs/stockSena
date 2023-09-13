@@ -103,7 +103,12 @@ export const UsePrestamosStore = defineStore("prestamos", {
         sortable: true,
       },
 
-      { name: "rol", label: "Rol",  field: (row) => row.customer.rol, sortable: true },
+      {
+        name: "rol",
+        label: "Rol",
+        field: (row) => row.customer.rol,
+        sortable: true,
+      },
 
       {
         name: "date",
@@ -262,11 +267,11 @@ export const UsePrestamosStore = defineStore("prestamos", {
       docs = await getDocs(q);
       docs = docs.docs.map((document, index) => {
         const today = new Date().getTime();
-        let enMora = false;
 
-        if (today > document.data().dueDate) {
-          enMora = true;
-        }
+        const enMora =
+          today > document.data().dueDate &&
+          document.data().returnedQuantity < document.data().quantity;
+
         return { index, docId: document.id, ...document.data(), enMora };
       });
       this.allPersonDocs = docs;

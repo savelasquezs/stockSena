@@ -16,9 +16,12 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
+  where,
 } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import { UseUtilsStore } from "./utilsStore";
@@ -41,6 +44,11 @@ export const UseClientesStore = defineStore("clientes", {
        * }
        * Estos campos son los que se le pasan a la columna, y varian segun
        * las columnas y como se definan*/
+      {
+        name: "enMora",
+        label: "Estado Mora",
+        field: "enMora",
+      },
       {
         name: "TipoDoc",
         align: "center",
@@ -78,14 +86,24 @@ export const UseClientesStore = defineStore("clientes", {
     ],
     columnsPrestamosPersona: [
       {
-        name: "caritas",
-        label: "Estado",
-        field: "caritas",
-      },
-      {
         name: "producto",
         label: "Producto",
         field: (row) => row.product,
+        style: (row) =>
+          row.product
+            ? "font-weight: bold;font-size:1rem"
+            : "font-weight: bold",
+      },
+      {
+        name: "enMora",
+        label: "Estado Mora",
+        field: "enMora",
+      },
+
+      {
+        name: "caritas",
+        label: "Debe Unidades",
+        field: "caritas",
       },
 
       {
@@ -97,6 +115,24 @@ export const UseClientesStore = defineStore("clientes", {
         name: "cantidadDevuelta",
         label: "Cantidad devuelta",
         field: (row) => row.returnedQuantity,
+      },
+      {
+        name: "fechaPrestamo",
+        label: "Fecha Prestamo",
+        field: (row) => row.dateBorrowed,
+        format: (val) => new Date(val).toLocaleDateString("es-CO"),
+      },
+      {
+        name: "fechaLimite",
+        label: "Fecha Limite",
+        field: (row) => row.dueDate,
+        format: (val) => new Date(val).toLocaleDateString("es-CO"),
+      },
+      {
+        name: "fechaDevuelto",
+        label: "Fecha ultima dev",
+        field: (row) => row.fechaDevolucion,
+        format: (val) => new Date(val).toLocaleDateString("es-CO"),
       },
       {
         name: "descripcion",
@@ -123,30 +159,6 @@ export const UseClientesStore = defineStore("clientes", {
         field: (row) => row.estadoDevuelto,
       },
 
-      {
-        name: "fechaPrestamo",
-        label: "Fecha Prestamo",
-        field: (row) => row.dateBorrowed,
-        format: (val) => new Date(val).toLocaleDateString("es-CO"),
-      },
-      {
-        name: "fechaDevuelto",
-        label: "Fecha devuelto",
-        field: (row) => row.fechaDevolucion,
-        format: (val) => new Date(val).toLocaleDateString("es-CO"),
-      },
-      {
-        name: "prestamoId",
-        align: "center",
-        label: "Id prestamo",
-        field: (row) => row.prestamoId,
-        sortable: true,
-      },
-      {
-        name: "productoId",
-        label: "ProductoId",
-        field: (row) => row.productId,
-      },
       { name: "acciones", label: "Acciones", field: "acciones" },
     ],
     stadistics: [
@@ -181,17 +193,34 @@ export const UseClientesStore = defineStore("clientes", {
       // Establecer un observador en la consulta
       onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
         // Iterar a través de los cambios en los documentos
-        snapshot.docChanges().forEach((change) => {
+        snapshot.docChanges().forEach(async (change) => {
           // Si se agrega un cliente nuevo
           if (change.type == "added") {
             // Crear un objeto de datos con el ID del documento y sus datos
             if (
               !this.clientesDatabase.some((item) => item.docId == change.doc.id)
             ) {
+              const today = new Date().getTime();
+              const customerRef = doc(db, "customers", change.doc.id);
+              const q = query(
+                collection(customerRef, "borrowings"),
+                where("dueDate", "<", today)
+              );
+              const docs = await getDocs(q);
+              let enMora = false;
+              if (!docs.empty) {
+                enMora = true;
+                docs.docs.forEach(async (prestamo) => {
+                  const prestRef = doc(customerRef, "borrowings", prestamo.id);
+                  await updateDoc(prestRef, { enMora });
+                });
+              }
               const data = {
                 docId: change.doc.id,
                 ...change.doc.data(),
+                enMora,
               };
+              console.log("asdasd");
               // Agregar el cliente al principio de la lista
               this.clientesDatabase.unshift(data);
             }
