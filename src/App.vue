@@ -8,7 +8,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "./firebaseInit";
 import { provide, ref } from "vue";
 import { useProductosStore } from "stores/productosStore";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useDatabaseStore } from "stores/DatabaseStore";
 
 const $q = useQuasar();
@@ -28,6 +28,7 @@ DatabaseStore.escucharCambios(
 
 const usuario = ref("");
 provide("user", usuario);
+const route = useRoute();
 
 let timer;
 
@@ -38,7 +39,7 @@ onAuthStateChanged(auth, async (user) => {
       if (doc.exists()) {
         localStorage.setItem("user", JSON.stringify(doc.data()));
         usuario.value = doc.data();
-        router.push("/");
+        if (route.fullPath == "/login") router.push("/");
       }
     });
   } else {

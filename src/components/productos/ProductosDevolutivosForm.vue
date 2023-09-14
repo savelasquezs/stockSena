@@ -9,12 +9,14 @@
   </div>
   <q-form @submit="emit('enviado', datosCompletos)">
     <div class="q-ma-lg q-pa-md shadow-2">
-      <div class="text-center text-subtitle2">Campos</div>
+      <div class="text-center text-subtitle2"></div>
+
       <q-input
         v-for="item in listaCampos"
         :key="item.nombreCampo"
         :label="item.nombreCampo"
         v-model="valueCampos.custom[item.nombreCampo]"
+        :type="item.tipoDato == 'numero' ? 'number' : 'text'"
       />
       <div v-if="listaCampos.length > 0">
         <q-input v-model="valueCampos.codigoBarra" label="Codigo de Barras" />

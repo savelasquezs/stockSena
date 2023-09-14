@@ -92,8 +92,6 @@ function onSubmit() {
 
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
-      router.push("/");
-
       // Muestra una notificación de éxito
       Notify.create({
         type: "positive", // Tipo de notificación de éxito
@@ -101,6 +99,7 @@ function onSubmit() {
         position: "top",
         timeout: 3000, // Duración de la notificación en milisegundos
       });
+      router.push("/");
     })
     .catch((error) => {
       loadingLogin.value = false;

@@ -3,6 +3,7 @@
 // Importación de la autentificación
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import { getFunctions } from "firebase/functions";
 
 // Inicializador de firebase
 import { initializeApp } from "firebase/app";
@@ -27,9 +28,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const app2 = initializeApp(firebaseConfig);
 
 // constante de autentificación
 const auth = getAuth(app);
+const auth2 = getAuth(app2);
 
 const db = initializeFirestore(app, {
   cache: CACHE_SIZE_UNLIMITED,
@@ -39,6 +42,6 @@ const db = initializeFirestore(app, {
 });
 
 const storage = getStorage(app);
+const functions = getFunctions(app);
 
-
-export { db, auth, storage  };
+export { db, auth, storage, auth2, functions };
