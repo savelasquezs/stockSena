@@ -6,6 +6,9 @@
   <QDialogo v-model="Codigo" iconModal="view_week">
     <BarcodeGenerator />
   </QDialogo>
+  <QDialogo v-model="modalDevolverOpened" iconModal="real_estate_agent">
+    <DevolverPrestamo @devuelto="modalDevolverOpened = false" />
+  </QDialogo>
 
   <q-layout view="hHh lpR fFf" class="page-background-gray">
     <q-header elevated>
@@ -20,8 +23,27 @@
 
         <q-toolbar-title> Sena Stock Management App </q-toolbar-title>
         <!-- <div>Quasar v{{ $q.version }}</div> -->
-        <q-btn @click="Codigo = true" label="Codigo Barra" />
-        <q-btn @click="modalPrestamoOpened = true" label="Crear prestamo" />
+        <q-btn
+          color="accent"
+          class="q-mx-sm"
+          icon="view_week"
+          @click="Codigo = true"
+          label="Codigo Barra"
+        />
+        <q-btn
+          color="accent"
+          class="q-mx-sm"
+          icon="real_estate_agent"
+          @click="modalPrestamoOpened = true"
+          label="Crear prestamo"
+        />
+        <q-btn
+          color="accent"
+          class="q-mx-sm"
+          icon="autorenew"
+          @click="modalDevolverOpened = true"
+          label="Devolver"
+        />
       </q-toolbar>
     </q-header>
 
@@ -48,7 +70,7 @@
         />
       </q-scroll-area>
 
-      <q-img class="absolute-top" style="height: 150px">
+      <q-img class="absolute-top perfil" style="height: 150px">
         <div class="absolute-bottom bg-transparent">
           <q-avatar size="50px" class="q-mb-sm" style="margin-bottom: -1px">
             <q-img src="/img/icono.png" />
@@ -58,8 +80,10 @@
               class="text-weight-medium text-black"
               style="margin-bottom: -15px"
             >
-              <p>{{ userCredential.email }}</p>
-              <p>Almacen: {{ userCredential.almacen }}</p>
+              <span>{{ userCredential.email }}</span>
+              <p class="text-subtitle1 text-accent">
+                Almacen: {{ userCredential.almacen }}
+              </p>
             </div>
           </div>
         </div>
@@ -82,8 +106,10 @@ import { useRouter } from "vue-router";
 import { getAuth } from "firebase/auth";
 import PrestamosFormVue from "components/prestamos/PrestamosFormVue.vue";
 import BarcodeGenerator from "components/dashboard/BarcodeGenerator.vue";
+import DevolverPrestamo from "components/prestamos/DevolverPrestamo.vue";
 
 import QDialogo from "components/utils/QDialogo.vue";
+const modalDevolverOpened = ref(false);
 
 const userCredential = ref({});
 const user = inject("user") || "raro";
@@ -152,3 +178,14 @@ function toggleLeftDrawer() {
   console.log(localStorage.getItem("user"));
 })();
 </script>
+
+<style scoped>
+.perfil {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(128, 128, 128, 0.2391806722689075) 51%,
+    rgba(250, 254, 255, 1) 100%
+  );
+}
+</style>

@@ -1,5 +1,4 @@
 <template>
-  {{ clienteReceptor }}
   <div class="text-h5 q-mb-xl text-center" v-if="tipoDev == 'devolucion'">
     ¿Seguro que quiere devolver los siguientes items?
   </div>
@@ -80,6 +79,7 @@ import { useProductosStore } from "src/stores/productosStore";
 import { useRoute } from "vue-router";
 import { UseClientesStore } from "src/stores/clientesStore";
 import { data } from "autoprefixer";
+import { UsePrestamosStore } from "src/stores/prestamosStore";
 
 const emit = defineEmits(["deselectRow", "devuelto"]);
 const props = defineProps({
@@ -88,10 +88,15 @@ const props = defineProps({
   clienteReceptor: Object,
   clienteEmisor: Object,
 });
+const prestamosStore = UsePrestamosStore();
 const guardando = ref(false);
 const notasGeneralesDevolucion = ref("");
 const route = useRoute();
-const userId = ref(route.params.id);
+const userId = computed(() => {
+  const id = route.params.id;
+  console.log(prestamosStore.currentCustomer);
+  return id ? id : prestamosStore.currentCustomer.numero_id;
+});
 const clientesStore = UseClientesStore();
 const productosStore = useProductosStore();
 
