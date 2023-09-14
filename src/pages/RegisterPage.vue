@@ -64,12 +64,15 @@
 
 <script setup>
 import { ref } from "vue";
-import { sendEmailVerification, signOut, updateProfile } from "firebase/auth";
-import { auth, db } from "src/firebaseInit";
+import { httpsCallable } from "firebase/functions";
+
 import { createUserWithEmailAndPassword } from "firebase/auth";
 //redireccion de rutas
 import { useRouter } from "vue-router";
 import { doc, setDoc } from "firebase/firestore";
+import { functions } from "src/firebaseInit";
+
+const createUser = httpsCallable(functions, "createUser");
 
 const router = useRouter();
 const email = ref("");
@@ -99,39 +102,19 @@ function onSubmit() {
   //   alert("Por favor, ingresa un correo válido de @misena.edu.co");
   //   return;
   // }
-
   //Registrar un usuario
-  createUserWithEmailAndPassword(auth, email.value, password1.value)
-    .then(async (userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      updateProfile(user, { displayName: username.value });
-      const userData = {
-        email: user.email,
-        displayName: username.value,
-        role: "invitado",
-        almacen: usuarioBD.almacen,
-      };
-      const docRef = doc(db, "users", user.uid);
-      await setDoc(docRef, userData)
-        .then(() => {})
-        .catch((error) => {
-          console.error("error adding document: ", error);
-        });
-
-      sendEmailVerification(userCredential.user);
-      signOut(auth);
-      // ...
-      returnManejo();
-
-      showSuccessMessage("Usuario registrado exitosamente");
+  createUser({
+    email: email.value,
+    password: password1.value,
+    displayName: username.value,
+  })
+    .then((result) => {
+      // Handle success
+      console.log("User created with ID:", result.data.uid);
     })
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(error, errorMessage);
-      // ..
-      showErrorMessage("No se pudo registrar el usuario");
+      // Handle errors
+      console.error("Error creating user:", error.message);
     });
 }
 
@@ -139,10 +122,6 @@ function onSubmit() {
 //   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
 //   return email.value.endsWith("@misena.edu.co");
 // }
-
-function returnManejo() {
-  router.push("/cuentas");
-}
 </script>
 
 <style>

@@ -284,7 +284,10 @@ export const UsePrestamosStore = defineStore("prestamos", {
       const idString = id;
       let docs;
       const productRef = doc(db, "products", idString);
-      const q = query(collection(productRef, "borrowings"));
+      const q = query(
+        collection(productRef, "borrowings"),
+        orderBy("diaPrestamo", "desc")
+      );
       docs = await getDocs(q);
       docs = docs.docs.map((document, index) => {
         return { index, docId: document.id, ...document.data() };
