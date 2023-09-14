@@ -71,7 +71,7 @@ import uploadData from "components/utils/ExcelToJasonBtn.vue";
 const Tipo_documento = ref(null);
 const options_Tipo_documento = ref([
   "Cedula de ciudadania",
-  "Tarjeta de indentidad",
+  "Tarjeta de identidad",
   "Pasaporte",
 ]);
 const Numero_documento = ref("");
