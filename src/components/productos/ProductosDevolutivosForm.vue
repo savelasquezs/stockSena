@@ -17,9 +17,19 @@
         :label="item.nombreCampo"
         v-model="valueCampos.custom[item.nombreCampo]"
         :type="item.tipoDato == 'numero' ? 'number' : 'text'"
+        :rules="[
+          (val) =>
+            (val != '' && val != null && val != 0) || 'Debes ingresar un valor',
+        ]"
       />
       <div v-if="listaCampos.length > 0">
-        <q-input v-model="valueCampos.codigoBarra" label="Codigo de Barras" />
+        <q-input
+          v-model="valueCampos.codigoBarra"
+          label="Codigo de Barras"
+          :rules="[
+            (val) => (val != '' && val != null) || 'Debes ingresar un valor',
+          ]"
+        />
         <q-input autogrow v-model="valueCampos.notas" label="Notas" />
         <q-select
           outlined
@@ -28,6 +38,9 @@
           v-model="valueCampos.estadoFisico"
           :options="options"
           class="q-my-lg"
+          :rules="[
+            (val) => (val != '' && val != null) || 'Debes ingresar un valor',
+          ]"
         />
       </div>
     </div>

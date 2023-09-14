@@ -6,7 +6,6 @@
 // Se utiliza en conjunto con el enrutador de Vue Router para navegar entre
 // las diferentes secciones de la aplicación.
 
-
 // routes es una matriz que contiene objetos de ruta.
 // Cada objeto representa una ruta en la aplicación y contiene información
 // sobre cómo se debe manejar esa ruta.
@@ -79,10 +78,7 @@ const routes = [
         path: "/cuentas",
         component: () => import("pages/CuentasManejo.vue"),
       },
-      {
-        path: "/experimento",
-        component: () => import("pages/experimentalPage.vue"),
-      },
+
       {
         path: "/register",
         component: () => import("pages/RegisterPage.vue"),

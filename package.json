@@ -8,7 +8,8 @@
   "scripts": {
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build -m electron"
+    "build": "quasar build -m electron",
+    "buildspa": "quasar build"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",

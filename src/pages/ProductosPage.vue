@@ -2,7 +2,7 @@
   <div style="background-color: #f5f5f5">
     <QDialogo
       v-model="openedForm"
-      colorButton="secondary"
+      colorButton="accent"
       iconButton="add_circle"
       iconModal="real_estate_agent"
       labelButton="Agregar formato producto devolutivo"
@@ -23,9 +23,9 @@
         <QDialogo
           visibleButton
           v-model="openConsumableForm"
-          colorButton="secondary"
+          colorButton="accent"
           iconButton="add_circle"
-          labelButton="Agregar producto consumible"
+          labelButton="Formato producto devolutivo"
           iconModal="save"
         >
           <ComsumiblesForm @productoGuardado="openConsumableForm = false" />
