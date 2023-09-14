@@ -186,6 +186,13 @@ export const UseClientesStore = defineStore("clientes", {
   getters: {},
 
   actions: {
+    updatePrestamosMora(customerRef, docs) {
+      docs.forEach(async (prestamo) => {
+        const prestRef = doc(customerRef, "borrowings", prestamo.id);
+        await updateDoc(prestRef, { enMora });
+      });
+    },
+
     // listenChanges / Acción para escuchar cambios en la colección de clientes
     async listenChanges() {
       // Crear una consulta para la colección "customers" ordenada por "nombre"
@@ -210,10 +217,7 @@ export const UseClientesStore = defineStore("clientes", {
               let enMora = false;
               if (!docs.empty) {
                 enMora = true;
-                docs.docs.forEach(async (prestamo) => {
-                  const prestRef = doc(customerRef, "borrowings", prestamo.id);
-                  await updateDoc(prestRef, { enMora });
-                });
+                this.updatePrestamosMora(customerRef, docs.docs);
               }
               const data = {
                 docId: change.doc.id,

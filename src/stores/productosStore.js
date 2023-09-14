@@ -235,7 +235,6 @@ export const useProductosStore = defineStore("productos", {
       },
       { name: "acciones", label: "Acciones", field: "acciones" },
     ],
-    devolutivosRows: [],
   }),
   // Getters personalizados para obtener información específica de los productos.
   getters: {
