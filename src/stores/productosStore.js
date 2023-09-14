@@ -168,17 +168,12 @@ export const useProductosStore = defineStore("productos", {
         periodo: "Ultima semana",
       },
       {
-        text_color: "text-yellow",
+        text_color: "text-black",
         titulo: "Total productos",
         valor: "15000",
         periodo: "Ultima semana",
       },
-      {
-        text_color: "text-pink",
-        titulo: "Diandry",
-        valor: "8569522",
-        periodo: "Ultima semana",
-      },
+
     ],
 
     columnasDetalleProducto: [

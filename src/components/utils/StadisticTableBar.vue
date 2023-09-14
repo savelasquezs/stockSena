@@ -18,20 +18,21 @@ Características clave:
 <template>
   <!-- Contenedor principal de la barra de estadísticas -->
   <div class="flex justify-center">
-    <q-item clickable to="/">
-      <!-- etiqueta en la cual se guarda la imagen -->
-      <q-img src="public\img\Sena.png" width="125px" />
-      <!-- aqui se llama al componente "StadisticTableItem"
+    <a href="/">
+      <q-item clickable>
+        <q-img src="public\img\Sena.png" width="125px" />
+      </q-item>
+    </a>
+    <!-- aqui se llama al componente "StadisticTableItem"
       en el cual se pueden especificar las caracteristicas del item-->
-      <StadisticTableItem
-        v-for="stadistic in stadisticTableBarInfo"
-        :key="stadistic.titulo"
-        :textColor="stadistic.text_color"
-        :titulo="stadistic.titulo"
-        :valor="stadistic.valor"
-        :periodo="stadistic.periodo"
-      />
-    </q-item>
+    <StadisticTableItem
+      v-for="stadistic in stadisticTableBarInfo"
+      :key="stadistic.titulo"
+      :textColor="stadistic.text_color"
+      :titulo="stadistic.titulo"
+      :valor="stadistic.valor"
+      :periodo="stadistic.periodo"
+    />
   </div>
 </template>
 
