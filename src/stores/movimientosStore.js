@@ -102,19 +102,19 @@ export const UseMovimientosStore = defineStore("movimientos", {
     ],
     stadistics: [
       {
-        text_color: "text-light-green-14",
+        text_color: "text-light-black",
         titulo: "Total ingresos",
         valor: "210",
         periodo: "Ultima semana",
       },
       {
-        text_color: "text-teal-6",
+        text_color: "text-light-black",
         titulo: "Total Salidas",
         valor: "210",
         periodo: "Ultima semana",
       },
       {
-        text_color: "text-deep-orange-6",
+        text_color: "text-light-black",
         titulo: "Proveedor Estrella",
         valor: "Juan la roca",
         periodo: "Ultima semana",

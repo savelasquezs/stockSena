@@ -40,13 +40,19 @@
           ]"
         />
 
-        <q-select outlined label="Rol" v-model="Rol" :options="options_Rol" />
-
+        <q-select
+          outlined
+          label="Rol"
+          v-model="Rol"
+          :options="options_Rol"
+          :rules="[(val) => !!val || 'Seleccione un Rol']"
+        />
         <q-select
           outlined
           label="Area"
           v-model="Area"
           :options="options_Area"
+          :rules="[(val) => !!val || 'Seleccione una opción']"
         />
         <q-btn type="submit" label="Guardar cliente" color="green-14" />
       </div>

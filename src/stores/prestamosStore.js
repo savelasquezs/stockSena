@@ -50,6 +50,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
        * }
         */
       {
+
         text_color: "light-green-14",
         titulo: "Productos devueltos",
         valor: "210",
@@ -62,17 +63,12 @@ export const UsePrestamosStore = defineStore("prestamos", {
         periodo: "Ultima semana",
       },
       {
-        text_color: "text-yellow",
+        text_color: "text-black",
         titulo: "Total productos",
         valor: "15000",
         periodo: "Ultima semana",
       },
-      {
-        text_color: "text-pink",
-        titulo: "Diandry",
-        valor: "8569522",
-        periodo: "Ultima semana",
-      },
+
     ],
     columns: [
       /** Definición de columnas para tablas relacionadas con prestamos.
