@@ -51,6 +51,7 @@
         <q-btn type="submit" label="Guardar cliente" color="green-14" />
       </div>
     </div>
+    <uploadData nomTabla="customers" tipo="customers" />
   </q-form>
 </template>
 
@@ -60,7 +61,7 @@ import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useQuasar } from "quasar";
 import { db } from "src/firebaseInit";
 import { ref } from "vue";
-
+import uploadData from "components/utils/ExcelToJasonBtn.vue";
 const Tipo_documento = ref(null);
 const options_Tipo_documento = ref([
   "Cedula de ciudadania",

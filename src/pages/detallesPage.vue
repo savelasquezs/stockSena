@@ -151,8 +151,8 @@
       <div class="bg-white text-orange text-h6 text-weight-bold">
         Cantidad En Almacén
         <div>
-          <div class="text-subtitle text-black flex justify-center">
-            {{ cantidadAlmacen }}
+          <div class="text-subtitle2 text-black flex justify-center">
+            {{ product.stockTotal }}
           </div>
         </div>
       </div>
