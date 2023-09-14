@@ -59,7 +59,7 @@
         <template v-slot:header="{ expanded }">
           <q-item-section avatar>
             <q-avatar>
-              <q-img src="public\img\icono.png" />
+              <q-img src="/img/icono.png" />
             </q-avatar>
           </q-item-section>
 

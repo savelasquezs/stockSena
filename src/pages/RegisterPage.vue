@@ -3,7 +3,7 @@
     <div class="form-container">
       <q-form @submit="onSubmit" class="q-gutter-md">
         <div class="logo-container">
-          <q-img src="public\img\Sena.png" width="125px" style="top: -25px" />
+          <q-img src="/img/Sena.png" width="125px" style="top: -25px" />
         </div>
 
         <q-input

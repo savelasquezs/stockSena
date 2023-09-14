@@ -1,6 +1,6 @@
 <template>
   <div class="flex column flex-center q-pb-xl">
-    <q-img src="public\img\Sena.png" width="125px" />
+    <q-img src="/img/Sena.png" width="125px" />
   </div>
 
   <q-form @submit="guardarCliente">

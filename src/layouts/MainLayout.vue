@@ -51,7 +51,7 @@
       <q-img class="absolute-top" style="height: 150px">
         <div class="absolute-bottom bg-transparent">
           <q-avatar size="50px" class="q-mb-sm" style="margin-bottom: -1px">
-            <q-img src="public\img\icono.png" />
+            <q-img src="/img/icono.png" />
           </q-avatar>
           <div v-if="userCredential">
             <div

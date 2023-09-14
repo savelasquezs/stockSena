@@ -34,10 +34,7 @@ Descripción del archivo "consumiblesForm.vue":
         </q-card-section>
         <!-- Imagen de ejemplo de campos -->
         <q-card-section>
-          <q-img
-            src="public\img\ejemploProductosConsumibles.png"
-            width="500px"
-          />
+          <q-img src="/img/ejemploProductosConsumibles.png" width="500px" />
         </q-card-section>
       </q-card>
     </q-dialog>

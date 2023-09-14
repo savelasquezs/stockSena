@@ -20,7 +20,7 @@ Características clave:
   <div class="flex justify-center">
     <a href="/">
       <q-item clickable>
-        <q-img src="public\img\Sena.png" width="125px" />
+        <q-img src="/img/Sena.png" width="125px" />
       </q-item>
     </a>
     <!-- aqui se llama al componente "StadisticTableItem"
