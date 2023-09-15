@@ -1,35 +1,73 @@
 <template>
-  <!-- Se añade un boton que permite entrar a el explorador de archivos y seleccionar
-    un archivo con formato xls-->
-  <q-file
-    v-model="fileExcel"
-    label="Cargar Archivos"
-    filled
-    counter
-    multiple
-    class="q-ml-sm"
-    style="max-width: 300px"
-  />
-  <!-- Se añade un boton que permite convertir los archivos adjuntados a formato tipo
-    json -->
-  <q-btn
-    @click="passToJasson"
-    icon="file_upload"
-    color="primary"
-    label="Subir datos"
-    class="q-ml-sm"
-    style="width: 210px"
-  />
-  <!--Se implementa un boton que permite descargar un formato clientes unicamente con los
-    campos principales para que el individuo pueda rellenar a gusto-->
-  <q-btn
-    @click="templateExcel"
-    icon="file_download"
-    color="primary"
-    label="plantilla"
-    class="q-ml-sm"
-    style="width: 210px"
-  />
+  <div class="q-pa-md">
+    <div class="q-gutter-y-md" style="max-width: 100%">
+      <q-expansion-item
+        icon="keyboard_arrow_down"
+        label="Opciones"
+        @before-open="showButtons = true"
+      >
+        <q-card>
+          <q-tabs
+            v-model="tab"
+            dense
+            class="text-grey"
+            active-color="primary"
+            indicator-color="primary"
+            align="justify"
+            narrow-indicator
+          >
+            <q-tab name="Carga masiva" label="Carga Masiva" />
+
+            <q-tab name="Plantilla" label="Plantilla" />
+          </q-tabs>
+
+          <q-separator />
+
+          <q-tab-panels v-model="tab" animated>
+            <q-tab-panel name="Carga masiva">
+              <div class="text-h6">Subir datos</div>
+              <!-- Se añade un boton que permite entrar a el explorador de archivos y seleccionar
+            un archivo con formato xls-->
+              <q-file
+                v-model="fileExcel"
+                label="Cargar Archivos"
+                filled
+                counter
+                multiple
+                class="q-ml-sm"
+                style="max-width: 300px"
+              />
+              <!-- Se añade un boton que permite convertir los archivos adjuntados a formato tipo
+            json -->
+              <q-btn
+                @click="passToJasson"
+                icon="file_upload"
+                color="primary"
+                label="Subir datos"
+                class="q-ml-sm"
+                v-if="fileExcel.length > 0"
+                style="width: 210px"
+              />
+            </q-tab-panel>
+
+            <q-tab-panel name="Plantilla">
+              <!--Se implementa un boton que permite descargar un formato clientes unicamente con los
+            campos principales para que el individuo pueda rellenar a gusto-->
+              <div class="text-h6">plantilla</div>
+              <q-btn
+                @click="templateExcel"
+                icon="file_download"
+                color="primary"
+                label="plantilla"
+                class="q-ml-sm"
+                style="width: 210px"
+              />
+            </q-tab-panel>
+          </q-tab-panels>
+        </q-card>
+      </q-expansion-item>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -41,9 +79,11 @@ import {
   ref as storageRef,
 } from "firebase/storage";
 import { storage } from "src/firebaseInit"; // Importa tu configuración de Firebase
+
 const databaseStore = useDatabaseStore();
 const fileExcel = ref([]);
-
+const tab = ref("Carga masiva");
+const showTabPanel = ref(false);
 const props = defineProps({ nomTabla: String, tipo: String });
 
 //Se define una función llamada passToJasson, que se encarga de convertir un archivo Excel
@@ -100,11 +140,11 @@ const uploadToFirebase = (objJson) => {
       databaseStore.saveElement(item, props.nomTabla);
     });
 
-    // Si objLength es menor que 10000 pero mayor o igual que 100,
+    // Si objLength es menor que 1000 pero mayor o igual que 100,
     // se ejecuta el bloque dentro del segundo if. Esto sugiere que los datos son más
     // densos y organizados en una estructura de arrays anidados. Se recorren los arrays
     //  anidados y se ejecuta la misma función de guardado para cada elemento.
-  } else if (objLength < 10000) {
+  } else if (objLength < 1000) {
     console.log("segundo if");
     objJson.forEach((array) => {
       array.forEach((element) => {
