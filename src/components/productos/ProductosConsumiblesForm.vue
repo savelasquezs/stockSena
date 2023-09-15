@@ -36,9 +36,14 @@ Características clave:
       <q-input
         outlined
         v-model="formulario.nombre"
+        @change="validarNombre"
         label="Nombre"
         required
-        :rules="[(val) => val.length > 2 || 'Por favor un nombre valido']"
+        :rules="[
+          (val) =>
+            (val != null && val != '' && val.length > 2) ||
+            'Por favor un nombre valido',
+        ]"
       >
         <!-- Añadir datos -->
         <template v-slot:append>
@@ -139,6 +144,21 @@ import { computed, inject, ref } from "vue";
 // Importación del componente Utils/ExcelToJasonBtn.vue
 import uploadData from "components/utils/ExcelToJasonBtn.vue";
 import QDialogo from "components/utils/QDialogo.vue";
+import { useProductosStore } from "src/stores/productosStore";
+import { UseUtilsStore } from "src/stores/utilsStore";
+const productosStore = useProductosStore();
+const utilsStore = UseUtilsStore();
+
+function validarNombre() {
+  const duplicado = productosStore.productosDatabase.some(
+    (producto) =>
+      producto.nombre.toLowerCase() == formulario.value.nombre.toLowerCase()
+  );
+  if (duplicado) {
+    utilsStore.notifyError("El producto con el nombre ingresado ya existe");
+    formulario.value.nombre = null;
+  }
+}
 
 // definición de los props
 const props = defineProps({
