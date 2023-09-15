@@ -13,6 +13,7 @@
           :options="options_Tipo_documento"
           transition-show="flip-up"
           transition-hide="flip-up"
+          :rules="[(val) => val != '' || 'Por favor ingrese documento valido']"
         />
         <q-input
           outlined

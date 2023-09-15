@@ -72,9 +72,12 @@ if (props.editando) {
 }
 
 async function submitForm(data) {
+  console.log(data);
   if (props.editando) {
     DatabaseStore.updateElement(data, "products", props.item.docId);
   } else {
+    if (typeof data.codigoBarra == "number")
+      data.codigoBarra = data.codigoBarra.toString();
     const docRef = doc(db, "products", data.codigoBarra);
     const alreadyExists = await getDoc(docRef);
     if (alreadyExists.exists()) {
@@ -85,7 +88,7 @@ async function submitForm(data) {
 
     setDoc(docRef, data).then(() => {
       emit("enviado");
-      utilsStore.notifyError("Cliente guardado exitosamente", "positive");
+      utilsStore.notifyError("Producto guardado exitosamente", "positive");
     });
   }
 
