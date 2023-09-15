@@ -1,6 +1,4 @@
 <template>
-  {{ cliente }}
-
   <div class="flex flex-center q-mt-lg">
     <q-item
       class="shadow-3 q-px-xl q-py-md skeleton"

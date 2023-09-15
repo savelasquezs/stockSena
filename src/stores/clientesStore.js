@@ -161,32 +161,40 @@ export const UseClientesStore = defineStore("clientes", {
 
       { name: "acciones", label: "Acciones", field: "acciones" },
     ],
-    stadistics: [
-      {
-        text_color: "text-light-black",
-        titulo: "Total ingresos",
-        valor: "210",
-        periodo: "Ultima semana",
-      },
-      {
-        text_color: "text-light-black",
-        titulo: "Total Salidas",
-        valor: "210",
-        periodo: "Ultima semana",
-      },
-      {
-        text_color: "text-light-black",
-        titulo: "Proveedor Estrella",
-        valor: "Juan la roca",
-        periodo: "Ultima semana",
-      },
-    ],
+
     currentCustomer: {},
   }),
-  getters: {},
+  getters: {
+    stadistics(state) {
+      const array = [];
+      const morososLength = state.clientesDatabase.filter(
+        (cliente) => cliente.enMora
+      ).length;
+
+      const totalClientes = state.clientesDatabase.length;
+
+      const totalMorososStadistic = {
+        text_color: "text-light-black",
+        titulo: "Total Morosos",
+        valor: morososLength,
+        periodo: "En total",
+      };
+      const totalClientesStadistic = {
+        text_color: "text-light-black",
+        titulo: "Total Clientes
+        ",
+        valor: totalClientes,
+        periodo: "En total",
+      };
+
+      array.push(totalMorososStadistic);
+      array.push(totalClientesStadistic);
+      return array;
+    },
+  },
 
   actions: {
-    updatePrestamosMora(customerRef, docs) {
+    updatePrestamosMora(customerRef, docs, enMora) {
       docs.forEach(async (prestamo) => {
         const prestRef = doc(customerRef, "borrowings", prestamo.id);
         await updateDoc(prestRef, { enMora });
@@ -217,7 +225,7 @@ export const UseClientesStore = defineStore("clientes", {
               let enMora = false;
               if (!docs.empty) {
                 enMora = true;
-                this.updatePrestamosMora(customerRef, docs.docs);
+                this.updatePrestamosMora(customerRef, docs.docs, enMora);
               }
               const data = {
                 docId: change.doc.id,
