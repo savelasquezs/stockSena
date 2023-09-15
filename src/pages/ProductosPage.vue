@@ -114,6 +114,8 @@ function editElement(object) {
 }
 
 function editarRetornable(id) {
+  console.log("editando");
+  editandoConsumible.value = false;
   editando.value = true;
   const object = productosStore.productosDatabase.find(
     (product) => product.docId == id

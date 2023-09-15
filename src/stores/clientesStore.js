@@ -181,8 +181,7 @@ export const UseClientesStore = defineStore("clientes", {
       };
       const totalClientesStadistic = {
         text_color: "text-light-black",
-        titulo: "Total Clientes
-        ",
+        titulo: "Total Clientes",
         valor: totalClientes,
         periodo: "En total",
       };
@@ -232,7 +231,7 @@ export const UseClientesStore = defineStore("clientes", {
                 ...change.doc.data(),
                 enMora,
               };
-              console.log("asdasd");
+
               // Agregar el cliente al principio de la lista
               this.clientesDatabase.unshift(data);
             }

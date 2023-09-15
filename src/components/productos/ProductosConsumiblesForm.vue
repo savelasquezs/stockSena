@@ -75,6 +75,7 @@ Características clave:
       , además contiene una validación
       de datos -->
       <q-input
+        :disable="editando"
         outlined
         v-model.number="formulario.codigoBarra"
         label="Código de Barra"
@@ -134,7 +135,7 @@ Características clave:
 
 <script setup>
 // Importaciones
-import { computed, ref } from "vue";
+import { computed, inject, ref } from "vue";
 // Importación del componente Utils/ExcelToJasonBtn.vue
 import uploadData from "components/utils/ExcelToJasonBtn.vue";
 import QDialogo from "components/utils/QDialogo.vue";
