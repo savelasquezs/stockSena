@@ -3,8 +3,53 @@
   <div class="flex justify-center">
     <q-item style="width: 30%" class="q-pa-lg">
       <q-item-section avatar>
+        <q-skeleton type="circle" size="80px" animation="wave" />
+      </q-item-section>
+
+      <q-item-section>
+        <q-skeleton type="text" width="80%" height="24px" animation="pulse" />
+        <q-skeleton type="text" width="60%" height="16px" animation="pulse" />
+      </q-item-section>
+    </q-item>
+  </div>
+  <div
+    class="q-pa-md row items-start q-gutter-md"
+    style="display: flex; justify-content: center"
+  >
+    <div class="shadow-3 q-pa-lg flex">
+      <div class="izquierda q-mr-lg">
+        <div class="flex justify-between">
+          <q-skeleton type="rect" width="20%" height="16px" animation="wave" />
+          <q-skeleton type="rect" width="20%" height="16px" animation="wave" />
+        </div>
+        <div class="flex justify-between">
+          <q-skeleton type="rect" width="20%" height="16px" animation="wave" />
+          <q-skeleton type="rect" width="20%" height="16px" animation="wave" />
+        </div>
+        <div class="flex justify-between">
+          <q-skeleton type="rect" width="20%" height="16px" animation="wave" />
+          <q-skeleton type="rect" width="20%" height="16px" animation="wave" />
+        </div>
+      </div>
+
+      <div class="derecha">
+        <div class="flex justify-between">
+          <q-skeleton type="rect" width="20%" height="16px" animation="wave" />
+          <q-skeleton type="rect" width="20%" height="16px" animation="wave" />
+        </div>
+        <div class="flex justify-between">
+          <q-skeleton type="rect" width="20%" height="16px" animation="wave" />
+          <q-skeleton type="rect" width="20%" height="16px" animation="wave" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center">
+    <q-item style="width: 30%" class="q-pa-lg">
+      <q-item-section avatar>
         <q-avatar color="accent" text-color="white"
-          >{{ product.nombre[0] }}
+          >{{ firstLetter }}
         </q-avatar>
       </q-item-section>
 
@@ -71,7 +116,10 @@
       </div>
     </div>
 
-    <CustomPropertiesTable :producto="product" v-if="!product.isConsumable" />
+    <CustomPropertiesTable
+      :producto="product"
+      v-if="product && !product.isConsumable"
+    />
   </div>
 
   <div
@@ -129,7 +177,6 @@ const props = defineProps(["id"]);
 const route = useRoute();
 const router = useRouter();
 const productoId = ref(route.params.id);
-const product = ref({});
 
 function verDetalles(id) {
   const prestamo = prestamosStore.allBorrowingsProducts.find(
@@ -143,10 +190,17 @@ const prestamosStore = UsePrestamosStore();
 const productosStore = useProductosStore();
 async function ejecutarInicio() {
   await prestamosStore.getPrestamosByProduct(productoId.value);
-  product.value = productosStore.productosDatabase.find(
+}
+const product = computed(() => {
+  return productosStore.productosDatabase.find(
     (producto) => producto.docId == productoId.value
   );
-}
+});
+const firstLetter = computed(() => {
+  const nombre = product.value?.nombre;
+  return nombre ? nombre[0] : "P";
+});
+
 ejecutarInicio();
 
 const vecesPrestada = computed(() => {

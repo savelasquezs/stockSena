@@ -9,15 +9,27 @@
   </div>
   <q-form @submit="emit('enviado', datosCompletos)">
     <div class="q-ma-lg q-pa-md shadow-2">
-      <div class="text-center text-subtitle2">Campos</div>
+      <div class="text-center text-subtitle2"></div>
+
       <q-input
         v-for="item in listaCampos"
         :key="item.nombreCampo"
         :label="item.nombreCampo"
         v-model="valueCampos.custom[item.nombreCampo]"
+        :type="item.tipoDato == 'numero' ? 'number' : 'text'"
+        :rules="[
+          (val) =>
+            (val != '' && val != null && val != 0) || 'Debes ingresar un valor',
+        ]"
       />
       <div v-if="listaCampos.length > 0">
-        <q-input v-model="valueCampos.codigoBarra" label="Codigo de Barras" />
+        <q-input
+          v-model="valueCampos.codigoBarra"
+          label="Codigo de Barras"
+          :rules="[
+            (val) => (val != '' && val != null) || 'Debes ingresar un valor',
+          ]"
+        />
         <q-input autogrow v-model="valueCampos.notas" label="Notas" />
         <q-select
           outlined
@@ -26,6 +38,9 @@
           v-model="valueCampos.estadoFisico"
           :options="options"
           class="q-my-lg"
+          :rules="[
+            (val) => (val != '' && val != null) || 'Debes ingresar un valor',
+          ]"
         />
       </div>
     </div>

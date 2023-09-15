@@ -1,25 +1,5 @@
 <template>
   <Qdialogo v-model="modalDevolucionIsOpen" iconModal="autorenew">
-    <div class="flex flex-center column">
-      <div class="text-h6">Que quieres hacer hoy?</div>
-      <q-separator />
-      <div>
-        <q-radio
-          v-model="tipoDev"
-          checked-icon="task_alt"
-          unchecked-icon="panorama_fish_eye"
-          val="devolucion"
-          label="Una devolución"
-        />
-        <q-radio
-          v-model="tipoDev"
-          checked-icon="task_alt"
-          unchecked-icon="panorama_fish_eye"
-          val="cambioUser"
-          label="Traspasar productos a otro usuario"
-        />
-      </div>
-    </div>
     <TraspasoForm v-if="tipoDev == 'cambioUser'" />
 
     <DevolverForm
@@ -35,10 +15,13 @@
 
   <SimpleTable
     @viendo="verDetalles"
+    :segundoBotonActivo="selectedPrestamos.length > 0"
+    @segundoBotonClicked="openDevolverModal('traspaso')"
+    segundoBotonLabel="Traspasar"
     customDetail
     :loading="loading"
     :agregarElementoLabel="selectedPrestamos.length > 0 ? 'Devolver' : null"
-    @agregando="openDevolverModal"
+    @agregando="openDevolverModal('devolucion')"
     :rows="prestamosStore.activeBorrowings"
     seleccionar
     :columns="clientesStore.columnsPrestamosPersona"
@@ -54,7 +37,7 @@ import TraspasoForm from "components/clientes/TraspasoForm.vue";
 
 import { useDatabaseStore } from "src/stores/DatabaseStore";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import DevolverForm from "components/clientes/DevolverForm.vue";
@@ -68,12 +51,17 @@ const prestamosStore = UsePrestamosStore();
 const clientesStore = UseClientesStore();
 
 const route = useRoute();
-const userId = ref(route.params.id);
+
+const userId = computed(() => {
+  const id = route.params.id;
+  console.log(prestamosStore.currentCustomer);
+  return id ? id : prestamosStore.currentCustomer.numero_id;
+});
 const guardando = ref(false);
 const loading = ref(false);
 const router = useRouter();
 const emit = defineEmits(["devuelto"]);
-const tipoDev = ref(null);
+const tipoDev = ref("devolucion");
 
 const rows = databaseStore.escucharCambiosInternalCollection(
   prestamosStore,
@@ -104,7 +92,7 @@ function deselectRow(row) {
   if (copySelectedRows.value.length == 0) modalDevolucionIsOpen.value = false;
 }
 
-function openDevolverModal() {
+function openDevolverModal(tipo) {
   copySelectedRows.value = selectedPrestamos.value.map((prestamo) => {
     return {
       ...prestamo,
@@ -113,6 +101,10 @@ function openDevolverModal() {
         : prestamo.quantity,
     };
   });
+
+  if (tipo == "traspaso") {
+    tipoDev.value = "cambioUser";
+  }
   modalDevolucionIsOpen.value = true;
 }
 

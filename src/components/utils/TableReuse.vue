@@ -69,7 +69,7 @@
             size="sm"
             color="accent"
             round
-            @click="props.row.expand = !props.row.expand"
+            @click="toggleRowExpansion(props.row)"
             :icon="props.row.expand ? 'remove' : 'add'"
           />
         </q-td>
@@ -130,16 +130,14 @@
 </template>
 
 <script setup>
-// Se importa computed y ref de "vue" para crear variables reactivas y calculadas.
-import { computed, ref } from "vue";
-// Se importa el componente personalizado DatePicker desde "../utils/DatePicker.vue".
+import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import DatePicker from "../utils/DatePicker.vue";
+
 const search = ref("");
-// Se definen las variables reactivas search, rangoFechas y rows.
 const rangoFechas = ref(null);
-const rows = ref([]);
 const emit = defineEmits(["editando", "viendo"]);
+
 const props = defineProps({
   dataArray: Array,
   columns: Array,
@@ -153,6 +151,7 @@ const props = defineProps({
   tablaUrl: String,
   table: String,
 });
+
 const router = useRouter();
 
 const customerUrl = (documentId) => {
@@ -170,7 +169,26 @@ function verDetalles(docId) {
   }
 }
 
-rows.value = props.dataArray;
+const rows = ref([...props.dataArray]);
+
+// Agrega un watcher para detectar cambios en props.dataArray
+watch(
+  () => props.dataArray,
+  (newArray) => {
+    rows.value = newArray.map((element) => ({ ...element, expand: false }));
+  }
+);
+
+function toggleRowExpansion(row) {
+  row.expand = !row.expand;
+}
+
+function configureFecha(fecha) {
+  const fechaNormal = fecha.split("-");
+  const nuevaFecha =
+    fechaNormal[1] + "-" + fechaNormal[0] + "-" + fechaNormal[2];
+  return nuevaFecha;
+}
 
 const expandedRows = computed(() => {
   console.log(props.dataArray);
@@ -180,37 +198,12 @@ const expandedRows = computed(() => {
   });
   return expanded;
 });
-// Se define una función configureFecha para ajustar el formato de la fecha.
-function configureFecha(fecha) {
-  const fechaNormal = fecha.split("-");
-  const nuevaFecha =
-    fechaNormal[1] + "-" + fechaNormal[0] + "-" + fechaNormal[2];
-  return nuevaFecha;
-}
-// Se definen las funciones filterByDate y resetTable para filtrar la tabla por fechas y reiniciar la tabla, respectivamente.
+
 function filterByDate(valorFechas) {
   rangoFechas.value = valorFechas;
-  if (rangoFechas.value != null) {
-    const fromDate = new Date(configureFecha(rangoFechas.value.from)).getTime();
-    const toDate = new Date(configureFecha(rangoFechas.value.to)).setHours(
-      23,
-      59,
-      59
-    );
-    // La propiedad rows se inicializa con el valor de props.dataArray, que se espera que sea una matriz de datos para la tabla.
-    const filtro = props.dataArray.filter((item) => {
-      if (props.table == "borrowings")
-        return item.dateBorrowed > fromDate && item.dateBorrowed < toDate;
-      return item.fecha > fromDate && item.fecha < toDate;
-    });
-    rows.value = filtro;
-    rangoFechas.value = null;
-  }
 }
 
 function resetTable() {
-  rows.value = props.dataArray;
+  rangoFechas.value = null;
 }
 </script>
-
-<style lang="scss" scoped></style>

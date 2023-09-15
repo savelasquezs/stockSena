@@ -1,6 +1,6 @@
 <template>
   <div class="flex column flex-center q-pb-xl">
-    <q-img src="public\img\Sena.png" width="125px" />
+    <q-img src="/img/Sena.png" width="125px" />
   </div>
 
   <q-form @submit="guardarCliente">
@@ -40,13 +40,19 @@
           ]"
         />
 
-        <q-select outlined label="Rol" v-model="Rol" :options="options_Rol" />
-
+        <q-select
+          outlined
+          label="Rol"
+          v-model="Rol"
+          :options="options_Rol"
+          :rules="[(val) => !!val || 'Seleccione un Rol']"
+        />
         <q-select
           outlined
           label="Area"
           v-model="Area"
           :options="options_Area"
+          :rules="[(val) => !!val || 'Seleccione una opción']"
         />
         <q-btn type="submit" label="Guardar cliente" color="green-14" />
       </div>
@@ -65,7 +71,7 @@ import uploadData from "components/utils/ExcelToJasonBtn.vue";
 const Tipo_documento = ref(null);
 const options_Tipo_documento = ref([
   "Cedula de ciudadania",
-  "Tarjeta de indentidad",
+  "Tarjeta de identidad",
   "Pasaporte",
 ]);
 const Numero_documento = ref("");

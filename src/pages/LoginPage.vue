@@ -89,7 +89,6 @@ function onSubmit() {
 
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
-      router.push("/");
       failedLoginAttempts = 0; // Restablecer el contador de intentos fallidos en caso de inicio de sesión exitoso
 
       Notify.create({
@@ -98,6 +97,7 @@ function onSubmit() {
         position: "top",
         timeout: 3000,
       });
+      router.push("/");
     })
     .catch((error) => {
       loadingLogin.value = false;
