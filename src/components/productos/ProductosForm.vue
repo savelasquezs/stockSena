@@ -1,7 +1,5 @@
 <template>
   <div class="">
-    {{ editandoConsumible }}
-    {{ item }}
     <q-form class="">
       <div class="flex column flex-center">
         <div class="text-h6 text-center q-my-xl">INGRESAR PRODUCTO</div>
@@ -75,6 +73,7 @@ async function submitForm(data) {
   console.log(data);
   if (props.editando) {
     DatabaseStore.updateElement(data, "products", props.item.docId);
+    emit("enviado");
   } else {
     if (typeof data.codigoBarra == "number")
       data.codigoBarra = data.codigoBarra.toString();
