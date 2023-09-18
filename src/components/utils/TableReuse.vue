@@ -118,6 +118,9 @@
                     size="10px"
                     style="width: 20px; margin-right: 8px"
                     text-color="secondary"
+                    @click="
+                      $emit('editando', props.row.docId || props.row.productId)
+                    "
                   />
                 </q-td>
               </template>
