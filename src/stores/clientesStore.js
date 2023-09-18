@@ -243,7 +243,7 @@ export const UseClientesStore = defineStore("clientes", {
                 ...change.doc.data(),
                 enMora,
               };
-              console.log("asdasd");
+
               // Agregar el cliente al principio de la lista
               this.clientesDatabase.unshift(data);
             }

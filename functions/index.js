@@ -4,10 +4,14 @@ const { setDoc, doc } = require("firebase/firestore");
 const cors = require("cors");
 
 admin.initializeApp();
+const db = admin.firestore();
 
 exports.createUser = functions.https.onCall((data, context) => {
-  // Use cors middleware with the origin option
-  return cors({ origin: "http://localhost:9000" })(data, context, () => {
+  // Get the request's origin from the headers
+  const requestOrigin = context.rawRequest.headers.origin;
+
+  // Use cors middleware with the dynamically obtained origin
+  return cors({ origin: requestOrigin })(data, context, () => {
     // Check if the caller is authenticated
     if (!context.auth) {
       throw new functions.https.HttpsError(
@@ -45,21 +49,11 @@ exports.createUser = functions.https.onCall((data, context) => {
               .generateEmailVerificationLink(data.email)
               .then((link) => {
                 // Send the email verification link to the user
-                // You can use any email service you prefer
-                // For example, you can use nodemailer or sendgrid
-                // See https://firebase.google.com/docs/auth/custom-email-handler for more details
-                return sendEmail(data.email, link)
-                  .then(() => {
-                    // Return a success message
-                    return { message: "Usuario registrado exitosamente" };
-                  })
-                  .catch((error) => {
-                    // Handle errors
-                    throw new functions.https.HttpsError(
-                      "internal",
-                      error.message
-                    );
-                  });
+                // Implement your email sending logic here
+                // Example: sendEmail(data.email, link);
+
+                // Return a success message
+                return { message: "Usuario registrado exitosamente" };
               })
               .catch((error) => {
                 // Handle errors
