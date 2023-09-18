@@ -1,5 +1,7 @@
 <template>
-  <div class="flex justify-evenly content-center complete items-center">
+  <div
+    class="flex justify-evenly content-center complete items-center mayuscula"
+  >
     <q-page class="flex content-center window-height">
       <div
         class="q-gutter-lg row justify-center items-center"
@@ -30,8 +32,13 @@
           <div class="text-h6"></div>
         </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          <q-input dense label="Correo electrónico" v-model="userEmail" />
+        <q-card-section class="q-pt-none mayuscula">
+          <q-input
+            class="mayusculas"
+            dense
+            label="Correo electrónico"
+            v-model="userEmail"
+          />
           <q-select
             outlined
             label="Rol"
@@ -63,14 +70,14 @@
             </q-avatar>
           </q-item-section>
 
-          <q-item-section>
+          <q-item-section class="mayusculas">
             Datos del usuario {{ expanded ? "" : "" }}
           </q-item-section>
         </template>
 
         <q-card>
           <q-card-section>
-            <div v-if="userCredential">
+            <div class="mayusculas" v-if="userCredential">
               <h4>Usuario Activo</h4>
               <p>Nombre: {{ userCredential.displayName }}</p>
               <p>Correo electrónico: {{ userCredential.email }}</p>

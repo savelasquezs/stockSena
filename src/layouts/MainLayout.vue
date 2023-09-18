@@ -80,8 +80,8 @@
               class="text-weight-medium text-black"
               style="margin-bottom: -15px"
             >
-              <span>{{ userCredential.email }}</span>
-              <p class="text-subtitle1 text-accent">
+              <span class="mayusculas">{{ userCredential.email }}</span>
+              <p class="text-subtitle1 text-accent mayusculas">
                 Almacen: {{ userCredential.almacen }}
               </p>
             </div>

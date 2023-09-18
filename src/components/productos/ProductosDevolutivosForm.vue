@@ -3,13 +3,14 @@
     <q-select
       :options="consumiblesStore.onlyNames"
       v-model="consumableSelected"
-      label="Selecciona un consumible"
+      label="Selecciona un devolutivo"
       style="width: 250px"
+      class="mayusculas"
     />
   </div>
   <q-form @submit="emit('enviado', datosCompletos)">
-    <div class="q-ma-lg q-pa-md shadow-2">
-      <div class="text-center text-subtitle2"></div>
+    <div class="q-ma-lg q-pa-md shadow-2 mayusculas">
+      <div class="text-center text-subtitle2 mayusculas"></div>
 
       <q-input
         v-for="item in listaCampos"
