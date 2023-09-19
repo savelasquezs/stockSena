@@ -13,6 +13,7 @@ Características clave:
 //Importaciónes
 import { defineStore } from "pinia";
 import {
+  and,
   collection,
   doc,
   getDoc,
@@ -172,9 +173,9 @@ export const UseClientesStore = defineStore("clientes", {
       ).length;
 
       const clientesDia = state.clientesDatabase.filter(
-        (cliente) => cliente.enMora==false
-      ).length
-      
+        (cliente) => cliente.enMora == false
+      ).length;
+
       const totalClientes = state.clientesDatabase.length;
 
       const totalMorososStadistic = {
@@ -234,8 +235,15 @@ export const UseClientesStore = defineStore("clientes", {
               );
               const docs = await getDocs(q);
               let enMora = false;
-              if (!docs.empty) {
+              if (
+                !docs.empty &&
+                docs.docs.some(
+                  (prestamo) =>
+                    prestamo.data().returnedQuantity < prestamo.data().quantity
+                )
+              ) {
                 enMora = true;
+                console.log(docs.docs);
                 this.updatePrestamosMora(customerRef, docs.docs, enMora);
               }
               const data = {
@@ -275,6 +283,8 @@ export const UseClientesStore = defineStore("clientes", {
           console.log("Data came from " + source);
         });
       });
+      const unique = [...new Set(this.clientesDatabase)];
+      console.log(unique);
     },
     async getCurrentCliente(cedula) {
       const utils = UseUtilsStore();
