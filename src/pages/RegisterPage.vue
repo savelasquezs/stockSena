@@ -69,10 +69,8 @@ import { httpsCallable } from "firebase/functions";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 //redireccion de rutas
 import { useRouter } from "vue-router";
-import { doc, setDoc } from "firebase/firestore";
-import { functions } from "src/firebaseInit";
-
-const createUser = httpsCallable(functions, "createUser");
+import { useDatabaseStore } from "src/stores/DatabaseStore";
+const databaseStore = useDatabaseStore();
 
 const router = useRouter();
 const email = ref("");
@@ -103,19 +101,7 @@ function onSubmit() {
   //   return;
   // }
   //Registrar un usuario
-  createUser({
-    email: email.value,
-    password: password1.value,
-    displayName: username.value,
-  })
-    .then((result) => {
-      // Handle success
-      console.log("User created with ID:", result.data.uid);
-    })
-    .catch((error) => {
-      // Handle errors
-      console.error("Error creating user:", error.message);
-    });
+  databaseStore.createUserCloudFunction(email.value, password1.value);
 }
 
 // function isEmailValid() {
