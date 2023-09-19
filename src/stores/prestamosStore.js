@@ -39,8 +39,8 @@ const databaseStore = useDatabaseStore();
 export const UsePrestamosStore = defineStore("prestamos", {
   state: () => ({
     prestamosDatabase: [],
-    stadisticTableBarInfo: [
-      /** Definición de los datos que se van a mostrar en las estadisticas
+    // stadisticTableBarInfo: [],
+    /** Definición de los datos que se van a mostrar en las estadisticas
         ejemplo:{
        * name:nombre de la columana
        * align:alineamiento
@@ -49,18 +49,18 @@ export const UsePrestamosStore = defineStore("prestamos", {
        * sortable:y el orden
        * }
 
+       /** Definición de columnas para tablas relacionadas con prestamos.
+         Estos campos son los que se le pasan a la columna, y varian segun
+         las columnas y como se definan
+         ejemplo:{
+        * name:nombre de la columana
+        * align:alineamiento
+        * label:label
+        * field:campo
+        * sortable:y el orden
+        * }
+         */
     columns: [
-      /** Definición de columnas para tablas relacionadas con prestamos.
-        Estos campos son los que se le pasan a la columna, y varian segun
-        las columnas y como se definan
-        ejemplo:{
-       * name:nombre de la columana
-       * align:alineamiento
-       * label:label
-       * field:campo
-       * sortable:y el orden
-       * }
-        */
       {
         name: "document",
         align: "center",
@@ -156,25 +156,26 @@ export const UsePrestamosStore = defineStore("prestamos", {
         (prestamo) => prestamo.returnedQuantity < prestamo.quantity
       ),
 
-    stadisticTableBarInfo(state){
-      const array=[];
-      const usuarioPrestamo = state.prestamosDatabase.map(prestamo=>prestamo.customerDocumentNumber)
-      const usuarioMas=Math.max(...usuarioPrestamo)
-      const usuarioMaximaCantidad=state.prestamosDatabase.filter(prestamo=>prestamo.customerDocumentNumber==usuarioMas)
+    stadisticTableBarInfo(state) {
+      const array = [];
+      const usuarioPrestamo = state.prestamosDatabase.map(
+        (prestamo) => prestamo.customerDocumentNumber
+      );
+      const usuarioMas = Math.max(...usuarioPrestamo);
+      const usuarioMaximaCantidad = state.prestamosDatabase.filter(
+        (prestamo) => prestamo.customerDocumentNumber == usuarioMas
+      );
 
-      const totalUsuario={
-        text_color: "text-light-black",
-        titulo: "Usuario con mas prestamos",
-        valor: usuarioMaximaCantidad[0].nombre,
-        periodo:`Usuario: ${usuarioMaximaCantidad[0].customerDocumentNumber}`,
-      };
+      // const totalUsuario = {
+      //   text_color: "text-light-black",
+      //   titulo: "Usuario con mas prestamos",
+      //   valor: usuarioMaximaCantidad[0].nombre,
+      //   periodo: `Usuario: ${usuarioMaximaCantidad[0].customerDocumentNumber}`,
+      // };
 
-      array.push(totalUsuario);
+      // array.push(totalUsuario);
       return array;
-
-
-    }
-
+    },
   },
 
   // Acción para escuchar cambios en la colección de préstamos en Firestore.
