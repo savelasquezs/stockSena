@@ -47,3 +47,9 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 </script>
+
+<style>
+.mayusculas {
+  text-transform: capitalize;
+}
+</style>

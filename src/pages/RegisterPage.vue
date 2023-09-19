@@ -47,7 +47,7 @@
             (val) => val == password1 || 'la contraseña no coincide',
           ]"
         />
-        <q-btn label="Registrar" type="submit" color="primary" />
+        <q-btn label="Registrar" type="submit" color=" primary" />
 
         <q-btn @click="returnManejo()" color="primary" label="Regresar" />
       </q-form>

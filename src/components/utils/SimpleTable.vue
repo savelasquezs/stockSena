@@ -53,7 +53,7 @@
         v-model:selected="selected"
         virtual-scroll
         :filter="filtro"
-        class="my-card flex shadow-5 shadow-up-3"
+        class="my-card flex shadow-5 shadow-up-3 mayusculas"
         table-header-style="background-color:#00af00; color:#ffff; shadow-n"
         :loading="loading"
       >

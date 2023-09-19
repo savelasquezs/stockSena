@@ -33,12 +33,14 @@ import { UsePrestamosStore } from "src/stores/prestamosStore";
 import stadisticTableBar from "components/utils/StadisticTableBar.vue";
 import PrestamosForm from "components/prestamos/PrestamosForm.vue";
 import TableReuse from "components/utils/TableReuse.vue";
-
 import { ref } from "vue";
+import { useDatabaseStore } from "src/stores/DatabaseStore";
+
 
 const openedForm = ref(false);
 const prestamosStore = UsePrestamosStore();
 const dataTableArray = ref([]);
+const databaseStore = useDatabaseStore();
 
 prestamosStore.listenChanges().then(() => {
   dataTableArray.value = prestamosStore.prestamosDatabase;
