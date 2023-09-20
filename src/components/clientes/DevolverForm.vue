@@ -186,17 +186,8 @@ async function prestarProducto() {
     });
   });
 }
-const nodemailer = require("nodemailer");
-function correoNotificacion() {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.example.com", // Cambia esto al servidor SMTP que desees
-    port: 587, // Puerto SMTP
-    auth: {
-      user: "tu_correo@example.com", // Dirección de correo electrónico del remitente
-      pass: "tu_contraseña", // Contraseña de correo electrónico del remitente
-    },
-  });
-}
+
+function correoNotificacion() {}
 
 async function updatePrestamos(
   element,

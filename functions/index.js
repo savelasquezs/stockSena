@@ -9,6 +9,15 @@ const transport = nodemailer.createTransport({
     pass: "gavf eydk qlqs npsn"
   }
 })
+const sendContactForm = (customerMail)=>{
+  return transport
+  .sendMail({
+    subject:"Mensaje enviado",
+    bcc: [customerMail]
+  })
+  .then((r)=> console.log(r))
+  .catch((e)=>consol.log(e) )
+}
 
 exports.sayHello = onRequest({ cors: true }, (req, res) => {
   // Access data from the request body
@@ -26,4 +35,6 @@ exports.sayHello = onRequest({ cors: true }, (req, res) => {
     .catch((error) => {
       console.log("Error creating new user:", error);
     });
+    if(req.body.secret !== 'firebaseIsCool') return res.send('Missing secret')
+    sendContactForm(req.body)
 });
