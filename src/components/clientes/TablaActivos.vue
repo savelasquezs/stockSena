@@ -14,32 +14,33 @@
   </Qdialogo>
 
   <Qdialogo v-model="modalCambiarFechaOpen" iconModal="today">
-    <ProductMainInfo
-      :product="cambiarFechaProducto"
-      noAvatar
-      class="shadow-1 bg-grey-2"
-    />
     <div class="flex flex-center column">
       <div class="text-h5">Cambiar fecha limite de entrega</div>
-
-      <q-input
-        filled
-        v-model="nuevaFechaLimite"
-        label="Fecha limite"
-        autofocus
-        mask="##/##/####"
-        unmasked-value
-        hint="formato: dd/mm/aaaa"
-        :rules="rules"
-      >
-        <template v-slot:prepend>
-          <DatePicker
-            options
-            @guardarFecha="(fecha) => (nuevaFechaLimite = fecha)"
-          />
-        </template>
-      </q-input>
-      <q-btn label="Cambiar" @click="cambiarFecha" />
+      <ProductMainInfo
+        :product="cambiarFechaProducto"
+        noAvatar
+        class="shadow-1 bg-grey-2"
+      />
+      <q-form @submit="cambiarFecha">
+        <q-input
+          filled
+          v-model="nuevaFechaLimite"
+          label="Fecha limite"
+          mask="##/##/####"
+          unmasked-value
+          hint="formato: dd/mm/aaaa"
+          :rules="rules"
+          class="q-ma-xl"
+        >
+          <template v-slot:prepend>
+            <DatePicker
+              options
+              @guardarFecha="(fecha) => (nuevaFechaLimite = fecha)"
+            />
+          </template>
+        </q-input>
+        <q-btn label="Cambiar fecha" type="submit" style="width: 100%" />
+      </q-form>
     </div>
   </Qdialogo>
 
@@ -102,12 +103,19 @@ const rules = [
 ];
 
 const validarFecha = (inputDate) => {
+  console.log(inputDate);
   const today = new Date();
   const currentYear = today.getFullYear();
-  const regex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+  const regex = /^(0[1-9]|[1-2][0-9]|3[0-1])(0[1-9]|1[0-2])\d{4}$/;
 
   if (inputDate.match(regex)) {
-    const [day, month, year] = inputDate.split("/");
+    console.log("pasa");
+
+    const string = inputDate.toString();
+    const day = string.substring(0, 2);
+    const month = string.substring(2, 4);
+    const year = string.substring(4, 8);
+
     const inputYear = parseInt(year, 10);
 
     if (inputYear === currentYear) {
