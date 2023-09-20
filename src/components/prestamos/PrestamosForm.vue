@@ -248,6 +248,7 @@ const buscarDocumento = () => {
 };
 
 function prestarProducto() {
+  const createdBy = localStorage.getItem("user").email;
   guardandoPrestamo.value = true;
   const dateBorrowed = new Date().getTime();
   const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
@@ -280,6 +281,7 @@ function prestarProducto() {
     },
     description: description.value,
     dateBorrowed,
+    createdBy,
   };
 
   productosList.value.forEach(async (product) => {
