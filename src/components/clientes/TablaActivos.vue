@@ -39,6 +39,7 @@
 </template>
 
 <script setup>
+import { Notify } from "quasar";
 import SimpleTable from "components/utils/SimpleTable.vue";
 import { UseClientesStore } from "src/stores/clientesStore";
 import Qdialogo from "components/utils/QDialogo.vue";
@@ -112,8 +113,32 @@ function deselectRow(row) {
   if (copySelectedRows.value.length == 0) modalDevolucionIsOpen.value = false;
 }
 
+// ...
 function openDevolverModal(tipo) {
   copySelectedRows.value = selectedPrestamos.value.map((prestamo) => {
+    if (tipo === "traspaso") {
+      // Filtrar los productos en mora
+      const productosEnMora = selectedPrestamos.value.filter((prestamo) => {
+        // Reemplaza 'prestamo.fechaMora' con la propiedad real que indica si un producto está en mora
+        return prestamo.fechaMora !== null; // Suponiendo que 'fechaMora' es nulo cuando no está en mora
+      });
+
+      if (productosEnMora.length > 0) {
+        // Si estás intentando hacer un traspaso con productos en mora, muestra una notificación de error
+        Notify.setDefaults({
+          position: "top-right",
+          color: "negative",
+        });
+
+        Notify.create({
+          message: "No puedes realizar un traspaso con productos en mora.",
+          timeout: 3000,
+        });
+
+        return; // Salir de la función si hay productos en mora y estás intentando un traspaso
+      }
+    }
+
     return {
       ...prestamo,
       devolver: prestamo.returnedQuantity
@@ -125,6 +150,7 @@ function openDevolverModal(tipo) {
   if (tipo == "traspaso") {
     tipoDev.value = "cambioUser";
   }
+
   modalDevolucionIsOpen.value = true;
 }
 
