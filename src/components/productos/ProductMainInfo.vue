@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center">
     <q-item class="q-pa-lg">
-      <q-item-section avatar>
+      <q-item-section avatar v-if="!noAvatar">
         <q-avatar color="accent" text-color="white"
           >{{ firstLetter }}
         </q-avatar>
@@ -25,7 +25,7 @@
 <script setup>
 import { computed } from "vue";
 
-const props = defineProps({ product: Object });
+const props = defineProps({ product: Object, noAvatar: Boolean });
 
 console.log(props.product);
 const firstLetter = computed(() => {

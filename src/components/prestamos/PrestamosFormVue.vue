@@ -93,6 +93,7 @@ function agregarProducto(producto) {
 }
 
 function datosPreparados() {
+  const createdBy = JSON.parse(localStorage.getItem("user")).email;
   guardandoPrestamo.value = true;
   const dateBorrowed = new Date().getTime();
   const listaProductos = productosList.value.map((registro) => {
@@ -135,6 +136,7 @@ function datosPreparados() {
     },
     description: generalDescription.value,
     dateBorrowed,
+    createdBy,
   };
   console.log(dataToSave);
   return dataToSave;
