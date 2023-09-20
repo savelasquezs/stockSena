@@ -96,9 +96,15 @@ export const UsePrestamosStore = defineStore("prestamos", {
         label: "Cantida",
         field: (row) => row.productosList[0].quantity,
       },
+      {
+        name: "user",
+        label: "Usuario", 
+        field: (row) => row.customer.user,
+        sortable: true,
+      },
     ],
     internalColumns: [
-      //definición de las internal columsn
+      //definición de las internal columns
       {
         name: "productoId",
         align: "center",
