@@ -115,6 +115,15 @@ Características clave:
         <!-- Input de tipo lista, en el cual se guardara el dato elejido en
       v-model="formulario.unidadMedida"-->
       </q-input>
+
+      <q-select
+        outlined
+        required
+        label="Estado Funcional"
+        v-model="formulario.EstadoFuncional"
+        :options="optionsEstado"
+        class="q-my-lg"
+      />
       <q-select
         outlined
         required
@@ -173,10 +182,12 @@ const formulario = ref({ unidadMedida: "Unidad" });
 
 // Variable que contiene un array de unidades de medición
 const options = ref(["Unidad", "Libra", "Kilo", "Metro"]);
+const optionsEstado = ref(["Excelente", "Dañado"]);
 
 // Función que se activa al guardar los datos del formulario,
 // al ingresar el formulario retorna el valor de la  variable formulario
 // y da el valor a "isConsumable" como True
+
 const completedForm = computed(() => {
   return {
     ...formulario.value,
