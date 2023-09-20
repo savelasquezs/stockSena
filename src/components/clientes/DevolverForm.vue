@@ -182,9 +182,12 @@ async function prestarProducto() {
         prestamoId: prestamo.id,
         ...producto,
       });
+      correoNotificacion();
     });
   });
 }
+
+function correoNotificacion() {}
 
 async function updatePrestamos(
   element,

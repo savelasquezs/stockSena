@@ -74,6 +74,11 @@ export const UseClientesStore = defineStore("clientes", {
         field: (row) => row.apellido,
       },
       {
+        name: "correo",
+        label: "Correo Electronico",
+        field: (row) => row.correo,
+      },
+      {
         name: "area",
         label: "Area",
         field: (row) => row.area,

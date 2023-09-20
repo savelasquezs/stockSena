@@ -19,5 +19,6 @@ export const UseDashboardStore = defineStore("dashboard", {
       clientesStore.clientesDatabase.filter(
         (cliente) => cliente.rol == "Instructor"
       ).length,
+      
   },
 });
