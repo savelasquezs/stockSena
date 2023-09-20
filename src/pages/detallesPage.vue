@@ -1,26 +1,6 @@
 <template>
   <!-- Informacion de productos -->
-
-  <div class="flex justify-center">
-    <q-item style="width: 30%" class="q-pa-lg">
-      <q-item-section avatar>
-        <q-avatar color="accent" text-color="white"
-          >{{ firstLetter }}
-        </q-avatar>
-      </q-item-section>
-
-      <q-item-section>
-        <q-item-label class="flex flex-center"
-          ><span class="text-h5 text-weight-bold">{{
-            product.nombre
-          }}</span></q-item-label
-        >
-        <q-item-label caption class="flex flex-center"
-          >codigo de barra : {{ product.codigoBarra }}</q-item-label
-        >
-      </q-item-section>
-    </q-item>
-  </div>
+  <ProductMainInfo :product="product" />
   <q-separator />
 
   <div
@@ -129,6 +109,7 @@ import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import SimpleTable from "components/utils/SimpleTable.vue";
 import CustomPropertiesTable from "components/productos/CustomPropertiesTable.vue";
+import ProductMainInfo from "components/productos/ProductMainInfo.vue";
 const props = defineProps(["id"]);
 const route = useRoute();
 const router = useRouter();
@@ -151,10 +132,6 @@ const product = computed(() => {
   return productosStore.productosDatabase.find(
     (producto) => producto.docId == productoId.value
   );
-});
-const firstLetter = computed(() => {
-  const nombre = product.value?.nombre;
-  return nombre ? nombre[0] : "P";
 });
 
 ejecutarInicio();

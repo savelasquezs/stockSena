@@ -13,6 +13,14 @@
     />
   </Qdialogo>
 
+  <Qdialogo v-model="modalCambiarFechaOpen" iconModal="today">
+    <ProductMainInfo :product="cambiarFechaProducto" />
+    <div class="flex flex-center column">
+      <div class="text-h5">Cambiar fecha limite de entrega</div>
+      <DatePicker />
+    </div>
+  </Qdialogo>
+
   <SimpleTable
     @viendo="verDetalles"
     :segundoBotonActivo="selectedPrestamos.length > 0"
@@ -26,6 +34,7 @@
     seleccionar
     :columns="clientesStore.columnsPrestamosPersona"
     @cambioSelected="(value) => (selectedPrestamos = value)"
+    @editando="editarPrestamo"
   />
 </template>
 
@@ -39,9 +48,10 @@ import { useDatabaseStore } from "src/stores/DatabaseStore";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import ProductMainInfo from "components/productos/ProductMainInfo.vue";
 
 import DevolverForm from "components/clientes/DevolverForm.vue";
-
+import DatePicker from "components/utils/DatePicker.vue";
 const selectedPrestamos = ref([]);
 const copySelectedRows = ref([]);
 
@@ -49,19 +59,29 @@ const modalDevolucionIsOpen = ref(false);
 const databaseStore = useDatabaseStore();
 const prestamosStore = UsePrestamosStore();
 const clientesStore = UseClientesStore();
+const guardando = ref(false);
+const loading = ref(false);
+const router = useRouter();
+const emit = defineEmits(["devuelto"]);
+const tipoDev = ref("devolucion");
+const cambiarFechaProducto = ref({});
+
+const modalCambiarFechaOpen = ref(false);
 
 const route = useRoute();
+
+function editarPrestamo(item) {
+  console.log(item);
+  cambiarFechaProducto.value = item;
+  console.log(cambiarFechaProducto.value);
+  modalCambiarFechaOpen.value = true;
+}
 
 const userId = computed(() => {
   const id = route.params.id;
   console.log(prestamosStore.currentCustomer);
   return id ? id : prestamosStore.currentCustomer.numero_id;
 });
-const guardando = ref(false);
-const loading = ref(false);
-const router = useRouter();
-const emit = defineEmits(["devuelto"]);
-const tipoDev = ref("devolucion");
 
 const rows = databaseStore.escucharCambiosInternalCollection(
   prestamosStore,
