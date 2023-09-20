@@ -181,8 +181,7 @@ export const UseClientesStore = defineStore("clientes", {
       };
       const totalClientesStadistic = {
         text_color: "text-light-black",
-        titulo: "Total Clientes
-        ",
+        titulo: "Total Clientes",
         valor: totalClientes,
         periodo: "En total",
       };
