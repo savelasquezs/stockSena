@@ -132,7 +132,7 @@ function onSubmit() {
           message:
             "Has superado el límite de intentos fallidos. ¿Deseas recuperar tu contraseña?",
           position: "top",
-          timeout: 50000, // Aumenta el tiempo para dar tiempo al usuario de hacer clic en el enlace/botón
+          timeout: 5000, // Aumenta el tiempo para dar tiempo al usuario de hacer clic en el enlace/botón
           actions: [
             {
               label: "Recuperar Contraseña",
