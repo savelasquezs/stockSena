@@ -66,13 +66,12 @@
 import Tabs from "components/utils/Tabs.vue";
 import QDialogo from "components/utils/QDialogo.vue";
 import ProductosForm from "../components/productos/ProductosForm.vue";
-import StadisticTableItem from "components/utils/StadisticTableItem.vue";
 import { useProductosStore } from "stores/productosStore";
 import SimpleTable from "components/utils/SimpleTable.vue";
 import TableReuse from "components/utils/TableReuse.vue";
 import StadisticTableBar from "components/utils/StadisticTableBar.vue";
 import ComsumiblesForm from "components/productos/ConsumiblesForm.vue";
-
+import { useDatabaseStore } from "src/stores/DatabaseStore";
 import { computed, onMounted, ref } from "vue";
 const selectedTab = ref("consumibles");
 
@@ -84,8 +83,17 @@ const editandoConsumible = ref(false);
 const itemToEdit = ref(null);
 const openConsumableForm = ref(false);
 const openForm = ref(false);
+const productosStore = useProductosStore();
+const dataTableArray=ref([]);
+const databaseStore = useDatabaseStore();
+
+
 
 const router = useRouter();
+
+productosStore.listenChanges().then(()=>{
+  dataTableArray.value = productosStore.productsDatabase;
+});
 
 const tabs = [
   { name: "consumibles", label: "Consumibles" },
@@ -114,6 +122,8 @@ function editElement(object) {
 }
 
 function editarRetornable(id) {
+  console.log("editando");
+  editandoConsumible.value = false;
   editando.value = true;
   const object = productosStore.productosDatabase.find(
     (product) => product.docId == id
@@ -149,5 +159,5 @@ function handleFileSelect() {
 
 const rows = ref([]);
 
-const productosStore = useProductosStore();
+
 </script>

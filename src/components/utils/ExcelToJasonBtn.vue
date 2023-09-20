@@ -24,8 +24,7 @@
           <q-separator />
 
           <q-tab-panels v-model="tab" animated>
-            <q-tab-panel name="Carga masiva">
-              <div class="text-h6">Subir datos</div>
+            <q-tab-panel class="text-center" name="Carga masiva">
               <!-- Se añade un boton que permite entrar a el explorador de archivos y seleccionar
             un archivo con formato xls-->
               <q-file
@@ -35,7 +34,7 @@
                 counter
                 multiple
                 class="q-ml-sm"
-                style="max-width: 300px"
+                style="max-width: 300px margin: 0 auto;"
               />
               <!-- Se añade un boton que permite convertir los archivos adjuntados a formato tipo
             json -->
@@ -46,19 +45,19 @@
                 label="Subir datos"
                 class="q-ml-sm"
                 v-if="fileExcel.length > 0"
-                style="width: 210px"
+                style="width: 210px margin: 0 auto;"
               />
             </q-tab-panel>
 
             <q-tab-panel name="Plantilla">
               <!--Se implementa un boton que permite descargar un formato clientes unicamente con los
             campos principales para que el individuo pueda rellenar a gusto-->
-              <div class="text-h6">plantilla</div>
+
               <q-btn
                 @click="templateExcel"
                 icon="file_download"
                 color="primary"
-                label="plantilla"
+                label="Descargar"
                 class="q-ml-sm"
                 style="width: 210px"
               />

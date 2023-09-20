@@ -9,16 +9,21 @@
         </q-btn>
       </q-card-section>
       <q-card-section>
-        <ClientesForm @clienteGuardado="formOppened = false" />
+        <ClientesForm
+          @clienteGuardado="formOppened = false"
+          :editando="editando"
+          :clienteEdit="clienteEdit"
+        />
       </q-card-section>
     </q-card>
   </q-dialog>
 
   <SimpleTable
     agregarElementoLabel="Agregar Usuario"
-    @agregando="formOppened = true"
+    @agregando="agregarCliente"
     :rows="clientesStore.clientesDatabase"
     :columns="clientesStore.columns"
+    @editando="editarCliente"
     editable
     tablaUrl="clientes"
   />
@@ -36,11 +41,24 @@ import { useRouter } from "vue-router";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
 
 const router = useRouter();
-
+const editando = ref(false);
 const formOppened = ref(false);
 const dataTableArray = ref([]);
 const clientesStore = UseClientesStore();
 const databaseStore = useDatabaseStore();
+const clienteEdit = ref({});
+
+function agregarCliente() {
+  clienteEdit.value = null;
+  editando.value = false;
+  formOppened.value = true;
+}
+
+function editarCliente(cliente) {
+  editando.value = true;
+  clienteEdit.value = cliente;
+  formOppened.value = true;
+}
 
 clientesStore.listenChanges().then(() => {
   dataTableArray.value = clientesStore.clientesDatabase;

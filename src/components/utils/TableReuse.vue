@@ -14,7 +14,7 @@
     virtual-scroll
     :rows-per-page-options="[0]"
     style="max-height: 600px"
-    class="q-mx-sm"
+    class="q-mx-sm mayusculas"
     dense
   >
     <!-- Se define un slot de encabezado utilizando <template v-slot:top>. -->
@@ -118,6 +118,9 @@
                     size="10px"
                     style="width: 20px; margin-right: 8px"
                     text-color="secondary"
+                    @click="
+                      $emit('editando', props.row.docId || props.row.productId)
+                    "
                   />
                 </q-td>
               </template>

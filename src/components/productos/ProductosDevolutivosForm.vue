@@ -3,13 +3,14 @@
     <q-select
       :options="consumiblesStore.onlyNames"
       v-model="consumableSelected"
-      label="Selecciona un consumible"
+      label="Selecciona un devolutivo"
       style="width: 250px"
+      class="mayusculas"
     />
   </div>
   <q-form @submit="emit('enviado', datosCompletos)">
-    <div class="q-ma-lg q-pa-md shadow-2">
-      <div class="text-center text-subtitle2"></div>
+    <div class="q-ma-lg q-pa-md shadow-2 mayusculas">
+      <div class="text-center text-subtitle2 mayusculas"></div>
 
       <q-input
         v-for="item in listaCampos"
@@ -24,6 +25,7 @@
       />
       <div v-if="listaCampos.length > 0">
         <q-input
+          :disable="editando"
           v-model="valueCampos.codigoBarra"
           label="Codigo de Barras"
           :rules="[
@@ -87,21 +89,29 @@ const datosCompletos = computed(() => {
   };
 });
 
+function crearFormulario() {
+  console.log(consumiblesStore.consumiblesDatabase);
+  console.log(consumableSelected.value);
+  const consumo = consumiblesStore.consumiblesDatabase.find(
+    (producto) => producto.nombre == consumableSelected.value
+  );
+  console.log(consumo);
+
+  listaCampos.value = consumo.listaCampos;
+}
+
 if (props.editando && !props.editandoConsumible) {
-  consumableSelected.value = props.item.nombre;
-  crearFormulario();
-  valueCampos.value = props.item;
+  setTimeout(() => {
+    console.log(props.item);
+    consumableSelected.value = props.item.nombre;
+    valueCampos.value = props.item;
+    crearFormulario();
+  }, 500);
 }
 
 watch(consumableSelected, () => {
   crearFormulario();
 });
-function crearFormulario() {
-  const consumable = consumiblesStore.consumiblesDatabase.find(
-    (consumible) => consumible.nombre == consumableSelected.value
-  );
-  listaCampos.value = consumable.listaCampos;
-}
 </script>
 
 <style lang="scss" scoped></style>

@@ -13,6 +13,7 @@ Características clave:
 //Importaciónes
 import { defineStore } from "pinia";
 import {
+  and,
   collection,
   doc,
   getDoc,
@@ -171,11 +172,15 @@ export const UseClientesStore = defineStore("clientes", {
         (cliente) => cliente.enMora
       ).length;
 
+      const clientesDia = state.clientesDatabase.filter(
+        (cliente) => cliente.enMora == false
+      ).length;
+
       const totalClientes = state.clientesDatabase.length;
 
       const totalMorososStadistic = {
         text_color: "text-light-black",
-        titulo: "Total Morosos",
+        titulo: "Total clientes morosos",
         valor: morososLength,
         periodo: "En total",
       };
@@ -186,6 +191,14 @@ export const UseClientesStore = defineStore("clientes", {
         periodo: "En total",
       };
 
+      const totalClientesDia = {
+        text_color: "text-light-black",
+        titulo: "Total clientes sin mora",
+        valor: clientesDia,
+        periodo: "En total",
+      };
+
+      array.push(totalClientesDia);
       array.push(totalMorososStadistic);
       array.push(totalClientesStadistic);
       return array;
@@ -222,8 +235,15 @@ export const UseClientesStore = defineStore("clientes", {
               );
               const docs = await getDocs(q);
               let enMora = false;
-              if (!docs.empty) {
+              if (
+                !docs.empty &&
+                docs.docs.some(
+                  (prestamo) =>
+                    prestamo.data().returnedQuantity < prestamo.data().quantity
+                )
+              ) {
                 enMora = true;
+                console.log(docs.docs);
                 this.updatePrestamosMora(customerRef, docs.docs, enMora);
               }
               const data = {
@@ -231,7 +251,7 @@ export const UseClientesStore = defineStore("clientes", {
                 ...change.doc.data(),
                 enMora,
               };
-              console.log("asdasd");
+
               // Agregar el cliente al principio de la lista
               this.clientesDatabase.unshift(data);
             }
@@ -263,6 +283,8 @@ export const UseClientesStore = defineStore("clientes", {
           console.log("Data came from " + source);
         });
       });
+      const unique = [...new Set(this.clientesDatabase)];
+      console.log(unique);
     },
     async getCurrentCliente(cedula) {
       const utils = UseUtilsStore();

@@ -188,6 +188,30 @@ export const useDatabaseStore = defineStore("database", {
         this.updateElement({ enMora }, "customers", idCliente);
       }
     },
+    async createUserCloudFunction(email, password) {
+      const userData = {
+        email,
+        password,
+      };
+
+      try {
+        const response = await fetch(
+          "https://us-central1-sena-stock-management.cloudfunctions.net/sayHello",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData),
+          }
+        );
+        const dada = response;
+        const data = await response.json(); // Parse the response as JSON
+        console.log(data);
+      } catch (error) {
+        console.error(error); // Handle errors
+      }
+    },
 
     async updateMoraCliente(idCliente, idBorrowing = null, quantity = null) {
       // Obtener los documentos de la subcoleccion

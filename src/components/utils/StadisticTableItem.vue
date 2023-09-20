@@ -36,7 +36,7 @@ Características clave:
 const props = defineProps({
   textColor: String,
   titulo: String,
-  valor: String,
+  valor: Number || String,
   periodo: String,
 });
 </script>
