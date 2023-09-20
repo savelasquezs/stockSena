@@ -1,5 +1,14 @@
 const { onRequest } = require("firebase-functions/v2/https");
 const { getAuth } = require("firebase-admin/auth");
+const { nodemailer } = require("nodemailer")
+
+const transport = nodemailer.createTransport({
+  service: 'Gmail',
+  auth:{
+    user: "cristiandavid3d@gmail.com",
+    pass: "gavf eydk qlqs npsn"
+  }
+})
 
 exports.sayHello = onRequest({ cors: true }, (req, res) => {
   // Access data from the request body
