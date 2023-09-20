@@ -112,6 +112,27 @@
           </q-td>
         </template>
 
+        <template v-slot:body-cell-dueDate="props">
+          <q-td :props="props">
+            <q-item
+              clickable
+              style="clickable; width:100%"
+              @click="searchData(props.row.docId)"
+              class="coloreble flex flex-center"
+              dense
+            >
+              <q-item-section avatar side>
+                <q-icon color="accent" name="ads_click" />
+              </q-item-section>
+              <q-item-section side class="text-blue">
+                {{
+                  new Date(props.row.dueDate).toLocaleDateString("es-CO")
+                }}</q-item-section
+              >
+            </q-item>
+          </q-td>
+        </template>
+
         <template v-slot:no-data>
           <div class="full-width row flex-center text-accent q-gutter-sm">
             <q-icon size="2em" name="sentiment_dissatisfied" />

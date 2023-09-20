@@ -44,5 +44,16 @@ const databaseStore = useDatabaseStore();
 
 prestamosStore.listenChanges().then(() => {
   dataTableArray.value = prestamosStore.prestamosDatabase;
+  sortedDataArray.value = sortPrestamosWhitMora(dataTableArray.value);
 });
+const sortPrestamosWhitMora = (prestamos)=>{
+  return prestamos.sort((a,b) =>{
+    if(a.tieneMora && !b.tieneMora){
+      return -1;
+    }else if(!a.tieneMora && b.tieneMora ){
+      return 1;
+    }
+    return 0;
+  });
+}
 </script>

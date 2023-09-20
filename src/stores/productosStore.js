@@ -154,8 +154,6 @@ export const useProductosStore = defineStore("productos", {
       { name: "acciones", label: "Acciones", field: "acciones" },
     ],
 
-
-
     columnasDetalleProducto: [
       {
         name: "prestamo",
@@ -282,51 +280,53 @@ export const useProductosStore = defineStore("productos", {
       });
     },
 
-    stadisticTableBarInfo(state){
+    stadisticTableBarInfo(state) {
       const array = [];
 
-      const producto=state.productosDatabase[3]
-      console.log(producto)
+      const producto = state.productosDatabase[3];
+      console.log(producto);
 
-      const totalProducts=state.productosDatabase.filter(
-        (product)=>product.isConsumable
-      ).length
+      const totalProducts = state.productosDatabase.filter(
+        (product) => product.isConsumable
+      ).length;
 
       const cantidadPrestamos = state.productosDatabase.filter(
-        (product)=>product.borrowedQuantity
-      ).length
+        (product) => product.borrowedQuantity
+      ).length;
 
+      const cantidadProductos = state.productosDatabase.map(
+        (producto) => producto.stockTotal
+      );
+      const maximaCantidad = Math.max(...cantidadProductos);
+      const productosMaximaCantidad = state.productosDatabase.filter(
+        (producto) => producto.stockTotal == maximaCantidad
+      );
 
-      const cantidadProductos=state.productosDatabase.map(producto=>producto.stockTotal)
-      const maximaCantidad=Math.max(...cantidadProductos)
-      const productosMaximaCantidad=state.productosDatabase.filter(producto=>producto.stockTotal==maximaCantidad)
-
-
-      const totalCantidadProducts={
+      const totalCantidadProducts = {
         text_color: "text-light-black",
         titulo: "Total productos disponibles",
         valor: totalProducts,
         periodo: "En total",
       };
-      const productoMaximoStock={
+      const productoMaximoStock = {
         text_color: "text-light-black",
         titulo: "Producto con mayor stock",
         valor: productosMaximaCantidad[0].nombre,
-        periodo:`Cantidad: ${productosMaximaCantidad[0].stockTotal}`,
+        periodo: `Cantidad: ${productosMaximaCantidad[0].stockTotal}`,
       };
 
-      const productoPrestamo={
+      const productoPrestamo = {
         text_color: "text-light-black",
         titulo: "Productos en prestamo",
         valor: cantidadPrestamos,
-        periodo:"En total",
+        periodo: "En total",
       };
 
       array.push(productoPrestamo);
       array.push(totalCantidadProducts);
       array.push(productoMaximoStock);
       return array;
-    }
+    },
   },
 
   // * Acción para escuchar cambios en la colección de productos en Firestore.

@@ -124,9 +124,9 @@ export const UseClientesStore = defineStore("clientes", {
         format: (val) => new Date(val).toLocaleDateString("es-CO"),
       },
       {
-        name: "fechaLimite",
+        name: "dueDate",
         label: "Fecha Limite",
-        field: (row) => row.dueDate,
+        field: "dueDate",
         format: (val) => new Date(val).toLocaleDateString("es-CO"),
       },
       {

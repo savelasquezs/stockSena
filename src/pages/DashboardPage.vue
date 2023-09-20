@@ -12,9 +12,9 @@ Descripción del archivo "DashboardPage.vue": -->
         <!-- Tarjeta para mostrar el total de préstamos -->
         <TarjetaEstad
           icono="event_available"
-          titulo="202"
+          :titulo="dashboardStore.prestamosQuantity"
           subtitulo="Total de préstamos"
-          iconColor="light-blue-13"
+          iconColor="accent"
         />
         <TarjetaEstad
           icono="transfer_within_a_station"
@@ -32,9 +32,9 @@ Descripción del archivo "DashboardPage.vue": -->
         <!-- Tarjeta para mostrar el número de productos agotados -->
         <TarjetaEstad
           icono="error"
-          titulo="121"
+          :titulo="dashboardStore.productosAgotados"
           subtitulo="Produc. agotados"
-          iconColor="light-blue-13"
+          iconColor="accent"
         />
       </div>
       <!-- Fin tarjetas centrales  -->
@@ -79,9 +79,9 @@ Descripción del archivo "DashboardPage.vue": -->
       <div class="flex no-wrap justify-evenly">
         <TarjetaEstad
           icono="settings"
-          titulo="586"
+          :titulo="dashboardStore.cantidadInstructores"
           subtitulo="Profesores"
-          iconColor="light-blue-13"
+          iconColor="accent"
         />
         <TarjetaEstad
           icono="settings"
@@ -132,8 +132,11 @@ import { UsePrestamosStore } from "src/stores/prestamosStore";
 import stadisticTableBar from "components/utils/StadisticTableBar.vue";
 import PrestamosForm from "components/prestamos/PrestamosForm.vue";
 import TableReuse from "components/utils/TableReuse.vue";
+import { UseDashboardStore } from "stores/dashboardStore";
 
 import { ref } from "vue";
+
+const dashboardStore = UseDashboardStore();
 
 const openedForm = ref(false);
 const prestamosStore = UsePrestamosStore();
