@@ -259,6 +259,19 @@ export const UseClientesStore = defineStore("clientes", {
 
               // Agregar el cliente al principio de la lista
               this.clientesDatabase.unshift(data);
+
+              // Ordenar la lista this.clientesDatabase para que los clientes enMora vayan primero
+              this.clientesDatabase.sort((a, b) => {
+                // Coloca los clientes enMora al principio (true antes de false)
+                if (a.enMora === true && b.enMora === false) {
+                  return -1;
+                } else if (a.enMora === false && b.enMora === true) {
+                  return 1;
+                }
+                // En caso de que enMora sea igual en ambos, no se cambia el orden
+                return 0;
+              });
+
             }
             // Si un cliente existente se modifica
           } else if (change.type == "modified") {
