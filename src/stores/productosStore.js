@@ -151,6 +151,7 @@ export const useProductosStore = defineStore("productos", {
         field: (row) => row.codigoBarra,
       },
 
+      { name: "EstadoFuncional", label: "Estado Funcional", field: "EstadoFuncional" },
       { name: "acciones", label: "Acciones", field: "acciones" },
     ],
 
