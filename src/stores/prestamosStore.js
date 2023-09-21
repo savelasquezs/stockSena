@@ -98,7 +98,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
       },
       {
         name: "user",
-        label: "Usuario", 
+        label: "Usuario",
         field: (row) => row.customer.user,
         sortable: true,
       },
@@ -277,9 +277,20 @@ export const UsePrestamosStore = defineStore("prestamos", {
         return { index, docId: document.id, ...document.data(), enMora };
       });
       this.allPersonDocs = docs;
+
+      this.allPersonDocs.sort((a, b) => {
+        if (a.enMora === true && b.enMora === false) {
+          return -1;
+        } else if (a.enMora === false && b.enMora === true) {
+          return 1;
+        }
+        return 0;
+      });
+
       this.updateMoraPerson(cedula);
       console.log(this.allPersonDocs);
       return docs;
+
     },
     /**
      * Acción para obtener préstamos por producto.
