@@ -41,7 +41,17 @@
             (val) => val.length > 2 || 'Por favor ingrese nombre valido',
           ]"
         />
-
+        <q-input
+          outlined
+          label="Correo Electrónico"
+          v-model="cliente.correo"
+          :rules="[
+            (val) => !!val || 'Por favor ingrese una dirección de correo',
+            (val) =>
+              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val) ||
+              'Por favor ingrese una dirección de correo válida',
+          ]"
+        />
         <q-select
           outlined
           label="Rol"

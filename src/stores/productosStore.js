@@ -151,6 +151,11 @@ export const useProductosStore = defineStore("productos", {
         field: (row) => row.codigoBarra,
       },
 
+      {
+        name: "EstadoFuncional",
+        label: "Estado Funcional",
+        field: "EstadoFuncional",
+      },
       { name: "acciones", label: "Acciones", field: "acciones" },
     ],
 
@@ -338,6 +343,7 @@ export const useProductosStore = defineStore("productos", {
     },
 
     getConsumableByCodeBar(code) {
+      console.log(this.productosDevolutivos);
       return this.productosDevolutivos.find(
         (producto) => producto.codigoBarra == code
       );

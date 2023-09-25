@@ -14,32 +14,33 @@
   </Qdialogo>
 
   <Qdialogo v-model="modalCambiarFechaOpen" iconModal="today">
-    <ProductMainInfo
-      :product="cambiarFechaProducto"
-      noAvatar
-      class="shadow-1 bg-grey-2"
-    />
     <div class="flex flex-center column">
       <div class="text-h5">Cambiar fecha limite de entrega</div>
-
-      <q-input
-        filled
-        v-model="nuevaFechaLimite"
-        label="Fecha limite"
-        autofocus
-        mask="##/##/####"
-        unmasked-value
-        hint="formato: dd/mm/aaaa"
-        :rules="rules"
-      >
-        <template v-slot:prepend>
-          <DatePicker
-            options
-            @guardarFecha="(fecha) => (nuevaFechaLimite = fecha)"
-          />
-        </template>
-      </q-input>
-      <q-btn label="Cambiar" @click="cambiarFecha" />
+      <ProductMainInfo
+        :product="cambiarFechaProducto"
+        noAvatar
+        class="shadow-1 bg-grey-2"
+      />
+      <q-form @submit="cambiarFecha">
+        <q-input
+          filled
+          v-model="nuevaFechaLimite"
+          label="Fecha limite"
+          mask="##/##/####"
+          unmasked-value
+          hint="formato: dd/mm/aaaa"
+          :rules="rules"
+          class="q-ma-xl"
+        >
+          <template v-slot:prepend>
+            <DatePicker
+              options
+              @guardarFecha="(fecha) => (nuevaFechaLimite = fecha)"
+            />
+          </template>
+        </q-input>
+        <q-btn label="Cambiar fecha" type="submit" style="width: 100%" />
+      </q-form>
     </div>
   </Qdialogo>
 
@@ -61,6 +62,7 @@
 </template>
 
 <script setup>
+import { Notify } from "quasar";
 import SimpleTable from "components/utils/SimpleTable.vue";
 import { UseClientesStore } from "src/stores/clientesStore";
 import Qdialogo from "components/utils/QDialogo.vue";
@@ -102,12 +104,19 @@ const rules = [
 ];
 
 const validarFecha = (inputDate) => {
+  console.log(inputDate);
   const today = new Date();
   const currentYear = today.getFullYear();
-  const regex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+  const regex = /^(0[1-9]|[1-2][0-9]|3[0-1])(0[1-9]|1[0-2])\d{4}$/;
 
   if (inputDate.match(regex)) {
-    const [day, month, year] = inputDate.split("/");
+    console.log("pasa");
+
+    const string = inputDate.toString();
+    const day = string.substring(0, 2);
+    const month = string.substring(2, 4);
+    const year = string.substring(4, 8);
+
     const inputYear = parseInt(year, 10);
 
     if (inputYear === currentYear) {
@@ -204,6 +213,29 @@ function cambiarFecha() {
 
 function openDevolverModal(tipo) {
   copySelectedRows.value = selectedPrestamos.value.map((prestamo) => {
+    if (tipo === "traspaso") {
+      // Filtrar los productos en mora
+      const productosEnMora = selectedPrestamos.value.filter((prestamo) => {
+        // Reemplaza 'prestamo.fechaMora' con la propiedad real que indica si un producto está en mora
+        return prestamo.fechaMora !== null; // Suponiendo que 'fechaMora' es nulo cuando no está en mora
+      });
+
+      if (productosEnMora.length > 0) {
+        // Si estás intentando hacer un traspaso con productos en mora, muestra una notificación de error
+        Notify.setDefaults({
+          position: "top-right",
+          color: "negative",
+        });
+
+        Notify.create({
+          message: "No puedes realizar un traspaso con productos en mora.",
+          timeout: 3000,
+        });
+
+        return; // Salir de la función si hay productos en mora y estás intentando un traspaso
+      }
+    }
+
     return {
       ...prestamo,
       devolver: prestamo.returnedQuantity
@@ -215,6 +247,7 @@ function openDevolverModal(tipo) {
   if (tipo == "traspaso") {
     tipoDev.value = "cambioUser";
   }
+
   modalDevolucionIsOpen.value = true;
 }
 
