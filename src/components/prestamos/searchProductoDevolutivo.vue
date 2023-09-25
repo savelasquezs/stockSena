@@ -7,7 +7,7 @@
         </q-icon>
       </q-item-section>
       <q-item-section>
-        <q-item-label>Prestar producto Devolutivo</q-item-label>
+        <q-item-label>{{ titulo }}</q-item-label>
       </q-item-section>
     </q-item>
     <q-input
@@ -37,6 +37,8 @@ import DevolutivosIcon from "components/icons/DevolutivosIcon.vue";
 import { useProductosStore } from "src/stores/productosStore";
 import { UseUtilsStore } from "src/stores/utilsStore";
 import { ref } from "vue";
+
+const props = defineProps({ titulo: String });
 const devolutivoSearch = ref("");
 const productosStore = useProductosStore();
 const utilsStore = UseUtilsStore();

@@ -226,8 +226,7 @@ Uso:
       </div>
       <div v-if="tipoSalida == 'salida'" class="flex flex-center">
         <div class="text-h5 shadow-1" style="width: 90%">
-          <div class="text-h5 text-center">Productos a sacar del almacen</div>
-          <SearchProductoDevolutivo @productSelected="setProducto" />
+          <SearchProductos />
         </div>
       </div>
       <div v-else-if="tipoSalida == 'deshabilitar'">Deshabilitar</div>
@@ -245,7 +244,7 @@ import { useProductosStore } from "stores/productosStore";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
-import SearchProductoDevolutivo from "components/prestamos/searchProductoDevolutivo.vue";
+import SearchProductos from "components/prestamos/SearchProducts.vue";
 
 //Instancia de dunciones
 const productosStore = useProductosStore();
@@ -306,11 +305,10 @@ function guardarCambios() {
         notas: notas.value,
       };
 
-      addDoc(collection(db, "stockMovements"), data).then(() => {
-        emit("movimientoGuardado");
-      });
+      addDoc(collection(db, "stockMovements"), data).then(() => {});
     }
   }
+  emit("movimientoGuardado");
 }
 
 // Función para guardar los productos de la lista

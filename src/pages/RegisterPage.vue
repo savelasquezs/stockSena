@@ -70,6 +70,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 //redireccion de rutas
 import { useRouter } from "vue-router";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
+import { auth } from "src/firebaseInit";
 const databaseStore = useDatabaseStore();
 
 const router = useRouter();
@@ -96,18 +97,24 @@ function showErrorMessage(message) {
 }
 
 function onSubmit() {
-  // if (!isEmailValid()) {
-  //   alert("Por favor, ingresa un correo válido de @misena.edu.co");
-  //   return;
-  // }
-  //Registrar un usuario
-  databaseStore.createUserCloudFunction(email.value, password1.value);
+  const almacen = JSON.parse(localStorage.getItem("user")).almacen;
+  if (password1.value == password2.value) {
+    createUserWithEmailAndPassword(auth, email.value, password1.value).then(
+      (credentials) => {
+        console.log(credentials);
+        const uid = credentials.user.uid;
+        const data = {
+          name: username.value,
+          almacen,
+          email: email.value,
+          role: "invitado",
+        };
+        databaseStore.setElement(data, "users", uid);
+        //crear el nuevo usuario en la base de datos
+      }
+    );
+  }
 }
-
-// function isEmailValid() {
-//   // Aquí verificamos si el correo contiene la extensión "@misena.edu.co"
-//   return email.value.endsWith("@misena.edu.co");
-// }
 </script>
 
 <style>

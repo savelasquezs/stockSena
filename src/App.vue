@@ -35,6 +35,7 @@ let timer;
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const uid = user.uid;
+    console.log(uid);
     await getDoc(doc(collection(db, "users"), uid)).then((doc) => {
       if (doc.exists()) {
         localStorage.setItem("user", JSON.stringify(doc.data()));

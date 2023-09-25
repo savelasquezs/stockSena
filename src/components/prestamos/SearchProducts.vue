@@ -2,6 +2,7 @@
   <div class="flex justify-evenly q-ma-md shadow-1 q-pa-md">
     <SearchProductoDevolutivo
       @productSelected="(producto) => $emit('productSelected', producto)"
+      titulo="Buscar producto Devolutivo"
     />
     <q-separator vertical />
     <div>
@@ -12,7 +13,7 @@
           </q-icon>
         </q-item-section>
         <q-item-section>
-          <q-item-label>Prestar producto Consumible</q-item-label>
+          <q-item-label>Buscar producto Consumible</q-item-label>
         </q-item-section>
       </q-item>
       <AutocompleteInput

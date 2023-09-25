@@ -27,20 +27,12 @@ import {
   query,
   updateDoc,
   where,
+  setDoc,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
 import { auth, db } from "src/firebaseInit";
 import { Notify } from "quasar";
-
-// Función para mostrar notificaciones
-const notificar = (message) => {
-  Notify.create({
-    color: "accent",
-    icon: "done_outline",
-    message,
-    timeout: 3500,
-  });
-};
+import { UseUtilsStore } from "./utilsStore";
 
 export const useDatabaseStore = defineStore("database", {
   state: () => {
@@ -50,6 +42,11 @@ export const useDatabaseStore = defineStore("database", {
   },
 
   actions: {
+    notifyError(message, type = "negative") {
+      const utilsStore = UseUtilsStore();
+      utilsStore.notifyError(message, type);
+    },
+
     async escucharCambios(store, tabla, ordenarPor, arrayName) {
       // Crear una consulta para la colección especificada, opcionalmente ordenada por un campo.
       const q = ordenarPor
@@ -162,7 +159,8 @@ export const useDatabaseStore = defineStore("database", {
       // Agregar el documento a la colección y obtener su referencia.
       const docRef = await addDoc(collection(db, tabla), completedData);
       // Notificar al usuario sobre el éxito de la operación.
-      notificar("Guardado exitosamente");
+
+      this.notifyError("Guardado exitosamente", "positive");
       return docRef;
     },
     /**
@@ -178,9 +176,20 @@ export const useDatabaseStore = defineStore("database", {
       // Obtener una referencia al documento que se va a actualizar.
       const docRef = doc(db, tabla, id);
       // Notificar al usuario sobre el éxito de la operación
-      notificar("Registro actualizado exitosamente");
+      this.notifyError("Registro actualizado exitosamente", "positive");
       // Actualizar el documento con los nuevos datos.
       await updateDoc(docRef, completedData);
+    },
+
+    setElement(data, tabla, id) {
+      const docRef = doc(db, tabla, id);
+      setDoc(docRef, data)
+        .then(() => {
+          this.notifyError("Registro guardado exitosamente", "positive");
+        })
+        .catch((err) => {
+          this.notifyError(err);
+        });
     },
 
     updateMoraPersona(idCliente) {
