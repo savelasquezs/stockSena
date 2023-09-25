@@ -99,7 +99,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
       {
         name: "user",
         label: "Usuario", 
-        field: (row) => row.customer.user,
+        field: (row) => row.createdBy,
         sortable: true,
       },
     ],
