@@ -52,6 +52,7 @@ import { db } from "src/firebaseInit";
 import ExpansionItem from "components/prestamos/ExpansionItem.vue";
 import InputClienteSearch from "components/prestamos/InputClienteSearch.vue";
 import { UseUtilsStore } from "src/stores/utilsStore";
+
 const productosList = ref([]);
 const $q = useQuasar();
 const prestamosStore = UsePrestamosStore();
@@ -197,6 +198,7 @@ function prestarProducto() {
       message: "Pedido Guardado exitosamente",
       color: "accent",
     });
+    utils.sendEmailBorrowing(cliente.value.correo, data);
   });
 }
 </script>

@@ -80,6 +80,7 @@ import { useRoute } from "vue-router";
 import { UseClientesStore } from "src/stores/clientesStore";
 import { data } from "autoprefixer";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
+import { UseUtilsStore } from "src/stores/utilsStore";
 
 const emit = defineEmits(["deselectRow", "devuelto"]);
 const props = defineProps({
@@ -88,6 +89,8 @@ const props = defineProps({
   clienteReceptor: Object,
   clienteEmisor: Object,
 });
+
+const utilsStore = UseUtilsStore();
 const prestamosStore = UsePrestamosStore();
 const guardando = ref(false);
 const notasGeneralesDevolucion = ref("");
@@ -152,6 +155,7 @@ async function prestarProducto() {
   const data = dataToBorrow();
   console.log(data);
   await addDoc(collection(db, "borrowings"), data).then((prestamo) => {
+    console.log(props.clienteReceptor);
     const clienteDocRef = doc(db, "customers", props.clienteReceptor.numero_id);
     data.productosList.forEach(async (producto, indexLista) => {
       const productoDocRef = doc(db, "products", producto.productId);
@@ -182,12 +186,18 @@ async function prestarProducto() {
         prestamoId: prestamo.id,
         ...producto,
       });
-      correoNotificacion();
     });
+    const almacen = JSON.parse(localStorage.getItem("user")).almacen;
+    const nombreClienteEmisor = `${props.clienteEmisor.nombre} ${props.clienteEmisor.apellido}`;
+    utilsStore.sendEmailBorrowing(
+      props.clienteReceptor.correo,
+      data,
+      almacen,
+      true,
+      nombreClienteEmisor
+    );
   });
 }
-
-function correoNotificacion() {}
 
 async function updatePrestamos(
   element,

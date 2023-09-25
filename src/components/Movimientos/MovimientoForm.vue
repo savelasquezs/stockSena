@@ -50,147 +50,187 @@ Uso:
         val="existente"
         label="Producto existente"
       />
-    </div>
-
-    <!-- Contenido específico según el tipo de ingreso -->
-    <div class="flex flex-center">
-      <!-- Formulario para un nuevo producto, en caso
+      <!-- Contenido específico según el tipo de ingreso -->
+      <div class="flex flex-center">
+        <!-- Formulario para un nuevo producto, en caso
       de que v-if="tipoIngreso == 'nuevo'-->
-      <productos-form v-if="tipoIngreso == 'nuevo'" />
-      <q-card
-        class="q-pa-lg"
-        v-else-if="tipoIngreso == 'existente'"
-        style="min-width: 750px"
-      >
-        <!-- Contenido del formulario de ingreso de productos existentes -->
-        <div class="flex column flex-center">
-          <!-- Configuración del icono (avatar) -->
-          <q-avatar
-            icon="add_task"
-            size="75px"
-            color="accent"
-            text-color="white"
-          ></q-avatar>
-          <!-- titulo -->
-          <div class="text-h5 text-center q-my-xl">
-            Ingreso de productos existentes
-          </div>
-        </div>
-        <!-- "Botón" el cual añade productos nuevos a la lista -->
-        <q-item class="flex flex-center" clickable @click="addproductList">
-          <!-- Icono del "botón" y su configuración -->
-          <q-icon name="add_circle" size="30px" color="primary"></q-icon>
-        </q-item>
-        <!-- inicio del area a la cual se le puede hacer "scroll" -->
-        <q-scroll-area
-          style="height: 150px; max-width: 1000px; width: 700px"
-          visible
+        <productos-form
+          v-if="tipoIngreso == 'nuevo'"
+          @enviado="console.log('recibido desde movements')"
+        />
+        <q-card
+          class="q-pa-lg"
+          v-else-if="tipoIngreso == 'existente'"
+          style="min-width: 750px"
         >
-          <div
-            class="flex q-my-sm"
-            v-for="(producto, index) in productosList"
-            :key="producto"
-          >
-            <q-card-section horizontal>
-              <!-- se llama al componente Autocompleteinput,
-              para añadir algun posible -->
-              <Autocompleteinput
-                :stringOptions="productosStore.productosNombres"
-                @cambioModel="
-                  (nombreProducto) => setProduct(nombreProducto, index)
-                "
-              />
-              <!-- Input para añadir la cantidad del producto, está vinculado
-               con v-model="producto.cantidad" -->
-              <q-input
-                color="teal"
-                outlined
-                type="number"
-                v-model="producto.cantidad"
-                label="Cantidad"
-                class="q-mx-sm"
-              >
-                <template v-slot:append>
-                  <!-- Icono que acompaña al input -->
-                  <q-icon
-                    :name="
-                      movimiento == 'Ingreso'
-                        ? 'add_shopping_cart'
-                        : 'remove_shopping_cart'
-                    "
-                  />
-                </template>
-              </q-input>
-              <!-- Input para añadir las notas, está vinculado a
-               v-model="producto.notas"  -->
-              <q-input
-                color="teal"
-                outlined
-                v-model="producto.notas"
-                label="Notas"
-                autogrow
-              >
-                <template v-slot:append>
-                  <q-icon
-                    name="inventory_2
-                "
-                  />
-                </template>
-              </q-input>
-              <!-- item (botón) clickable el cual esta conectado a la función
-               @click="deleteProductList(index)" -->
-              <q-item
-                clickable
-                dense
-                class="items-center"
-                style="height: 56px"
-                @click="deleteProductList(index)"
-              >
-                <!-- Configuración del icono -->
-                <q-icon name="delete" size="24px" color="red-8"></q-icon>
-              </q-item>
-            </q-card-section>
-          </div>
-          <!-- Fin del scroll-area -->
-        </q-scroll-area>
-        <q-card-section>
-          <!-- Input para añadir el proveedor, el cual está conectando a la
-          variable v-model="proveedor"  -->
-          <q-input color="teal" outlined v-model="proveedor" label="Proveedor">
-            <template v-slot:append>
-              <q-icon
-                name="precision_manufacturing
-                "
-              />
-            </template>
-          </q-input>
-          <!-- Input para añadir las notas conectado a la variable: v-model="notas" -->
-          <q-input
-            color="teal"
-            outlined
-            v-model="notas"
-            label="Notas"
-            class="q-my-lg"
-          >
-            <template v-slot:append>
-              <q-icon
-                name="chat
-                "
-              />
-            </template>
-          </q-input>
-          <q-card-actions>
-            <!-- Boton para guardar los datos ingresados en el formulario -->
-            <q-btn
-              color="primary"
-              icon="save"
+          <!-- Contenido del formulario de ingreso de productos existentes -->
+          <div class="flex column flex-center">
+            <!-- Configuración del icono (avatar) -->
+            <q-avatar
+              icon="add_task"
+              size="75px"
+              color="accent"
               text-color="white"
-              label="Guardar"
-              type="submit"
-            ></q-btn>
-          </q-card-actions>
-        </q-card-section>
-      </q-card>
+            ></q-avatar>
+            <!-- titulo -->
+            <div class="text-h5 text-center q-mt-xl">
+              Ingreso de productos existentes
+            </div>
+            <div class="text-grey-6">
+              Solo puedes agregar existencias a productos consumibles, pues cada
+              devolutivo es unico
+            </div>
+          </div>
+          <!-- "Botón" el cual añade productos nuevos a la lista -->
+          <q-item class="flex flex-center" clickable @click="addproductList">
+            <!-- Icono del "botón" y su configuración -->
+            <q-icon name="add_circle" size="30px" color="primary"></q-icon>
+          </q-item>
+          <!-- inicio del area a la cual se le puede hacer "scroll" -->
+          <q-scroll-area
+            style="height: 150px; max-width: 1000px; width: 700px"
+            visible
+          >
+            <div
+              class="flex q-my-sm"
+              v-for="(producto, index) in productosList"
+              :key="producto"
+            >
+              <q-card-section horizontal>
+                <!-- se llama al componente Autocompleteinput,
+              para añadir algun posible -->
+                <Autocompleteinput
+                  :stringOptions="productosStore.nameColumnsConsumibles"
+                  @cambioModel="
+                    (nombreProducto) => setProduct(nombreProducto, index)
+                  "
+                />
+                <!-- Input para añadir la cantidad del producto, está vinculado
+               con v-model="producto.cantidad" -->
+                <q-input
+                  color="teal"
+                  outlined
+                  type="number"
+                  v-model="producto.cantidad"
+                  label="Cantidad"
+                  class="q-mx-sm"
+                >
+                  <template v-slot:append>
+                    <!-- Icono que acompaña al input -->
+                    <q-icon
+                      :name="
+                        movimiento == 'Ingreso'
+                          ? 'add_shopping_cart'
+                          : 'remove_shopping_cart'
+                      "
+                    />
+                  </template>
+                </q-input>
+                <!-- Input para añadir las notas, está vinculado a
+               v-model="producto.notas"  -->
+                <q-input
+                  color="teal"
+                  outlined
+                  v-model="producto.notas"
+                  label="Notas"
+                  autogrow
+                >
+                  <template v-slot:append>
+                    <q-icon
+                      name="inventory_2
+                "
+                    />
+                  </template>
+                </q-input>
+                <!-- item (botón) clickable el cual esta conectado a la función
+               @click="deleteProductList(index)" -->
+                <q-item
+                  clickable
+                  dense
+                  class="items-center"
+                  style="height: 56px"
+                  @click="deleteProductList(index)"
+                >
+                  <!-- Configuración del icono -->
+                  <q-icon name="delete" size="24px" color="red-8"></q-icon>
+                </q-item>
+              </q-card-section>
+            </div>
+            <!-- Fin del scroll-area -->
+          </q-scroll-area>
+          <q-card-section>
+            <!-- Input para añadir el proveedor, el cual está conectando a la
+          variable v-model="proveedor"  -->
+            <q-input
+              color="teal"
+              outlined
+              v-model="proveedor"
+              label="Proveedor"
+            >
+              <template v-slot:append>
+                <q-icon
+                  name="precision_manufacturing
+                "
+                />
+              </template>
+            </q-input>
+            <!-- Input para añadir las notas conectado a la variable: v-model="notas" -->
+            <q-input
+              color="teal"
+              outlined
+              v-model="notas"
+              label="Notas"
+              class="q-my-lg"
+            >
+              <template v-slot:append>
+                <q-icon
+                  name="chat
+                "
+                />
+              </template>
+            </q-input>
+            <q-card-actions>
+              <!-- Boton para guardar los datos ingresados en el formulario -->
+              <q-btn
+                color="primary"
+                icon="save"
+                text-color="white"
+                label="Guardar"
+                type="submit"
+              ></q-btn>
+            </q-card-actions>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+    <div v-else-if="movimiento == 'Salida'">
+      <div class="flex flex-center">
+        <div>
+          <q-radio
+            v-model="tipoSalida"
+            checked-icon="task_alt"
+            unchecked-icon="panorama_fish_eye"
+            val="salida"
+            label="Salida del almacen"
+          />
+        </div>
+        <div>
+          <q-radio
+            v-model="tipoSalida"
+            checked-icon="task_alt"
+            unchecked-icon="panorama_fish_eye"
+            val="deshabilitar"
+            label="Deshabilitar producto"
+          />
+        </div>
+      </div>
+      <div v-if="tipoSalida == 'salida'" class="flex flex-center">
+        <div class="text-h5 shadow-1" style="width: 90%">
+          <div class="text-h5 text-center">Productos a sacar del almacen</div>
+          <SearchProductoDevolutivo @productSelected="setProducto" />
+        </div>
+      </div>
+      <div v-else-if="tipoSalida == 'deshabilitar'">Deshabilitar</div>
     </div>
   </q-form>
 </template>
@@ -204,6 +244,8 @@ import { ref } from "vue";
 import { useProductosStore } from "stores/productosStore";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "src/firebaseInit";
+import { useDatabaseStore } from "src/stores/DatabaseStore";
+import SearchProductoDevolutivo from "components/prestamos/searchProductoDevolutivo.vue";
 
 //Instancia de dunciones
 const productosStore = useProductosStore();
@@ -215,6 +257,9 @@ const cantidad = ref(null);
 const proveedor = ref("");
 const notas = ref("");
 const productosList = ref([]);
+const tipoSalida = ref(null);
+
+const DatabaseStore = useDatabaseStore();
 
 // evento
 const emit = defineEmits(["movimientoGuardado"]);
@@ -225,15 +270,22 @@ const emit = defineEmits(["movimientoGuardado"]);
  * actualiza el stock de los productos en la base de datos.
  * @returns {void}
  */
+
+function setProducto(producto) {
+  console.log(producto);
+}
 function guardarCambios() {
   if (movimiento.value == "Ingreso") {
     if (tipoIngreso.value == "existente") {
       productosList.value.forEach((registro) => {
-        const docRef = doc(db, "products", registro.docId);
-        updateDoc(docRef, {
-          totalStock:
-            parseInt(registro.totalStock) + parseInt(registro.cantidad),
-        }).then(() => {});
+        DatabaseStore.updateElement(
+          {
+            stockTotal:
+              parseInt(registro.stockTotal) + parseInt(registro.cantidad),
+          },
+          "products",
+          registro.docId
+        );
       });
       const productos = productosList.value.map((producto) => {
         return {
@@ -241,9 +293,9 @@ function guardarCambios() {
           docId: producto.docId,
           nombre: producto.producto,
           notas: producto.notas,
-          stockAnterior: producto.totalStock,
+          stockAnterior: producto.stockTotal,
           nuevoStock:
-            parseInt(producto.totalStock) + parseInt(producto.cantidad),
+            parseInt(producto.stockTotal) + parseInt(producto.cantidad),
         };
       });
       const data = {
@@ -292,14 +344,14 @@ function setProduct(nombreProducto, index) {
   }
   productosList.value[index].producto = nombreProducto;
   const producto = productosStore.productosDatabase.find(
-    (producto) => producto.name == nombreProducto
+    (producto) => producto.nombre == nombreProducto
   );
 
   productosList.value[index].maxQuantity =
-    producto.totalStock - producto.borrowedQuantity;
+    producto.stockTotal - producto.borrowedQuantity;
   productosList.value[index].docId = producto.docId;
   productosList.value[index].cantidadPrestada = producto.borrowedQuantity;
-  productosList.value[index].totalStock = producto.totalStock;
+  productosList.value[index].stockTotal = producto.stockTotal;
 }
 </script>
 
