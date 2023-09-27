@@ -130,7 +130,6 @@ import GraphPrueba from "components/dashboard/PruebaVue.vue";
 import LowStockItem from "components/dashboard/LowStockItem.vue";
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import stadisticTableBar from "components/utils/StadisticTableBar.vue";
-import PrestamosForm from "components/prestamos/PrestamosForm.vue";
 import TableReuse from "components/utils/TableReuse.vue";
 import { UseDashboardStore } from "stores/dashboardStore";
 

@@ -23,9 +23,9 @@ import { db } from "src/firebaseInit";
 // Definición del store de movimientos.
 export const UseMovimientosStore = defineStore("movimientos", {
   state: () => ({
-    movimientosDatabase: [],// Almacena la lista de movimientos obtenida de Firestore.
+    movimientosDatabase: [], // Almacena la lista de movimientos obtenida de Firestore.
     columns: [
-       /** Definición de columnas para tablas relacionadas con movimientos.
+      /** Definición de columnas para tablas relacionadas con movimientos.
         Estos campos son los que se le pasan a la columna, y varian segun
         las columnas y como se definan
         ejemplo:{
@@ -74,22 +74,22 @@ export const UseMovimientosStore = defineStore("movimientos", {
       {
         name: "cantidad",
         align: "center",
-        label: "Cantidad Ingresada",
+        label: "Cantidad movida",
         field: (row) => row.cantidad,
         sortable: true,
       },
       {
         name: "stockAnterior",
         align: "center",
-        label: "Stock Anterior",
+        label: "Stock Disponible Anterior",
         field: (row) => row.stockAnterior,
         sortable: true,
       },
       {
         name: "nuevoStock",
         align: "center",
-        label: "Nuevo Stock",
-        field: (row) => row.nuevoStock,
+        label: "Nuevo Stock disponible",
+        field: (row) => row.stockTotal,
         sortable: true,
       },
       {
@@ -124,7 +124,6 @@ export const UseMovimientosStore = defineStore("movimientos", {
   getters: {},
 
   actions: {
-
     // Acción para escuchar cambios en la colección de movimientos en Firestore.
 
     async listenChanges() {
@@ -143,7 +142,7 @@ export const UseMovimientosStore = defineStore("movimientos", {
                 docId: change.doc.id,
                 ...change.doc.data(),
               };
-               // Agregar el movimiento al principio de la lista.
+              // Agregar el movimiento al principio de la lista.
               this.movimientosDatabase.unshift(data);
             }
           } else if (change.type == "modified") {
@@ -153,13 +152,13 @@ export const UseMovimientosStore = defineStore("movimientos", {
             let index = this.movimientosDatabase.findIndex(
               (item) => item.docId == change.doc.id
             );
-             // Actualizar los datos del movimiento en la lista.
+            // Actualizar los datos del movimiento en la lista.
             this.movimientosDatabase[index] = {
               ...cambio,
               ...change.doc.data(),
             };
           } else if (change.type == "removed") {
-             // Si se elimina un movimiento, filtrar y actualizar la lista eliminando el movimiento correspondiente.
+            // Si se elimina un movimiento, filtrar y actualizar la lista eliminando el movimiento correspondiente.
             this.movimientosDatabase = this.movimientosDatabase.filter(
               (item) => item.docId != change.doc.id
             );

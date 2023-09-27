@@ -23,7 +23,7 @@ Uso:
 -->
 <template>
   <!-- Formulario para registrar movimientos de inventario -->
-  <q-form @submit="guardarCambios">
+  <q-form ref="refForm">
     <!-- Selección del tipo de movimiento (Ingreso o Salida) -->
     <q-select
       v-model="movimiento"
@@ -196,7 +196,7 @@ Uso:
                 icon="save"
                 text-color="white"
                 label="Guardar"
-                type="submit"
+                @click="verificarValores"
               ></q-btn>
             </q-card-actions>
           </q-card-section>
@@ -224,12 +224,24 @@ Uso:
           />
         </div>
       </div>
-      <div v-if="tipoSalida == 'salida'" class="flex flex-center">
-        <div class="text-h5 shadow-1" style="width: 90%">
-          <SearchProductos />
-        </div>
+      <div
+        class="text-h5 text-center"
+        v-if="tipoSalida == 'salida' || tipoSalida == 'deshabilitar'"
+      >
+        {{
+          tipoSalida == "salida"
+            ? "Sacar del almacen"
+            : "Deshabilitar productos"
+        }}
       </div>
-      <div v-else-if="tipoSalida == 'deshabilitar'">Deshabilitar</div>
+      <SalidaDeAlmacen
+        v-if="tipoSalida == 'salida' || tipoSalida == 'deshabilitar'"
+        :tipoSalida="tipoSalida"
+        @productSelected="agregarProducto"
+        :productlist="productosList"
+        @darSalida="guardarCambios"
+        @deselectProduct="deselectRow"
+      />
     </div>
   </q-form>
 </template>
@@ -238,20 +250,30 @@ Uso:
 //importaciones de los componentes
 import ProductosForm from "components/productos/ProductosForm.vue";
 import Autocompleteinput from "components/utils/autocompleteInput.vue";
+import SalidaDeAlmacen from "components/Movimientos/SalidaDeAlmacen.vue";
 //Importaciones necesarias
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useProductosStore } from "stores/productosStore";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "src/firebaseInit";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
-import SearchProductos from "components/prestamos/SearchProducts.vue";
+import { UseUtilsStore } from "src/stores/utilsStore";
+const refForm = ref(null);
+
+function verificarValores() {
+  refForm.value.validate().then((result) => {
+    if (result) {
+      guardarCambios(notas.value);
+    }
+  });
+}
 
 //Instancia de dunciones
 const productosStore = useProductosStore();
 // Declaración de las variables
 const tiposMovimiento = ["Ingreso", "Salida"];
 const movimiento = ref("");
-const tipoIngreso = ref("");
+const tipoIngreso = ref(null);
 const cantidad = ref(null);
 const proveedor = ref("");
 const notas = ref("");
@@ -259,9 +281,37 @@ const productosList = ref([]);
 const tipoSalida = ref(null);
 
 const DatabaseStore = useDatabaseStore();
+const utils = UseUtilsStore();
+
+const emit = defineEmits(["movimientoGuardado"]);
+
+function deselectRow(id) {
+  productosList.value = productosList.value.filter(
+    (producto) => producto.docId != id
+  );
+}
 
 // evento
-const emit = defineEmits(["movimientoGuardado"]);
+
+function agregarProducto(producto) {
+  console.log(producto);
+  if (
+    productosList.value.some((elemento) => elemento.docId == producto.docId)
+  ) {
+    utils.notifyError("Este producto ya esta en tu lista");
+    return;
+  }
+  console.log(producto);
+  if (producto.stockTotal - producto.borrowedQuantity <= 0) {
+    utils.notifyError("Lo sentimos, no tenemos mas disponibles");
+    return;
+  }
+  productosList.value.unshift({
+    ...producto,
+    prestar: 1,
+  });
+  console.log(productosList.value);
+}
 
 /**
  * Guarda los cambios realizados en el inventario.
@@ -270,44 +320,69 @@ const emit = defineEmits(["movimientoGuardado"]);
  * @returns {void}
  */
 
-function setProducto(producto) {
-  console.log(producto);
-}
-function guardarCambios() {
-  if (movimiento.value == "Ingreso") {
-    if (tipoIngreso.value == "existente") {
-      productosList.value.forEach((registro) => {
-        DatabaseStore.updateElement(
-          {
-            stockTotal:
-              parseInt(registro.stockTotal) + parseInt(registro.cantidad),
-          },
-          "products",
-          registro.docId
+function guardarCambios(notasSalida) {
+  function calculartotalStock(stockAnterior, producto) {
+    if (movimiento.value == "Ingreso") {
+      if (tipoIngreso.value == "existente") {
+        return (
+          parseInt(stockAnterior) +
+          parseInt(producto.cantidad || producto.prestar)
         );
-      });
-      const productos = productosList.value.map((producto) => {
-        return {
-          cantidad: producto.cantidad,
-          docId: producto.docId,
-          nombre: producto.producto,
-          notas: producto.notas,
-          stockAnterior: producto.stockTotal,
-          nuevoStock:
-            parseInt(producto.stockTotal) + parseInt(producto.cantidad),
-        };
-      });
-      const data = {
-        productosList: productos,
-        fecha: new Date().getTime(),
-        movimiento: movimiento.value,
-        proveedor: proveedor.value,
-        notas: notas.value,
-      };
-
-      addDoc(collection(db, "stockMovements"), data).then(() => {});
+      }
+    } else if (movimiento.value == "Salida") {
+      if (tipoSalida.value == "salida") {
+        return (
+          parseInt(stockAnterior) -
+          parseInt(producto.cantidad || producto.prestar)
+        );
+      } else return producto.stockTotal;
     }
   }
+
+  const productos = productosList.value.map((producto) => {
+    console.log(producto);
+    const stockAnterior =
+      parseInt(producto.stockTotal) -
+      parseInt(producto.borrowedQuantity || producto.cantidadPrestada) -
+      parseInt(producto.unavailableQuantity);
+
+    const stockTotal = calculartotalStock(stockAnterior, producto);
+    const unavailableQuantity =
+      movimiento.value == "Salida" && tipoSalida.value == "deshabilitar"
+        ? producto.unavailableQuantity + producto.cantidad || producto.prestar
+        : producto.unavailableQuantity;
+    return {
+      cantidad: producto.cantidad || producto.prestar,
+      docId: producto.docId,
+      nombre: producto.producto || producto.nombre,
+      notas: producto.notas || notasSalida,
+      stockAnterior,
+      stockTotal,
+      unavailableQuantity,
+    };
+  });
+  const data = {
+    productosList: productos,
+    fecha: new Date().getTime(),
+    movimiento: `${movimiento.value} ${tipoIngreso.value || tipoSalida.value}`,
+    proveedor: proveedor.value || "No aplica",
+    notas: notas.value || "",
+  };
+
+  productos.forEach((registro) => {
+    console.log(registro.stockTotal);
+    DatabaseStore.updateElement(
+      {
+        stockTotal: registro.stockTotal,
+        unavailableQuantity: registro.unavailableQuantity,
+      },
+      "products",
+      registro.docId
+    );
+  });
+  console.log(data);
+  addDoc(collection(db, "stockMovements"), data).then(() => {});
+
   emit("movimientoGuardado");
 }
 
@@ -323,6 +398,10 @@ function addproductList() {
 function deleteProductList(index) {
   productosList.value.splice(index, 1);
 }
+
+watch([movimiento, tipoIngreso, tipoSalida], () => {
+  productosList.value = [];
+});
 
 /**
  * Establece un producto en la lista de productos para ingresar.
@@ -350,6 +429,7 @@ function setProduct(nombreProducto, index) {
   productosList.value[index].docId = producto.docId;
   productosList.value[index].cantidadPrestada = producto.borrowedQuantity;
   productosList.value[index].stockTotal = producto.stockTotal;
+  productosList.value[index].unavailableQuantity = producto.unavailableQuantity;
 }
 </script>
 

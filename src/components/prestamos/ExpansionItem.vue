@@ -52,7 +52,7 @@
             />
           </div>
         </q-item-section>
-        <q-item-section>
+        <q-item-section v-if="!darBaja">
           <div class="flex flex-center">
             <DatePicker
               options
@@ -98,6 +98,7 @@
                 v-model="producto.comentario"
                 autogrow
                 label="Ingrese comentarios"
+                :rules="[withoutReasonError]"
               />
             </div>
           </div>
@@ -111,9 +112,22 @@
 <script setup>
 import CustomPropertiesTable from "components/productos/CustomPropertiesTable.vue";
 import DatePicker from "components/utils/DatePicker.vue";
+import { UseUtilsStore } from "src/stores/utilsStore";
 
-const props = defineProps({ productosList: Object });
+const props = defineProps({ productosList: Array, darBaja: Boolean });
 const emit = defineEmits(["deselectElement"]);
+const utilsStore = UseUtilsStore();
+
+function withoutReasonError(value) {
+  if (!!value) return true;
+  else if (props.darBaja) {
+    utilsStore.notifyError(
+      "Despliega el producto e ingresa el motivo para dar de baja el producto"
+    );
+
+    return "Debes ingresar un motivo para dar de baja el producto";
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>

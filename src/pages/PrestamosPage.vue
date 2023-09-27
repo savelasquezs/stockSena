@@ -31,11 +31,10 @@
 <script setup>
 import { UsePrestamosStore } from "src/stores/prestamosStore";
 import stadisticTableBar from "components/utils/StadisticTableBar.vue";
-import PrestamosForm from "components/prestamos/PrestamosForm.vue";
+
 import TableReuse from "components/utils/TableReuse.vue";
 import { ref } from "vue";
 import { useDatabaseStore } from "src/stores/DatabaseStore";
-
 
 const openedForm = ref(false);
 const prestamosStore = UsePrestamosStore();
@@ -46,14 +45,14 @@ prestamosStore.listenChanges().then(() => {
   dataTableArray.value = prestamosStore.prestamosDatabase;
   sortedDataArray.value = sortPrestamosWhitMora(dataTableArray.value);
 });
-const sortPrestamosWhitMora = (prestamos)=>{
-  return prestamos.sort((a,b) =>{
-    if(a.tieneMora && !b.tieneMora){
+const sortPrestamosWhitMora = (prestamos) => {
+  return prestamos.sort((a, b) => {
+    if (a.tieneMora && !b.tieneMora) {
       return -1;
-    }else if(!a.tieneMora && b.tieneMora ){
+    } else if (!a.tieneMora && b.tieneMora) {
       return 1;
     }
     return 0;
   });
-}
+};
 </script>

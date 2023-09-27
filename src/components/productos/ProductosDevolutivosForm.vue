@@ -86,6 +86,7 @@ const datosCompletos = computed(() => {
     ...valueCampos.value,
     nombre: consumableSelected.value,
     borrowedQuantity: 0,
+    unavailableQuantity: 0,
   };
 });
 

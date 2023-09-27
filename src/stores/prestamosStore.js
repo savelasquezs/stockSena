@@ -19,7 +19,6 @@
 //importaciones
 import { defineStore } from "pinia";
 
-import { Dialog } from "quasar";
 import {
   collection,
   doc,
@@ -98,7 +97,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
       },
       {
         name: "user",
-        label: "Usuario", 
+        label: "Usuario",
         field: (row) => row.createdBy,
         sortable: true,
       },
@@ -290,7 +289,6 @@ export const UsePrestamosStore = defineStore("prestamos", {
       this.updateMoraPerson(cedula);
       console.log(this.allPersonDocs);
       return docs;
-
     },
     /**
      * Acción para obtener préstamos por producto.

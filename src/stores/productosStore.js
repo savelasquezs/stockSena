@@ -59,11 +59,11 @@ export const useProductosStore = defineStore("productos", {
         field: "Prestados",
       },
       {
-        name: "Averiados",
+        name: "NoDisponible",
         required: true,
-        label: "Averiados",
+        label: "No Disponibles",
         align: "left",
-        field: "Averiados",
+        field: "NoDisponible",
       },
     ],
     devolutivosInternalCols: [
@@ -128,6 +128,12 @@ export const useProductosStore = defineStore("productos", {
         sortable: true,
       },
       {
+        name: "stockDisponible",
+        label: "Stock disponible",
+        field: (row) =>
+          row.stockTotal - row.borrowedQuantity - row.unavailableQuantity,
+      },
+      {
         name: "Stock Total",
         label: "Stock Total",
         field: (row) => row.stockTotal,
@@ -140,9 +146,14 @@ export const useProductosStore = defineStore("productos", {
         field: (row) => row.borrowedQuantity,
       },
       {
-        name: "stockDisponible",
-        label: "Stock disponible",
-        field: (row) => row.stockTotal - row.borrowedQuantity,
+        name: "Stock-NoDisponible",
+        label: "No Disponible",
+        field: (row) => row.unavailableQuantity,
+      },
+      {
+        name: "Stock-Consumido",
+        label: "Total Consumido",
+        field: (row) => row.consumedQuantity,
       },
 
       {
@@ -151,11 +162,6 @@ export const useProductosStore = defineStore("productos", {
         field: (row) => row.codigoBarra,
       },
 
-      {
-        name: "EstadoFuncional",
-        label: "Estado Funcional",
-        field: "EstadoFuncional",
-      },
       { name: "acciones", label: "Acciones", field: "acciones" },
     ],
 
@@ -254,11 +260,13 @@ export const useProductosStore = defineStore("productos", {
     valoresDevolutivos: (state) => {
       return (nombre) => {
         const productos = state.productosDatabase.filter(
-          (producto) => producto.nombre == nombre
+          (producto) => producto.nombre == nombre && producto.stockTotal > 0
         );
         const Total = productos.length;
-        const Averiados = productos.filter(
-          (producto) => producto.estadoFisico == "No funcional"
+        const NoDisponible = productos.filter(
+          (producto) =>
+            producto.estadoFisico == "No funcional" ||
+            producto.unavailableQuantity > 0
         ).length;
 
         const Prestados = productos.filter(
@@ -269,9 +277,9 @@ export const useProductosStore = defineStore("productos", {
           docId: productos[0].docId,
           nombre,
           Total,
-          Disponibles: Total - Averiados - Prestados,
+          Disponibles: Total - NoDisponible - Prestados,
           Prestados,
-          Averiados,
+          NoDisponible,
           productosList: [...productos],
         };
       };

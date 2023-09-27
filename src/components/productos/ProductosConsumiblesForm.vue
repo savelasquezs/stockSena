@@ -193,6 +193,8 @@ const completedForm = computed(() => {
     ...formulario.value,
     borrowedQuantity: 0,
     isConsumable: true,
+    unavailableQuantity: 0,
+    consumedQuantity: 0,
   };
 });
 
