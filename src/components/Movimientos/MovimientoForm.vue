@@ -302,8 +302,15 @@ function agregarProducto(producto) {
     return;
   }
   console.log(producto);
-  if (producto.stockTotal - producto.borrowedQuantity <= 0) {
-    utils.notifyError("Lo sentimos, no tenemos mas disponibles");
+  if (
+    producto.stockTotal -
+      producto.borrowedQuantity -
+      producto.unavailableQuantity <=
+    0
+  ) {
+    utils.notifyError(
+      "Lo sentimos, este producto esta prestado o deshabilitado"
+    );
     return;
   }
   productosList.value.unshift({

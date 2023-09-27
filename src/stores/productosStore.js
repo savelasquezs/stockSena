@@ -97,6 +97,13 @@ export const useProductosStore = defineStore("productos", {
         field: (row) => row.borrowedQuantity > 0,
       },
       {
+        name: "disponible",
+        required: true,
+        label: "Disponible",
+        align: "left",
+        field: (row) => row.unavailableQuantity == 0,
+      },
+      {
         name: "name",
         required: true,
         label: "Descripción",

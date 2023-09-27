@@ -81,7 +81,12 @@ function agregarProducto(producto) {
     return;
   }
   console.log(producto);
-  if (producto.stockTotal - producto.borrowedQuantity <= 0) {
+  if (
+    producto.stockTotal -
+      producto.borrowedQuantity -
+      producto.unavailableQuantity <=
+    0
+  ) {
     utils.notifyError("Lo sentimos, no tenemos mas disponibles");
     return;
   }
