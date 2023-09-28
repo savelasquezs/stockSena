@@ -7,7 +7,7 @@
     flat
     bordered
     :title="title"
-    :rows="rows"
+    :rows="dataArray"
     :columns="columns"
     row-key="name"
     :filter="search"
@@ -165,6 +165,7 @@ function verDetalles(docId) {
   console.log(props.customDetailRouting);
   console.log(docId);
   if (props.id) {
+    dataArray;
     emit("viendo", docId);
     return;
   } else {
@@ -175,12 +176,6 @@ function verDetalles(docId) {
 const rows = ref([...props.dataArray]);
 
 // Agrega un watcher para detectar cambios en props.dataArray
-watch(
-  () => props.dataArray,
-  (newArray) => {
-    rows.value = newArray.map((element) => ({ ...element, expand: false }));
-  }
-);
 
 function toggleRowExpansion(row) {
   row.expand = !row.expand;
