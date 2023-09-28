@@ -84,16 +84,10 @@ const itemToEdit = ref(null);
 const openConsumableForm = ref(false);
 const openForm = ref(false);
 const productosStore = useProductosStore();
-const dataTableArray=ref([]);
+
 const databaseStore = useDatabaseStore();
 
-
-
 const router = useRouter();
-
-productosStore.listenChanges().then(()=>{
-  dataTableArray.value = productosStore.productsDatabase;
-});
 
 const tabs = [
   { name: "consumibles", label: "Consumibles" },
@@ -158,6 +152,4 @@ function handleFileSelect() {
 }
 
 const rows = ref([]);
-
-
 </script>

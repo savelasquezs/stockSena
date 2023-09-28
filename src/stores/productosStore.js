@@ -29,6 +29,7 @@ export const useProductosStore = defineStore("productos", {
     // columnasDetalleProducto: [ /* ... */ ], // Columnas para la tabla de detalles de producto.
 
     productosDatabase: [],
+    devolutivosRows: [],
     devolutivosCols: [
       {
         name: "name",
@@ -264,42 +265,6 @@ export const useProductosStore = defineStore("productos", {
       return nameConsumables;
     },
 
-    valoresDevolutivos: (state) => {
-      return (nombre) => {
-        const productos = state.productosDatabase.filter(
-          (producto) => producto.nombre == nombre && producto.stockTotal > 0
-        );
-        const Total = productos.length;
-        const NoDisponible = productos.filter(
-          (producto) =>
-            producto.estadoFisico == "No funcional" ||
-            producto.unavailableQuantity > 0
-        ).length;
-
-        const Prestados = productos.filter(
-          (producto) => producto.borrowedQuantity > 0
-        ).length;
-
-        return {
-          docId: productos[0].docId,
-          nombre,
-          Total,
-          Disponibles: Total - NoDisponible - Prestados,
-          Prestados,
-          NoDisponible,
-          productosList: [...productos],
-        };
-      };
-    },
-
-    devolutivosRows() {
-      return this.columnsDevolutivos.map((nombre) => {
-        const valores = this.valoresDevolutivos(nombre);
-        console.log(valores.productosList);
-        return valores;
-      });
-    },
-
     stadisticTableBarInfo(state) {
       const array = [];
 
@@ -331,8 +296,8 @@ export const useProductosStore = defineStore("productos", {
       const productoMaximoStock = {
         text_color: "text-light-black",
         titulo: "Producto con mayor stock",
-        valor: productosMaximaCantidad[0].nombre,
-        periodo: `Cantidad: ${productosMaximaCantidad[0].stockTotal}`,
+        valor: productosMaximaCantidad[0]?.nombre,
+        periodo: `Cantidad: ${productosMaximaCantidad[0]?.stockTotal}`,
       };
 
       const productoPrestamo = {
@@ -351,6 +316,73 @@ export const useProductosStore = defineStore("productos", {
 
   // * Acción para escuchar cambios en la colección de productos en Firestore.
   actions: {
+    valoresDevolutivos(nombre) {
+      const productos = this.productosDatabase.filter(
+        (producto) => producto.nombre == nombre && producto.stockTotal > 0
+      );
+      const Total = productos.length;
+      const NoDisponible = productos.filter(
+        (producto) =>
+          producto.estadoFisico == "No funcional" ||
+          producto.unavailableQuantity > 0
+      ).length;
+
+      const Prestados = productos.filter(
+        (producto) => producto.borrowedQuantity > 0
+      ).length;
+
+      return {
+        docId: productos[0].docId,
+        nombre,
+        Total,
+        Disponibles: Total - NoDisponible - Prestados,
+        Prestados,
+        NoDisponible,
+        productosList: [...productos],
+      };
+    },
+    valoresDevolutivosOnList(nombre) {
+      const productos = this.productosDatabase.filter(
+        (producto) => producto.nombre == nombre && producto.stockTotal > 0
+      );
+      const Total = productos.length;
+      const NoDisponible = productos.filter(
+        (producto) =>
+          producto.estadoFisico == "No funcional" ||
+          producto.unavailableQuantity > 0
+      ).length;
+
+      const Prestados = productos.filter(
+        (producto) => producto.borrowedQuantity > 0
+      ).length;
+      return {
+        docId: productos[0].docId,
+        nombre,
+        Total,
+        Disponibles: Total - NoDisponible - Prestados,
+        Prestados,
+        NoDisponible,
+        productosList: [...productos],
+      };
+    },
+
+    setDevolutivosRows() {
+      console.log(this.productosDatabase);
+      this.productosDatabase.forEach((producto) => console.log(producto));
+      const devolutivos = this.productosDatabase.filter(
+        (producto) => !producto.isConsumable
+      );
+      let namedevolutivos = devolutivos.map((producto) => producto.nombre);
+      namedevolutivos = [...new Set(namedevolutivos)];
+
+      const productos = namedevolutivos.map((nombre) => {
+        const valores = this.valoresDevolutivos(nombre);
+        return valores;
+      });
+      console.log(productos);
+      this.devolutivosRows = productos;
+    },
+
     getConsumableByName(productName) {
       return this.productosConsumibles.find(
         (producto) => producto.nombre == productName
@@ -376,7 +408,7 @@ export const useProductosStore = defineStore("productos", {
       const q = query(collection(db, "products"), orderBy("name"));
 
       // Establecer un observador en la consulta.
-      onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
+      onSnapshot(q, { includeMetadataChanges: true }, async (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           //en caso de añadir un registro
           if (change.type == "added") {

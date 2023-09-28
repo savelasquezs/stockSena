@@ -33,6 +33,7 @@ import { defineStore } from "pinia";
 import { auth, db } from "src/firebaseInit";
 import { Notify } from "quasar";
 import { UseUtilsStore } from "./utilsStore";
+import { useProductosStore } from "./productosStore";
 
 export const useDatabaseStore = defineStore("database", {
   state: () => {
@@ -48,6 +49,7 @@ export const useDatabaseStore = defineStore("database", {
     },
 
     async escucharCambios(store, tabla, ordenarPor, arrayName) {
+      const productosStore = useProductosStore();
       // Crear una consulta para la colección especificada, opcionalmente ordenada por un campo.
       const q = ordenarPor
         ? query(collection(db, tabla), orderBy(ordenarPor))
@@ -80,6 +82,10 @@ export const useDatabaseStore = defineStore("database", {
             );
           }
         });
+        if (tabla == "products") {
+          console.log("productos uiasdasd");
+          productosStore.setDevolutivosRows();
+        }
       });
     },
 
