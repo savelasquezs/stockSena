@@ -33,7 +33,6 @@ import { db } from "src/firebaseInit";
 import { UseUtilsStore } from "./utilsStore";
 import { useDatabaseStore } from "./DatabaseStore";
 
-const databaseStore = useDatabaseStore();
 // Definición del store de préstamos.
 export const UsePrestamosStore = defineStore("prestamos", {
   state: () => ({
@@ -238,6 +237,7 @@ export const UsePrestamosStore = defineStore("prestamos", {
     },
 
     updateMoraPerson(cedula) {
+      const databaseStore = useDatabaseStore();
       const moraActual = this.currentCustomer.enMora;
       const enMora = this.activeBorrowings.some((pedido) => pedido.enMora);
       console.log(moraActual, enMora);

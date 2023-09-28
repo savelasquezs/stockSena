@@ -16,7 +16,9 @@ const $q = useQuasar();
 const router = useRouter();
 import { collection, doc, getDoc } from "firebase/firestore";
 import CuentasManejoVue from "./pages/CuentasManejo.vue";
+import { UsePrestamosStore } from "./stores/prestamosStore";
 
+const prestamosStore = UsePrestamosStore();
 const productosStore = useProductosStore();
 const DatabaseStore = useDatabaseStore();
 DatabaseStore.escucharCambios(
@@ -24,6 +26,13 @@ DatabaseStore.escucharCambios(
   "products",
   "nombre",
   "productosDatabase"
+);
+
+DatabaseStore.escucharCambios(
+  prestamosStore,
+  "borrowings",
+  "dateBorrowed",
+  "prestamosDatabase"
 );
 
 const usuario = ref("");

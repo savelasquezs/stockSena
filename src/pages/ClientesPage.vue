@@ -43,7 +43,7 @@ import { useDatabaseStore } from "src/stores/DatabaseStore";
 const router = useRouter();
 const editando = ref(false);
 const formOppened = ref(false);
-const dataTableArray = ref([]);
+
 const clientesStore = UseClientesStore();
 const databaseStore = useDatabaseStore();
 const clienteEdit = ref({});
@@ -60,9 +60,7 @@ function editarCliente(cliente) {
   formOppened.value = true;
 }
 
-clientesStore.listenChanges().then(() => {
-  dataTableArray.value = clientesStore.clientesDatabase;
-});
+clientesStore.listenChanges();
 
 //-----------------------------------------
 </script>
