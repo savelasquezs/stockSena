@@ -276,7 +276,7 @@ const movimiento = ref("");
 const tipoIngreso = ref(null);
 const cantidad = ref(null);
 const proveedor = ref("");
-const notas = ref("");
+const notas = ref(null);
 const productosList = ref([]);
 const tipoSalida = ref(null);
 
@@ -348,21 +348,19 @@ function guardarCambios(notasSalida) {
 
   const productos = productosList.value.map((producto) => {
     console.log(producto);
-    const stockAnterior =
-      parseInt(producto.stockTotal) -
-      parseInt(producto.borrowedQuantity || producto.cantidadPrestada) -
-      parseInt(producto.unavailableQuantity);
+    const stockAnterior = parseInt(producto.stockTotal);
 
     const stockTotal = calculartotalStock(stockAnterior, producto);
     const unavailableQuantity =
       movimiento.value == "Salida" && tipoSalida.value == "deshabilitar"
-        ? producto.unavailableQuantity + producto.cantidad || producto.prestar
-        : producto.unavailableQuantity;
+        ? parseInt(producto.unavailableQuantity) +
+          (parseInt(producto.cantidad) || parseInt(producto.prestar))
+        : parseInt(producto.unavailableQuantity);
     return {
       cantidad: producto.cantidad || producto.prestar,
       docId: producto.docId,
       nombre: producto.producto || producto.nombre,
-      notas: producto.notas || notasSalida,
+      notas: producto.notas || producto.comentario,
       stockAnterior,
       stockTotal,
       unavailableQuantity,
@@ -377,7 +375,7 @@ function guardarCambios(notasSalida) {
   };
 
   productos.forEach((registro) => {
-    console.log(registro.stockTotal);
+    console.log(registro);
     DatabaseStore.updateElement(
       {
         stockTotal: registro.stockTotal,
@@ -388,7 +386,7 @@ function guardarCambios(notasSalida) {
     );
   });
   console.log(data);
-  addDoc(collection(db, "stockMovements"), data).then(() => {});
+  useDatabaseStore().saveElement(data, "stockMovements");
 
   emit("movimientoGuardado");
 }
