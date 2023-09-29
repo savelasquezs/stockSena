@@ -204,6 +204,7 @@ export const useProductosStore = defineStore("productos", {
         field: (row) => row.customer.documentNumber,
         sortable: true,
       },
+      { name: "caritas", label: "Debe", field: "caritas" },
       {
         name: "cantidad",
         label: "Cantidad Prestada",

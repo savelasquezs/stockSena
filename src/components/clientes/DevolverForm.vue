@@ -300,8 +300,10 @@ async function updateCustomerBorrowings(
   );
 
   await updateDoc(docCustomerBorrowingRef, {
-    returnedQuantity: (element.returnedQuantity +=
-      parseInt(element.devolver) + parseInt(element.consumido)),
+    returnedQuantity:
+      element.returnedQuantity +
+      parseInt(element.devolver) +
+      parseInt(element.consumido),
     fechaDevolucion,
     notasDevolucion,
     estadoDevuelto,
