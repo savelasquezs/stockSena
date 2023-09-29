@@ -26,16 +26,25 @@
               dense
               class="text-subtitle2 q-mx-sm"
               min="1"
-              :max="producto.stockTotal - producto.borrowedQuantity"
+              :max="
+                producto.stockTotal -
+                producto.borrowedQuantity -
+                producto.unavailableQuantity
+              "
               v-model="producto.prestar"
               style="width: 80px"
               type="number"
               :rules="[
                 (val) => val >= 0 || 'La cantidad debe ser mayor a 0',
                 (val) =>
-                  val <= producto.stockTotal - producto.borrowedQuantity ||
+                  val <=
+                    producto.stockTotal -
+                      producto.borrowedQuantity -
+                      producto.unavailableQuantity ||
                   `Solo ${
-                    producto.stockTotal - producto.borrowedQuantity
+                    producto.stockTotal -
+                    producto.borrowedQuantity -
+                    producto.unavailableQuantity
                   } unidades disponibles`,
               ]"
             />
@@ -47,7 +56,9 @@
               @click="producto.prestar++"
               :disable="
                 producto.prestar ==
-                producto.stockTotal - producto.borrowedQuantity
+                producto.stockTotal -
+                  producto.borrowedQuantity -
+                  producto.unavailableQuantity
               "
             />
           </div>

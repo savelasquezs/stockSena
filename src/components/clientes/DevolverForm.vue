@@ -23,28 +23,65 @@
         <q-separator />
       </q-item-section>
       <q-item-section>
-        <div class="flex flex-center">
-          <q-btn
-            icon="do_not_disturb_on"
-            round
-            color="red-5"
-            @click="elemento.devolver--"
-            :disable="elemento.devolver < 2"
-          />
-          <span class="text-subtitle2 q-mx-sm"
-            ><span :class="elemento.quantity == 1 ? 'text-grey' : ''">{{
-              elemento.devolver
-            }}</span></span
-          >
-          <q-btn
-            icon="add_circle"
-            round
-            color="primary"
-            @click="elemento.devolver++"
-            :disable="
-              elemento.devolver == elemento.quantity - elemento.returnedQuantity
-            "
-          />
+        <div class="flex column justify-center">
+          <div class="flex flex-center">
+            <q-btn
+              icon="do_not_disturb_on"
+              round
+              color="red-5"
+              @click="elemento.devolver--"
+              :disable="elemento.devolver < 1"
+            />
+            <span class="text-subtitle2 q-mx-sm"
+              ><span :class="elemento.quantity == 1 ? 'text-grey' : ''">{{
+                elemento.devolver
+              }}</span></span
+            >
+            <q-btn
+              icon="add_circle"
+              round
+              color="primary"
+              @click="elemento.devolver++"
+              :disable="
+                elemento.devolver ==
+                  elemento.quantity - elemento.returnedQuantity ||
+                elemento.consumido + elemento.devolver >=
+                  elemento.quantity - elemento.returnedQuantity
+              "
+            />
+          </div>
+          <div class="text-center">Devueltos</div>
+        </div>
+      </q-item-section>
+      <q-item-section>
+        <div class="flex column justify-center">
+          <div class="flex flex-center">
+            <q-btn
+              icon="do_not_disturb_on"
+              round
+              color="red-5"
+              @click="elemento.consumido--"
+              :disable="elemento.consumido < 1"
+            />
+            <span class="text-subtitle2 q-mx-sm"
+              ><span :class="elemento.quantity == 1 ? 'text-grey' : ''">{{
+                elemento.consumido
+              }}</span></span
+            >
+            <q-btn
+              icon="add_circle"
+              round
+              color="primary"
+              @click="elemento.consumido++"
+              :disable="
+                elemento.consumido ==
+                  elemento.quantity - elemento.returnedQuantity ||
+                elemento.consumido + elemento.devolver >=
+                  elemento.quantity - elemento.returnedQuantity
+              "
+            />
+          </div>
+          <div class="text-center">Consumidos</div>
         </div>
       </q-item-section>
       <q-item-section side>
@@ -210,9 +247,10 @@ async function updatePrestamos(
   const prestamoProductos = prestamo.data().productosList;
   prestamoProductos[element.indexLista].returnedQuantity =
     parseInt(prestamoProductos[element.indexLista].returnedQuantity) +
-    parseInt(element.devolver);
+    parseInt(element.devolver) +
+    parseInt(element.consumido);
   prestamoProductos[element.indexLista].returnedState = estadoDevuelto;
-
+  element;
   prestamoProductos[element.indexLista].notasDevolucion = notasDevolucion;
   prestamoProductos[element.indexLista].fechaDevolucion = fechaDevolucion;
 
@@ -223,6 +261,7 @@ async function updatePrestamos(
 }
 
 async function updateProduct(element) {
+  console.log("updating producto");
   //update productos cantidad disponible
 
   const docProductoRef = doc(db, "products", element.productId);
@@ -230,9 +269,18 @@ async function updateProduct(element) {
     (producto) => producto.docId == element.productId
   );
   const borrowedQuantity =
-    parseInt(productElement.borrowedQuantity) - element.devolver;
+    parseInt(productElement.borrowedQuantity) -
+    element.devolver -
+    element.consumido;
+  const stockTotal =
+    parseInt(productElement.stockTotal) - parseInt(element.consumido);
+  const consumedQuantity = productElement.consumedQuantity
+    ? productElement.consumedQuantity + element.consumido
+    : element.consumido;
   const data = {
     borrowedQuantity,
+    stockTotal,
+    consumedQuantity,
   };
   await updateDoc(docProductoRef, data);
 }
@@ -252,7 +300,8 @@ async function updateCustomerBorrowings(
   );
 
   await updateDoc(docCustomerBorrowingRef, {
-    returnedQuantity: (element.returnedQuantity += parseInt(element.devolver)),
+    returnedQuantity: (element.returnedQuantity +=
+      parseInt(element.devolver) + parseInt(element.consumido)),
     fechaDevolucion,
     notasDevolucion,
     estadoDevuelto,
@@ -275,7 +324,8 @@ async function updateProductBorrowings(
   );
 
   await updateDoc(docProductBorrowingRef, {
-    returnedQuantity: (element.returnedQuantity += element.devolver),
+    returnedQuantity:
+      element.returnedQuantity + element.devolver + element.consumido,
     fechaDevolucion,
     notasDevolucion,
     estadoDevuelto,
@@ -285,7 +335,7 @@ async function updateProductBorrowings(
 async function devolver() {
   guardando.value = true;
   props.listaElementos.forEach(async (element) => {
-    console.log();
+    console.log(element);
 
     const estadoDevuelto =
       element.estadoDevuelto || element.estadoEntrega || "excelente";
@@ -309,6 +359,7 @@ async function devolver() {
       fechaDevolucion,
       estadoDevuelto
     );
+
     if (props.tipoDev == "devolucion") {
       await updateProduct(element);
     }

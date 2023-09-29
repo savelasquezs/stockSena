@@ -15,8 +15,17 @@
 
 //Importaciónes
 import { defineStore } from "pinia";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { db } from "src/firebaseInit";
+import { useDatabaseStore } from "./DatabaseStore";
+import { UseUtilsStore } from "./utilsStore";
 
 //Definición del store de productos.
 export const useProductosStore = defineStore("productos", {
@@ -341,6 +350,7 @@ export const useProductosStore = defineStore("productos", {
         productosList: [...productos],
       };
     },
+
     valoresDevolutivosOnList(nombre) {
       const productos = this.productosDatabase.filter(
         (producto) => producto.nombre == nombre && producto.stockTotal > 0

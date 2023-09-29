@@ -241,6 +241,7 @@ function openDevolverModal(tipo) {
       devolver: prestamo.returnedQuantity
         ? prestamo.quantity - prestamo.returnedQuantity
         : prestamo.quantity,
+      consumido: 0,
     };
   });
 
