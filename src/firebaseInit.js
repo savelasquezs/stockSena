@@ -18,12 +18,12 @@ import {
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDrYRDVCdhClF3vRmX5YaecuybVnf8KLBU",
-  authDomain: "sena-stock-management.firebaseapp.com",
-  projectId: "sena-stock-management",
-  storageBucket: "sena-stock-management.appspot.com",
-  messagingSenderId: "290528563591",
-  appId: "1:290528563591:web:1dd4c325a9c7c19d164322",
+  apiKey: import.meta.env.VITE_apiKey,
+  authDomain: import.meta.env.VITE_authDomain,
+  projectId: import.meta.env.VITE_projectId,
+  storageBucket: import.meta.env.VITE_storageBucket,
+  messagingSenderId: import.meta.env.VITE_messagingSenderId,
+  appId: import.meta.env.VITE_appId,
 };
 
 // Initialize Firebase
