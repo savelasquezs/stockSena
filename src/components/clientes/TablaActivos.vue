@@ -78,6 +78,7 @@ import DevolverForm from "components/clientes/DevolverForm.vue";
 import DatePicker from "components/utils/DatePicker.vue";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "src/firebaseInit";
+import { UseUtilsStore } from "src/stores/utilsStore";
 const selectedPrestamos = ref([]);
 const copySelectedRows = ref([]);
 
@@ -212,35 +213,23 @@ function cambiarFecha() {
 }
 
 function openDevolverModal(tipo) {
+  console.log(selectedPrestamos.value);
+  if (
+    tipo == "traspaso" &&
+    selectedPrestamos.value.some((producto) => producto.enMora)
+  ) {
+    UseUtilsStore().notifyError(
+      "No puedes hacer traspasos de productos en Mora"
+    );
+    return;
+  }
   copySelectedRows.value = selectedPrestamos.value.map((prestamo) => {
-    if (tipo === "traspaso") {
-      // Filtrar los productos en mora
-      const productosEnMora = selectedPrestamos.value.filter((prestamo) => {
-        // Reemplaza 'prestamo.fechaMora' con la propiedad real que indica si un producto está en mora
-        return prestamo.fechaMora !== null; // Suponiendo que 'fechaMora' es nulo cuando no está en mora
-      });
-
-      if (productosEnMora.length > 0) {
-        // Si estás intentando hacer un traspaso con productos en mora, muestra una notificación de error
-        Notify.setDefaults({
-          position: "top-right",
-          color: "negative",
-        });
-
-        Notify.create({
-          message: "No puedes realizar un traspaso con productos en mora.",
-          timeout: 3000,
-        });
-
-        return; // Salir de la función si hay productos en mora y estás intentando un traspaso
-      }
-    }
-
     return {
       ...prestamo,
       devolver: prestamo.returnedQuantity
         ? prestamo.quantity - prestamo.returnedQuantity
         : prestamo.quantity,
+      consumido: 0,
     };
   });
 
@@ -260,15 +249,16 @@ function openDevolverModal(tipo) {
 
 watch(
   () => route.params.id,
-  async (toId, fromId) => {
+  (toId) => {
     userId.value = toId;
-    await prestamosStore.getPrestamosByPerson(toId);
+    prestamosStore.getPrestamosByPerson(toId);
   }
 );
 watch(modalDevolucionIsOpen, (newValue) => {
   if (!newValue) {
     tipoDev.value = null;
     clientesStore.currentCustomer = {};
+    emit("devuelto");
   }
 });
 </script>

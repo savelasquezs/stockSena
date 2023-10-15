@@ -82,16 +82,24 @@
           <q-td :props="props">
             <q-badge
               :color="
-                props.row.quantity > props.row.returnedQuantity
+                (props.row.quantity
+                  ? props.row.quantity
+                  : props.row.cantidadPrestada) > props.row.returnedQuantity
                   ? 'yellow-6'
                   : 'success'
               "
               text-color="black"
             >
-              {{ props.row.quantity - props.row.returnedQuantity }}
+              {{
+                (props.row.quantity
+                  ? props.row.quantity
+                  : props.row.cantidadPrestada) - props.row.returnedQuantity
+              }}
               <q-icon
                 :name="
-                  props.row.quantity > props.row.returnedQuantity
+                  (props.row.quantity
+                    ? props.row.quantity
+                    : props.row.cantidadPrestada) > props.row.returnedQuantity
                     ? 'warning'
                     : 'sentiment_very_satisfied'
                 "

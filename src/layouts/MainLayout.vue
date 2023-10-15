@@ -125,7 +125,7 @@ const linksList = ref([
   },
   {
     title: "Usuarios",
-    caption: "Profesores y aprendices del SENA registrados",
+    caption: "Intructores y aprendices del SENA registrados",
     icon: "people_alt",
     to: "/clientes",
   },
