@@ -48,7 +48,13 @@
       </table>
       <p class="centered">Thanks for your purchase! <br />parzibyte.me/blog</p>
     </div>
-    <button id="btnPrint" class="hidden-print" @click="printDiv">Print</button>
+    <button
+      id="btnPrint"
+      class="hidden-print"
+      @click="imprimirTicketConAcentos"
+    >
+      Print
+    </button>
   </div>
 
   <q-layout view="hHh lpR fFf" class="page-background-gray">
@@ -152,9 +158,50 @@ import DevolverPrestamo from "components/prestamos/DevolverPrestamo.vue";
 import QDialogo from "components/utils/QDialogo.vue";
 const modalDevolverOpened = ref(false);
 
-function printDiv() {
-  window.print();
-}
+const imprimirTicketConAcentos = async () => {
+  const impresora = "xprinterprueba1";
+  console.log(impresora);
+  const conector = new ConectorPluginV3(URLPlugin);
+  conector.EstablecerTamañoFuente(1, 1);
+  conector.EstablecerEnfatizado(false);
+  conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
+  conector.DescargarImagenDeInternetEImprimir(
+    "https://ssb.wiki.gallery/images/f/f7/SSBU_spirit_Cuphead.png",
+    ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL,
+    160
+  );
+  conector.Feed(1);
+  conector.EscribirTexto("Santiago's blog\n");
+  conector.EscribirTexto("Blog de un programador\n");
+  conector.DeshabilitarElModoDeCaracteresChinos();
+  // Recuerda que si tu impresora soporta acentos sin configuración adicional solo debes invocar a EscribirTExto
+  conector.TextoSegunPaginaDeCodigos(2, "cp850", "Teléfono: 123456789\n");
+  conector.EscribirTexto("Fecha/Hora: 2021-02-08 16:57:55\n");
+  conector.EstablecerEnfatizado(true);
+  conector.EscribirTexto("Cliente: ");
+  conector.EstablecerEnfatizado(false);
+  conector.TextoSegunPaginaDeCodigos(2, "cp850", "María José\n");
+  conector.EscribirTexto("--------------------------------\n");
+  conector.EscribirTexto("Audífonos HyperX\n");
+  conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA);
+  conector.EscribirTexto("25 USD\n");
+  conector.EscribirTexto("--------------------------------\n");
+  conector.EscribirTexto("TOTAL: 25 USD\n");
+  conector.EscribirTexto("--------------------------------\n");
+  conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
+  conector.TextoSegunPaginaDeCodigos(
+    2,
+    "cp850",
+    "¡Muchas gracias por su compra y feliz año nuevo 2021!"
+  );
+  conector.Feed(4);
+  conector.Corte(1);
+  conector.CorteParcial();
+  const respuesta = await conector.imprimirEn(impresora);
+  if (respuesta !== true) {
+    alert("Error: " + respuesta);
+  }
+};
 
 const userCredential = ref({});
 const user = inject("user") || "raro";
