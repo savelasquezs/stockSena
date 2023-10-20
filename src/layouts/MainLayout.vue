@@ -159,6 +159,7 @@ import QDialogo from "components/utils/QDialogo.vue";
 const modalDevolverOpened = ref(false);
 
 const imprimirTicketConAcentos = async () => {
+  const URLPlugin = "http://localhost:8000";
   const impresora = "xprinterprueba1";
   console.log(impresora);
   const conector = new ConectorPluginV3(URLPlugin);
