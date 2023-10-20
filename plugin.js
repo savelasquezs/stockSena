@@ -391,3 +391,5 @@ const ConectorPluginV3 = (() => {
   }
   return ConectorPlugin;
 })();
+
+export default ConectorPluginV3;

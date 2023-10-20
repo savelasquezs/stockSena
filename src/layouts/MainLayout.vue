@@ -154,6 +154,7 @@ import { getAuth } from "firebase/auth";
 import PrestamosFormVue from "components/prestamos/PrestamosFormVue.vue";
 import BarcodeGenerator from "components/dashboard/BarcodeGenerator.vue";
 import DevolverPrestamo from "components/prestamos/DevolverPrestamo.vue";
+import ConectorPluginV3 from "../../plugin";
 
 import QDialogo from "components/utils/QDialogo.vue";
 const modalDevolverOpened = ref(false);
